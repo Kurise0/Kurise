@@ -687,14 +687,14 @@
         { img: "images/header2.png", rank: "100th out of 2657 teams", title: "CMI - Detect Behavior with Sensor Data", publisher: "Kaggle · Sep 2025", fullDetail: "100th place among 2657 teams · Sensor multimodal time-series analysis", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
         { img: "images/header6.jpg", rank: "82nd out of 1455 teams", title: "ARC Prize 2025", publisher: "Kaggle · Dec 2025", fullDetail: "82nd place among 1455 teams · Abstract reasoning challenge", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
     ];
-    const PROJECTS_DATA_ZH = [{ img: "images/eridanus.svg", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" }];
-    const PROJECTS_DATA_EN = [{ img: "images/eridanus.svg", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }];
+    const PROJECTS_DATA_ZH = [{ img: "images/eridanus.png", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" }];
+    const PROJECTS_DATA_EN = [{ img: "images/eridanus.png", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }];
     const PAPERS_DATA = [];
     let currentTab = 'competition', currentLang = 'zh', currentRate = '0.000000';
     const i18n = { zh: { heading: "世界观测者档案", p1: "你好，我是<strong>龙力立</strong>， 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong>", p2: "在校本科生，目前专注于<strong class='highlight'>机器学习</strong>与<strong class='highlight'>数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class='highlight'>Kaggle Competition Master</strong> 成就。", p3: "喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。", footer: "Kurise • 最后更新: ", worldlineH: "世界线变动率", worldlineF: "世界线变动率: ", competition: "竞赛", projects: "项目", papers: "论文", noPapers: "暂无论文" }, en: { heading: "World Observer Archives", p1: "Hello, I am <strong>Lili Long</strong>, online nickname <strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Kurisu Makise</strong> from <strong>Steins;Gate</strong>", p2: "A undergraduate student currently focusing on <strong class='highlight'>Machine Learning</strong> and <strong class='highlight'>Data Science</strong>.<br>Passionate about Kaggle competitions, proud <strong class='highlight'>Kaggle Competition Master</strong>.", p3: "I love turning complex problems into practical solutions and exploring cutting-edge tech. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.", footer: "Kurise © Future Gadget Lab • Last updated: ", worldlineH: "Divergence Meter", worldlineF: "Divergence Ratio: ", competition: "Competition", projects: "Projects", papers: "Papers", noPapers: "No papers yet" } };
     function updateWorldlineText() { document.getElementById('worldline-header').innerText = `${i18n[currentLang].worldlineH} ${currentRate}%`; document.getElementById('worldline-footer').innerText = `${i18n[currentLang].worldlineF}${currentRate}%`; }
     function setWavesBackground(lightMode) { const waves = document.querySelector('a-waves'); if(waves) lightMode ? (waves.classList.remove('dark-bg'), waves.classList.add('light-bg')) : (waves.classList.remove('light-bg'), waves.classList.add('dark-bg')); }
-    function createCardElement(imgSrc, rankText, titleText, metaText, descText, linkUrl) { const cardDiv = document.createElement('div'); cardDiv.className = 'cert-card _target'; cardDiv.addEventListener('click', (e) => { e.stopPropagation(); if(linkUrl) window.open(linkUrl, '_blank'); }); const img = document.createElement('img'); img.src = imgSrc; img.className = 'card-img'; img.loading = 'lazy'; img.onerror = function() { this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231a1f26'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='14' text-anchor='middle' dy='.3em'%3EKurise%3C/text%3E%3C/svg%3E"; }; const textBox = document.createElement('div'); textBox.className = 'card-textbox'; const rankSpan = document.createElement('div'); rankSpan.className = 'card-rank'; rankSpan.innerText = rankText; const titleSpan = document.createElement('div'); titleSpan.className = 'card-title'; titleSpan.innerText = titleText; const metaSpan = document.createElement('div'); metaSpan.className = 'card-meta'; metaSpan.innerText = metaText; const fullDescSpan = document.createElement('div'); fullDescSpan.className = 'card-full-desc'; fullDescSpan.innerText = descText; textBox.append(rankSpan, titleSpan, metaSpan, fullDescSpan); cardDiv.append(img, textBox); return cardDiv; }
+    function createCardElement(imgSrc, rankText, titleText, metaText, descText, linkUrl) { const cardDiv = document.createElement('div'); cardDiv.className = 'cert-card _target'; cardDiv.addEventListener('click', (e) => { e.stopPropagation(); if(linkUrl) window.open(linkUrl, '_blank'); }); const img = document.createElement('img'); img.src = imgSrc; img.className = 'card-img'; img.loading = 'eager'; img.onerror = function() { this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231a1f26'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='14' text-anchor='middle' dy='.3em'%3EKurise%3C/text%3E%3C/svg%3E"; }; const textBox = document.createElement('div'); textBox.className = 'card-textbox'; const rankSpan = document.createElement('div'); rankSpan.className = 'card-rank'; rankSpan.innerText = rankText; const titleSpan = document.createElement('div'); titleSpan.className = 'card-title'; titleSpan.innerText = titleText; const metaSpan = document.createElement('div'); metaSpan.className = 'card-meta'; metaSpan.innerText = metaText; const fullDescSpan = document.createElement('div'); fullDescSpan.className = 'card-full-desc'; fullDescSpan.innerText = descText; textBox.append(rankSpan, titleSpan, metaSpan, fullDescSpan); cardDiv.append(img, textBox); return cardDiv; }
     function renderContent(tab) { const container = document.getElementById('galleryList'); if(!container) return; container.innerHTML = ''; if(tab === 'competition') { (currentLang === 'zh' ? COMPETITIONS_DATA_ZH : COMPETITIONS_DATA_EN).forEach(c => container.appendChild(createCardElement(c.img, c.rank, c.title, c.publisher, c.fullDetail, c.url))); } else if(tab === 'projects') { (currentLang === 'zh' ? PROJECTS_DATA_ZH : PROJECTS_DATA_EN).forEach(p => container.appendChild(createCardElement(p.img, p.rank, p.title, p.publisher, p.fullDetail, p.url))); } else { const msgDiv = document.createElement('div'); msgDiv.style.cssText = 'text-align:center; padding:32px 16px; color:var(--text-muted); font-family:VT323;'; msgDiv.innerText = i18n[currentLang].noPapers; container.appendChild(msgDiv); } }
     function initTabs() { document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => { currentTab = btn.getAttribute('data-tab'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderContent(currentTab); }); }); }
     function updateTabButtonTexts() { document.querySelectorAll('.tab-btn').forEach(btn => { const key = btn.getAttribute('data-tab'); if(key && i18n[currentLang][key]) btn.innerText = i18n[currentLang][key]; }); }
@@ -708,8 +708,112 @@
         document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
         window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
     } else { if(pointer) pointer.style.display = 'none'; }
-    (()=>{ const loader=document.getElementById('amadeus-loader'), numberSpan=document.getElementById('worldlineNumber'), containerDigit=document.getElementById('digitContainer'), mainOuter=document.getElementById('mainOuter'); const finalValue=(Math.random()*1.8+0.2).toFixed(6); currentRate=finalValue; updateWorldlineText(); let frame=0, maxFrames=52, zoomStarted=false; const startVal=0, targetVal=parseFloat(finalValue); function easeOutCubic(t){return 1-Math.pow(1-t,3);} function updateBlurAndOpacity(p){ const blurAmount=Math.max(0,12*(1-p)); const opacityVal=Math.min(1,0.5+p*0.7); numberSpan.style.filter=`blur(${blurAmount}px)`; numberSpan.style.opacity=opacityVal; numberSpan.style.textShadow=`0 0 ${5+(1-p)*12}px #c93a0e, 0 0 18px #7a2e00`; } function animateNumber(){ if(frame<maxFrames){ let progress=frame/maxFrames, eased=easeOutCubic(progress), noiseRange=0.9*(1-eased)+0.01, rawNoise=(Math.random()-0.5)*noiseRange*2.2, centerVal=startVal*(1-eased)+targetVal*eased, noisy=Math.min(1.999999,Math.max(0.000001,centerVal+rawNoise)); numberSpan.innerText=noisy.toFixed(6); updateBlurAndOpacity(eased); frame++; requestAnimationFrame(animateNumber); } else { numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); setTimeout(()=>{ if(!zoomStarted && loader){ zoomStarted=true; containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); }, 600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },150); } },200); } } requestAnimationFrame(animateNumber); setTimeout(()=>{ if(!zoomStarted && loader){ numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); },600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },120); } },4000); })();
-    const carouselItems=[{img:"images/topimage.jpg",link:"https://steinsgate.jp/"},{img:"images/kurisu.jpg",link:"https://www.pixiv.net/artworks/126362853"}]; let currentSlide=0, autoInterval=null; const slidesContainer=document.getElementById('carouselSlides'), dotsContainer=document.getElementById('carouselDots'); let totalSlides=carouselItems.length; function buildCarousel(){ slidesContainer.innerHTML=''; dotsContainer.innerHTML=''; carouselItems.forEach((item,idx)=>{ const slideDiv=document.createElement('div'); slideDiv.className='carousel-slide'; if(idx===0) slideDiv.classList.add('active'); const link=document.createElement('a'); link.href=item.link; link.target='_blank'; link.classList.add('_target'); const img=document.createElement('img'); img.src=item.img; img.onerror=function(){ this.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; }; link.appendChild(img); slideDiv.appendChild(link); slidesContainer.appendChild(slideDiv); const dot=document.createElement('button'); dot.classList.add('dot'); if(idx===0) dot.classList.add('active'); dot.addEventListener('click',()=>goToSlide(idx)); dotsContainer.appendChild(dot); }); } function updateCarousel(){ document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); } function goToSlide(idx){ currentSlide=(idx+totalSlides)%totalSlides; updateCarousel(); resetAutoPlay(); } function nextSlide(){ goToSlide(currentSlide+1); } function resetAutoPlay(){ if(autoInterval) clearInterval(autoInterval); autoInterval=setInterval(()=>nextSlide(),4500); } function pauseAutoPlay(){ if(autoInterval) clearInterval(autoInterval); } function resumeAutoPlay(){ resetAutoPlay(); } function bindCarouselEvents(){ const c=document.getElementById('carousel'); if(c){ c.addEventListener('mouseenter',pauseAutoPlay); c.addEventListener('mouseleave',resumeAutoPlay); } } window.addEventListener('load',()=>{ const waves=document.querySelector('a-waves'); if(waves&&waves.setSize){ waves.setSize(); waves.setLines(); } setWavesBackground(document.body.classList.contains('light-mode')); initTabs(); renderContent('competition'); updateTabButtonTexts(); document.getElementById('last-updated').textContent=new Date().toLocaleDateString('zh-CN'); buildCarousel(); bindCarouselEvents(); resetAutoPlay(); });
+    const carouselItems=[{img:"images/topimage.jpg",link:"https://steinsgate.jp/"},{img:"images/kurisu.jpg",link:"https://www.pixiv.net/artworks/126362853"}];
+    let currentSlide=0, autoInterval=null;
+    const slidesContainer=document.getElementById('carouselSlides'), dotsContainer=document.getElementById('carouselDots');
+    let totalSlides=carouselItems.length;
+    function buildCarousel(){
+        slidesContainer.innerHTML=''; dotsContainer.innerHTML='';
+        carouselItems.forEach((item,idx)=>{
+            const slideDiv=document.createElement('div'); slideDiv.className='carousel-slide'; if(idx===0) slideDiv.classList.add('active');
+            const link=document.createElement('a'); link.href=item.link; link.target='_blank'; link.classList.add('_target');
+            const img=document.createElement('img'); img.src=item.img; img.loading='eager';
+            img.onerror=function(){ this.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; };
+            link.appendChild(img); slideDiv.appendChild(link); slidesContainer.appendChild(slideDiv);
+            const dot=document.createElement('button'); dot.classList.add('dot'); if(idx===0) dot.classList.add('active');
+            dot.addEventListener('click',()=>goToSlide(idx)); dotsContainer.appendChild(dot);
+        });
+    }
+    function updateCarousel(){ document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); }
+    function goToSlide(idx){ currentSlide=(idx+totalSlides)%totalSlides; updateCarousel(); resetAutoPlay(); }
+    function nextSlide(){ goToSlide(currentSlide+1); }
+    function resetAutoPlay(){ if(autoInterval) clearInterval(autoInterval); autoInterval=setInterval(()=>nextSlide(),4500); }
+    function pauseAutoPlay(){ if(autoInterval) clearInterval(autoInterval); }
+    function resumeAutoPlay(){ resetAutoPlay(); }
+    function bindCarouselEvents(){ const c=document.getElementById('carousel'); if(c){ c.addEventListener('mouseenter',pauseAutoPlay); c.addEventListener('mouseleave',resumeAutoPlay); } }
+    function waitForImages(elements) {
+        const imgs = Array.from(elements).filter(el => el.tagName === 'IMG' && !el.complete);
+        if(imgs.length === 0) return Promise.resolve();
+        return Promise.allSettled(imgs.map(img => new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); })));
+    }
+    function revealMainContent() {
+        const loader = document.getElementById('amadeus-loader');
+        const mainOuter = document.getElementById('mainOuter');
+        const containerDigit = document.getElementById('digitContainer');
+        if(!loader || mainOuter.classList.contains('revealed')) return;
+        mainOuter.classList.add('revealed');
+        containerDigit.classList.add('digit-zoom-out');
+        mainOuter.classList.add('zoomed');
+        const flashDiv = document.createElement('div');
+        flashDiv.classList.add('global-flash');
+        document.body.appendChild(flashDiv);
+        setTimeout(()=>{ flashDiv.remove(); }, 600);
+        setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); }, 150);
+    }
+    let digitsFinished = false, imagesReady = false;
+    function tryCompleteLoading() {
+        if(digitsFinished && imagesReady) revealMainContent();
+    }
+    function startDigitAnimation() {
+        const numberSpan = document.getElementById('worldlineNumber');
+        const finalValue = (Math.random() * 1.8 + 0.2).toFixed(6);
+        currentRate = finalValue;
+        updateWorldlineText();
+        let frame = 0, maxFrames = 52;
+        const startVal = 0, targetVal = parseFloat(finalValue);
+        function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+        function updateBlurAndOpacity(p){
+            const blurAmount = Math.max(0, 12 * (1 - p));
+            const opacityVal = Math.min(1, 0.5 + p * 0.7);
+            numberSpan.style.filter = `blur(${blurAmount}px)`;
+            numberSpan.style.opacity = opacityVal;
+            numberSpan.style.textShadow = `0 0 ${5+(1-p)*12}px #c93a0e, 0 0 18px #7a2e00`;
+        }
+        function animateNumber(){
+            if(frame < maxFrames){
+                let progress = frame / maxFrames, eased = easeOutCubic(progress), noiseRange = 0.9 * (1 - eased) + 0.01, rawNoise = (Math.random() - 0.5) * noiseRange * 2.2, centerVal = startVal * (1 - eased) + targetVal * eased, noisy = Math.min(1.999999, Math.max(0.000001, centerVal + rawNoise));
+                numberSpan.innerText = noisy.toFixed(6);
+                updateBlurAndOpacity(eased);
+                frame++;
+                requestAnimationFrame(animateNumber);
+            } else {
+                numberSpan.innerText = finalValue;
+                updateBlurAndOpacity(1);
+                currentRate = finalValue;
+                updateWorldlineText();
+                digitsFinished = true;
+                tryCompleteLoading();
+            }
+        }
+        requestAnimationFrame(animateNumber);
+    }
+    function initUIAndWaitImages() {
+        buildCarousel();
+        bindCarouselEvents();
+        resetAutoPlay();
+        initTabs();
+        renderContent('competition');
+        updateTabButtonTexts();
+        document.getElementById('last-updated').textContent = new Date().toLocaleDateString('zh-CN');
+        const allImages = document.querySelectorAll('img');
+        waitForImages(allImages).then(() => {
+            imagesReady = true;
+            tryCompleteLoading();
+        });
+        setTimeout(() => {
+            if(!imagesReady) {
+                imagesReady = true;
+                tryCompleteLoading();
+            }
+        }, 8000);
+    }
+    window.addEventListener('load', () => {
+        const waves = document.querySelector('a-waves');
+        if(waves && waves.setSize){ waves.setSize(); waves.setLines(); }
+        setWavesBackground(document.body.classList.contains('light-mode'));
+        initUIAndWaitImages();
+        startDigitAnimation();
+    });
 </script>
 </body>
 </html>
