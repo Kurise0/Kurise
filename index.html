@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kurise - About me</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #010101;
+            --text-color: #eef2ff;
+            --text-muted: #8ea4b3;
+            --neon-green: #00ff9d;
+            --cyan: #00e5ff;
+            --neon-glow: rgba(0, 255, 157, 0.6);
+            --glass-bg: rgba(8, 12, 18, 0.7);
+            --glass-border: rgba(0, 255, 157, 0.35);
+            --card-radius: 32px;
+            --wave-bg-center: rgba(0,20,10,0.3);
+            --wave-bg-edge: #000000;
+            --header-bg: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,20,10,0.5) 100%);
+        }
+
+        body.light-mode {
+            --bg-color: #f0f4f8;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --neon-green: #0d9488;
+            --cyan: #06b6d4;
+            --neon-glow: rgba(13, 148, 136, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(13, 148, 136, 0.3);
+            --wave-bg-center: rgba(13, 148, 136, 0.08);
+            --wave-bg-edge: #f0f4f8;
+            --header-bg: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(240,253,244,0.8) 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%; width: 100%; overflow: hidden; position: fixed;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: none;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        #amadeus-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(ellipse at center, #0a0c0a 0%, #000000 100%);
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.4s ease;
+            font-family: 'VT323', 'Courier New', monospace;
+            overflow: hidden;
+        }
+        .crt-screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(180, 60, 20, 0.06) 0px,
+                rgba(180, 60, 20, 0.06) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            pointer-events: none;
+            z-index: 2;
+            animation: scanlines 8s linear infinite;
+        }
+        .crt-noise {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMTUiLz48L3N2Zz4=');
+            background-repeat: repeat;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: screen;
+        }
+        .crt-glow {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            box-shadow: inset 0 0 80px rgba(200, 70, 20, 0.25), 0 0 50px rgba(180, 60, 15, 0.15);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .worldline-digit-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            padding: 0 5%;
+            transform: scale(1);
+            transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+        }
+        .worldline-number {
+            font-family: 'VT323', 'Courier New', monospace;
+            font-weight: 700;
+            font-size: clamp(4rem, 20vw, 16rem);
+            letter-spacing: 0.06em;
+            color: #d35400;
+            text-shadow: 0 0 5px #b84500, 0 0 15px #9a3a00, 0 0 30px #7a2e00;
+            background: linear-gradient(135deg, #ff8c42 0%, #b85c1a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px #c95a0c;
+            white-space: nowrap;
+            overflow-x: auto;
+            transition: all 0.08s linear;
+        }
+        .digit-zoom-out {
+            animation: zoomPulse 0.65s cubic-bezier(0.2, 1.2, 0.8, 1) forwards !important;
+        }
+        @keyframes zoomPulse {
+            0% { transform: scale(1); opacity: 1; filter: blur(0px); }
+            40% { transform: scale(1.8); opacity: 0.9; filter: blur(4px); text-shadow: 0 0 40px #ff6a1a; }
+            100% { transform: scale(3.5); opacity: 0; filter: blur(12px); visibility: hidden; }
+        }
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 20px; }
+        }
+        .loader-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        a-waves {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            transition: background 0.5s ease;
+        }
+        a-waves.dark-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(0, 20, 10, 0.4) 0%, #000000 90%) !important;
+        }
+        a-waves.light-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(13, 148, 136, 0.12) 0%, #f0f4f8 90%) !important;
+        }
+        a-waves svg {
+            width: 100%; height: 100%; filter: drop-shadow(0 0 3px var(--neon-glow));
+        }
+        a-waves svg path {
+            fill: none; stroke: url(#waveGradient); stroke-width: 1.5px;
+            stroke-linecap: round; stroke-linejoin: round; opacity: 0.85;
+        }
+        body.light-mode a-waves svg path {
+            opacity: 0.9;
+        }
+
+        .pointer {
+            --width: 26px; --height: 26px;
+            position: fixed; top: calc(var(--height) / -2); left: calc(var(--width) / -2);
+            width: var(--width); height: var(--height);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            pointer-events: none; z-index: 9999;
+            filter: drop-shadow(0 0 5px var(--neon-green));
+        }
+        .pointer div {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid var(--neon-green); opacity: 0.95;
+            box-shadow: 0 0 8px var(--neon-green); transition: all 0.2s;
+        }
+        .pointer div:nth-child(1) { border-top-style: solid; border-left-style: solid; top: -2px; left: -2px; }
+        .pointer div:nth-child(2) { border-top-style: solid; border-right-style: solid; top: -2px; right: -2px; }
+        .pointer div:nth-child(3) { border-bottom-style: solid; border-left-style: solid; bottom: -2px; left: -2px; }
+        .pointer div:nth-child(4) { border-bottom-style: solid; border-right-style: solid; bottom: -2px; right: -2px; }
+        .pointer::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 3px; height: 3px; background: var(--neon-green);
+            border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 6px var(--neon-green);
+        }
+
+        .stage {
+            position: relative; z-index: 10; display: flex; align-items: center;
+            gap: 12px; width: 100%; max-width: 1160px; height: 82vh; max-height: 88vh;
+        }
+
+        .links {
+            display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;
+        }
+        .links a, .links button {
+            color: var(--text-color);
+            text-decoration: none; font-size: 13.5px; font-family: 'VT323', monospace;
+            letter-spacing: 2px; padding: 12px 0; width: 125px; text-align: center;
+            border: 1px solid var(--glass-border); border-left: 3px solid var(--neon-green);
+            border-radius: 4px; background: var(--glass-bg); backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: none;
+            box-shadow: -4px 0 12px rgba(0,0,0,0.05); display: block; outline: none;
+        }
+        .links button {
+            font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 1px;
+            color: var(--neon-green);
+        }
+        .links a:hover, .links button:hover {
+            background: var(--neon-green); color: #fff;
+            transform: translateX(6px) scale(1.03);
+            box-shadow: 0 0 20px var(--neon-glow), inset 0 0 4px #fff; border-color: #fff;
+        }
+
+        .container {
+            flex: 1; height: 100%; background: var(--glass-bg);
+            backdrop-filter: blur(12px); border-radius: var(--card-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2), 0 0 0 1px var(--glass-border) inset, 0 0 30px var(--neon-glow);
+            overflow: hidden; display: flex; flex-direction: column; position: relative;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        .container::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(135deg, var(--neon-glow), transparent);
+            border-radius: calc(var(--card-radius) + 2px); z-index: -1; opacity: 0.5; pointer-events: none;
+        }
+
+        header {
+            background: var(--header-bg); padding: 22px 30px 16px; text-align: center;
+            flex-shrink: 0; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(4px); position: relative;
+            transition: background 0.5s ease;
+        }
+        header::after {
+            content: ''; position: absolute; bottom: -1px; left: 15%; width: 70%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), var(--cyan), transparent); filter: blur(1px);
+        }
+        h1 {
+            font-family: 'VT323', monospace; font-size: clamp(40px, 5vw, 65px);
+            color: var(--neon-green); text-shadow: 0 0 12px var(--neon-glow);
+            letter-spacing: 5px; font-weight: 400;
+        }
+        .subtitle {
+            font-size: clamp(12px, 1.8vw, 17px); color: var(--text-color); margin-top: 8px;
+            letter-spacing: 3px; font-weight: 600; text-transform: uppercase;
+        }
+
+        .hero {
+            flex-shrink: 0; text-align: center; background: rgba(0, 0, 0, 0.1);
+            padding: 12px 0 4px; position: relative;
+        }
+        body:not(.light-mode) .hero { background: rgba(0, 0, 0, 0.35); }
+        .hero img {
+            width: 90%; max-width: 520px; height: auto; max-height: 150px; 
+            object-fit: contain; filter: drop-shadow(0 0 15px var(--neon-glow));
+            transition: transform 0.3s; border-radius: 20px;
+        }
+        .hero img:hover { transform: scale(1.01); }
+
+        .content {
+            flex: 1; padding: 24px 50px; max-width: 850px; margin: 0 auto; width: 100%;
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+        }
+        .content::-webkit-scrollbar { width: 5px; }
+        .content::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        .content::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+
+        h2 {
+            color: var(--neon-green); font-family: 'VT323', monospace; font-size: clamp(24px, 3vw, 32px);
+            margin: 10px 0 14px 0; letter-spacing: 1.5px; border-left: 4px solid var(--neon-green);
+            padding-left: 16px; text-shadow: 0 0 4px var(--neon-glow);
+        }
+        p {
+            font-size: clamp(14px, 1.6vw, 16.5px); margin-bottom: 16px; line-height: 1.75;
+            font-weight: 400; color: var(--text-color);
+        }
+        .highlight {
+            color: var(--neon-green); font-weight: 700;
+            background: linear-gradient(120deg, var(--neon-glow), transparent);
+            padding: 0 4px; border-radius: 6px; text-shadow: 0 0 2px var(--neon-glow);
+        }
+
+        footer {
+            flex-shrink: 0; text-align: center; padding: 14px; background: rgba(0, 0, 0, 0.2);
+            color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px); letter-spacing: 0.5px;
+        }
+        body:not(.light-mode) footer { background: rgba(0, 0, 0, 0.5); }
+        #last-updated { color: var(--neon-green); font-weight: 600; }
+
+        .worldline {
+            position: absolute; bottom: 20px; right: 28px; font-family: 'VT323', monospace;
+            font-size: 12px; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 30px;
+            backdrop-filter: blur(4px); color: var(--neon-green); letter-spacing: 1px; z-index: 15;
+            pointer-events: none; border-left: 2px solid var(--neon-green);
+        }
+        body.light-mode .worldline { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-left: 2px solid var(--neon-green); }
+
+        @media (max-width: 850px) {
+            body { padding: 10px; }
+            .stage { flex-direction: column; height: 90vh; max-height: 94vh; gap: 0; }
+            .links { flex-direction: row; justify-content: center; flex-wrap: wrap; width: 100%; margin-bottom: 12px; gap: 10px; }
+            .links a, .links button { width: auto; font-size: 13px; border-left-width: 1px; border-bottom: 2px solid var(--neon-green); border-radius: 20px; padding: 6px 16px; }
+            .links a:hover, .links button:hover { transform: translateY(-3px); }
+        }
+        @media (max-width: 500px) {
+            .content { padding: 16px 20px; }
+            .stage { height: 92vh; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="amadeus-loader">
+    <div class="crt-screen"></div>
+    <div class="crt-noise"></div>
+    <div class="crt-glow"></div>
+    <div class="worldline-digit-container" id="digitContainer">
+        <div class="worldline-number" id="worldlineNumber">0.000000</div>
+    </div>
+</div>
+
+<a-waves>
+    <svg>
+        <defs>
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop id="stop1" offset="0%" stop-color="#00ff9d" stop-opacity="0.85" />
+                <stop id="stop2" offset="50%" stop-color="#3effb3" stop-opacity="0.95" />
+                <stop id="stop3" offset="100%" stop-color="#00e5ff" stop-opacity="0.7" />
+            </linearGradient>
+        </defs>
+    </svg>
+</a-waves>
+
+<div class="pointer">
+    <div></div><div></div><div></div><div></div>
+</div>
+
+<div class="stage">
+    <div class="links">
+        <button id="theme-toggle" class="_target">THEME</button>
+        <button id="lang-toggle" class="_target">EN / 中</button>
+        <a href="https://www.kaggle.com/kurisew" target="_blank" class="_target">KAGGLE</a>
+        <a href="https://github.com/Kurise0" target="_blank" class="_target">GITHUB</a>
+        <a href="https://x.com/KURISEW" target="_blank" class="_target">X (TWITTER)</a>
+        <a href="https://www.linkedin.com/in/%E5%8A%9B%E7%AB%8B-%E9%BE%99-7b41a9367" target="_blank" class="_target">LINKEDIN</a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Kurise</h1>
+            <div class="subtitle" id="worldline-header">世界线变动率</div>
+        </header>
+
+        <div class="hero">
+            <a href="https://steinsgate.jp/" target="_blank" class="_target" style="display: inline-block; border-radius: 20px;">
+                <img src="images/topimage.jpg" alt="Steins;Gate Gate of Steiner" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 800 300\'%3E%3Crect width=\'800\' height=\'300\' fill=\'%23000\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'26\' font-family=\'monospace\' fill=\'%2300ff9d\' text-anchor=\'middle\' dy=\'.3em\'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E';">
+            </a>
+        </div>
+
+        <div class="content">
+            <h2 data-i18n="heading">世界观测者档案</h2>
+            <p data-i18n="p1">你好，我是<strong>龙力立</strong>, 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong></p>
+            <p data-i18n="p2">在校本科生，目前专注于<strong class="highlight">机器学习</strong>与<strong class="highlight">数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class="highlight">Kaggle Master</strong> 成就。</p>
+            <p data-i18n="p3">喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。</p>
+        </div>
+
+        <footer>
+            <span data-i18n="footer">Kurise © 未来道具研究所 • Last updated: </span><span id="last-updated"></span>
+        </footer>
+        <div class="worldline" id="worldline-footer">世界线变动率: </div>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'zh';
+    let currentRate = '0.000000'; 
+
+    const i18n = {
+        zh: {
+            heading: "世界观测者档案",
+            p1: "你好，我是<strong>龙力立</strong>， 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong>",
+            p2: "在校本科生，目前专注于<strong class='highlight'>机器学习</strong>与<strong class='highlight'>数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class='highlight'>Kaggle Competition Master</strong> 成就。",
+            p3: "喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。",
+            footer: "Kurise © 未来道具研究所 • Last updated: ",
+            worldlineH: "世界线变动率",
+            worldlineF: "世界线变动率: "
+        },
+        en: {
+            heading: "World Observer Archives",
+            p1: "Hello, I am <strong>Lili Long</strong>, Online nickname<strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Kurisu Makise</strong> from <strong>Steins;Gate</strong>",
+            p2: "A undergraduate student currently focusing on <strong class='highlight'>Machine Learning</strong> and <strong class='highlight'>Data Science</strong>.<br>Passionate about Kaggle competitions, proud <strong class='highlight'>Kaggle Competition Master</strong>.",
+            p3: "I love turning complex problems into practical solutions and exploring cutting-edge tech. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.",
+            footer: "Kurise © Future Gadget Lab • Last updated: ",
+            worldlineH: "Divergence Meter",
+            worldlineF: "Divergence Ratio: "
+        }
+    };
+
+    const stop1 = document.getElementById('stop1');
+    const stop2 = document.getElementById('stop2');
+    const stop3 = document.getElementById('stop3');
+
+    function setWavesBackground(lightMode) {
+        const waves = document.querySelector('a-waves');
+        if (!waves) return;
+        if (lightMode) {
+            waves.classList.remove('dark-bg');
+            waves.classList.add('light-bg');
+        } else {
+            waves.classList.remove('light-bg');
+            waves.classList.add('dark-bg');
+        }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        
+        if (isLight) {
+            stop1.setAttribute('stop-color', '#0d9488');
+            stop2.setAttribute('stop-color', '#14b8a6');
+            stop3.setAttribute('stop-color', '#06b6d4');
+        } else {
+            stop1.setAttribute('stop-color', '#00ff9d');
+            stop2.setAttribute('stop-color', '#3effb3');
+            stop3.setAttribute('stop-color', '#00e5ff');
+        }
+        
+        setWavesBackground(isLight);
+    });
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[currentLang][key]) {
+                el.innerHTML = i18n[currentLang][key];
+            }
+        });
+        updateWorldlineText();
+    });
+
+    function updateWorldlineText() {
+        document.getElementById('worldline-header').innerText = `${i18n[currentLang].worldlineH} ${currentRate}%`;
+        document.getElementById('worldline-footer').innerText = `${i18n[currentLang].worldlineF}${currentRate}%`;
+    }
+
+    class AWaves extends HTMLElement {
+        connectedCallback() {
+            this.svg = this.querySelector('svg');
+            this.mouse = { x: 0, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0 };
+            this.lines = []; this.paths = [];
+            this.bindEvents(); this.setSize(); this.setLines();
+            requestAnimationFrame(this.tick.bind(this));
+        }
+        bindEvents() {
+            window.addEventListener('resize', () => { this.setSize(); this.setLines(); });
+            const update = (x, y) => {
+                if (!this.bounding) return;
+                this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top;
+            };
+            window.addEventListener('mousemove', e => update(e.clientX, e.clientY));
+            window.addEventListener('touchmove', e => { if(e.touches.length) update(e.touches[0].clientX, e.touches[0].clientY); });
+            window.addEventListener('touchstart', e => { if(e.touches.length) update(e.touches[0].clientX, e.touches[0].clientY); });
+        }
+        setSize() {
+            this.bounding = this.getBoundingClientRect();
+            this.svg.style.width = `${this.bounding.width}px`;
+            this.svg.style.height = `${this.bounding.height}px`;
+        }
+        setLines() {
+            const { width, height } = this.bounding;
+            if (width === 0 || height === 0) return;
+            this.lines = []; this.paths.forEach(p => p.remove()); this.paths = [];
+            const xGap = 10, yGap = 28, oWidth = width + 200, oHeight = height + 40;
+            const totalLines = Math.ceil(oWidth / xGap), totalPoints = Math.ceil(oHeight / yGap);
+            const xStart = (width - xGap * totalLines) / 2, yStart = (height - yGap * totalPoints) / 2;
+            for (let i = 0; i <= totalLines; i++) {
+                const points = [];
+                for (let j = 0; j <= totalPoints; j++) {
+                    points.push({ x: xStart + xGap * i, y: yStart + yGap * j, cursor: { x: 0, y: 0, vx: 0, vy: 0 } });
+                }
+                this.lines.push(points);
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('stroke', 'url(#waveGradient)');
+                this.svg.appendChild(path); this.paths.push(path);
+            }
+        }
+        movePoints() {
+            const { lines, mouse } = this;
+            if (!lines.length) return;
+            lines.forEach(points => {
+                points.forEach(p => {
+                    const dx = p.x - mouse.sx, dy = p.y - mouse.sy, d = Math.hypot(dx, dy), l = Math.max(160, mouse.vs);
+                    if (d < l) {
+                        const f = 1 - d / l;
+                        p.cursor.vx += Math.cos(mouse.a) * f * mouse.vs * 0.072;
+                        p.cursor.vy += Math.sin(mouse.a) * f * mouse.vs * 0.072;
+                    }
+                    p.cursor.vx += (0 - p.cursor.x) * 0.006; p.cursor.vy += (0 - p.cursor.y) * 0.006;
+                    p.cursor.vx *= 0.93; p.cursor.vy *= 0.93;
+                    p.cursor.x += p.cursor.vx * 1.9; p.cursor.y += p.cursor.vy * 1.9;
+                    p.cursor.x = Math.min(90, Math.max(-90, p.cursor.x)); p.cursor.y = Math.min(90, Math.max(-90, p.cursor.y));
+                });
+            });
+        }
+        moved(point, withCursorForce = true) {
+            return {
+                x: Math.round((point.x + (withCursorForce ? point.cursor.x : 0)) * 10) / 10,
+                y: Math.round((point.y + (withCursorForce ? point.cursor.y : 0)) * 10) / 10,
+            };
+        }
+        drawLines() {
+            const { lines, paths } = this;
+            if (!lines.length) return;
+            lines.forEach((points, lIndex) => {
+                if (!points.length) return;
+                let p1 = this.moved(points[0], false), d = `M ${p1.x} ${p1.y}`;
+                points.forEach((p, idx) => {
+                    const isLast = idx === points.length - 1;
+                    const cur = this.moved(p, !isLast);
+                    d += `L ${cur.x} ${cur.y}`;
+                });
+                if (paths[lIndex]) paths[lIndex].setAttribute('d', d);
+            });
+        }
+        tick() {
+            if (this.bounding) {
+                this.mouse.sx += (this.mouse.x - this.mouse.sx) * 0.1; this.mouse.sy += (this.mouse.y - this.mouse.sy) * 0.1;
+                const dx = this.mouse.x - this.mouse.lx, dy = this.mouse.y - this.mouse.ly, d = Math.hypot(dx, dy);
+                this.mouse.vs += (d - this.mouse.vs) * 0.1; this.mouse.vs = Math.min(95, this.mouse.vs);
+                this.mouse.lx = this.mouse.x; this.mouse.ly = this.mouse.y; this.mouse.a = Math.atan2(dy, dx);
+                this.movePoints(); this.drawLines();
+            }
+            requestAnimationFrame(this.tick.bind(this));
+        }
+    }
+    if (!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
+
+    const pointer = {
+        container: document.querySelector(".pointer"),
+        current_target: null,
+        init() {
+            window.addEventListener("mousemove", this.move.bind(this));
+            this.bind_targets();
+        },
+        move(e) {
+            let x = e.clientX, y = e.clientY;
+            if (this.current_target) {
+                const rect = this.current_target.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+                x = cx + (x - cx) * 0.1; y = cy + (y - cy) * 0.1;
+            }
+            this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        },
+        bind_targets() {
+            document.querySelectorAll("._target").forEach(el => {
+                el.addEventListener("mouseenter", () => {
+                    this.current_target = el;
+                    const rect = el.getBoundingClientRect(), w = rect.width * 1.1, h = rect.height * 1.3;
+                    this.container.style.setProperty("--width", `${Math.max(28, w)}px`);
+                    this.container.style.setProperty("--height", `${Math.max(28, h)}px`);
+                });
+                el.addEventListener("mouseleave", () => {
+                    this.current_target = null;
+                    this.container.style.setProperty("--width", "26px");
+                    this.container.style.setProperty("--height", "26px");
+                });
+            });
+        }
+    };
+    pointer.init();
+
+    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+    (function crtLoader() {
+        const loaderDiv = document.getElementById('amadeus-loader');
+        const numberSpan = document.getElementById('worldlineNumber');
+        const container = document.getElementById('digitContainer');
+        
+        const finalValue = (Math.random() * 1.8 + 0.2).toFixed(6);
+        currentRate = finalValue;
+        updateWorldlineText();
+
+        let frameCount = 0;
+        let transitionStarted = false;
+        let zoomTriggered = false;
+        let animFrame = null;
+        const startVal = 0;
+        const targetVal = parseFloat(finalValue);
+        
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+        
+        function updateNumber() {
+            if (frameCount < 75) {
+                let progress = frameCount / 75;
+                let ease = easeOutCubic(progress);
+                let noiseRange = 0.8 * (1 - ease) + 0.02;
+                let rawNoise = (Math.random() - 0.5) * noiseRange * 2.2;
+                let centerVal = startVal * (1 - ease) + targetVal * ease;
+                let noisy = centerVal + rawNoise;
+                noisy = Math.min(1.999999, Math.max(0.000001, noisy));
+                numberSpan.innerText = noisy.toFixed(6);
+                frameCount++;
+                animFrame = requestAnimationFrame(updateNumber);
+            } else if (!transitionStarted) {
+                transitionStarted = true;
+                let step = 0;
+                const maxStep = 28;
+                function smooth() {
+                    if (step <= maxStep) {
+                        let t = step / maxStep;
+                        let smoothVal = startVal * (1 - t) + targetVal * t;
+                        numberSpan.innerText = smoothVal.toFixed(6);
+                        step++;
+                        requestAnimationFrame(smooth);
+                    } else {
+                        numberSpan.innerText = finalValue;
+                        currentRate = finalValue;
+                        updateWorldlineText();
+                        setTimeout(() => {
+                            if (!zoomTriggered && loaderDiv) {
+                                zoomTriggered = true;
+                                container.classList.add('digit-zoom-out');
+                                setTimeout(() => {
+                                    loaderDiv.classList.add('loader-hidden');
+                                    setTimeout(() => { if (loaderDiv && loaderDiv.parentNode) loaderDiv.remove(); }, 400);
+                                    if (animFrame) cancelAnimationFrame(animFrame);
+                                }, 550);
+                            }
+                        }, 380);
+                    }
+                }
+                smooth();
+            }
+        }
+        
+        animFrame = requestAnimationFrame(updateNumber);
+        
+        setTimeout(() => {
+            if (!zoomTriggered && loaderDiv && loaderDiv.parentNode) {
+                numberSpan.innerText = finalValue;
+                currentRate = finalValue;
+                updateWorldlineText();
+                container.classList.add('digit-zoom-out');
+                setTimeout(() => {
+                    loaderDiv.classList.add('loader-hidden');
+                    setTimeout(() => { if (loaderDiv && loaderDiv.parentNode) loaderDiv.remove(); }, 400);
+                    if (animFrame) cancelAnimationFrame(animFrame);
+                }, 500);
+            }
+        }, 3500);
+    })();
+
+    window.addEventListener('load', () => {
+        const waves = document.querySelector('a-waves');
+        if (waves && waves.setSize) { waves.setSize(); waves.setLines(); }
+        if (pointer && pointer.bind_targets) { pointer.bind_targets(); }
+        const isLight = document.body.classList.contains('light-mode');
+        setWavesBackground(isLight);
+    });
+</script>
+</body>
+</html>
