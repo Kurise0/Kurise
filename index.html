@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Kurise - About me</title>
+    <title>Kurise - 世界线观测者 | 命运石之门</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,6 +19,8 @@
             --wave-bg-center: rgba(0,20,10,0.3);
             --wave-bg-edge: #000000;
             --header-bg: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,20,10,0.5) 100%);
+            --gallery-card-bg: rgba(12, 18, 24, 0.75);
+            --russet-glow: rgba(200, 70, 20, 0.6);
         }
 
         body.light-mode {
@@ -33,6 +35,8 @@
             --wave-bg-center: rgba(13, 148, 136, 0.08);
             --wave-bg-edge: #f0f4f8;
             --header-bg: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(240,253,244,0.8) 100%);
+            --gallery-card-bg: rgba(245, 250, 250, 0.9);
+            --russet-glow: rgba(180, 80, 30, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,21 +66,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.4s ease;
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             font-family: 'VT323', 'Courier New', monospace;
             overflow: hidden;
+            opacity: 1;
+            visibility: visible;
         }
         .crt-screen {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(180, 60, 20, 0.06) 0px,
-                rgba(180, 60, 20, 0.06) 2px,
-                transparent 2px,
-                transparent 6px
-            );
+            background: repeating-linear-gradient(0deg, rgba(180, 60, 20, 0.06) 0px, rgba(180, 60, 20, 0.06) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
             z-index: 2;
             animation: scanlines 8s linear infinite;
@@ -114,24 +114,24 @@
             font-weight: 700;
             font-size: clamp(4rem, 20vw, 16rem);
             letter-spacing: 0.06em;
-            color: #d35400;
-            text-shadow: 0 0 5px #b84500, 0 0 15px #9a3a00, 0 0 30px #7a2e00;
-            background: linear-gradient(135deg, #ff8c42 0%, #b85c1a 100%);
+            background: linear-gradient(135deg, #c93a0e 0%, #9b3a0a 40%, #732a06 100%);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px #c95a0c;
+            text-shadow: 0 0 12px #b84500, 0 0 20px #7a2e00;
             white-space: nowrap;
             overflow-x: auto;
-            transition: all 0.08s linear;
+            transition: filter 0.08s linear, text-shadow 0.1s ease;
+            filter: blur(8px);
+            opacity: 0.7;
         }
         .digit-zoom-out {
-            animation: zoomPulse 0.65s cubic-bezier(0.2, 1.2, 0.8, 1) forwards !important;
+            animation: zoomPulse 0.7s cubic-bezier(0.2, 1.2, 0.8, 1) forwards !important;
         }
         @keyframes zoomPulse {
-            0% { transform: scale(1); opacity: 1; filter: blur(0px); }
-            40% { transform: scale(1.8); opacity: 0.9; filter: blur(4px); text-shadow: 0 0 40px #ff6a1a; }
-            100% { transform: scale(3.5); opacity: 0; filter: blur(12px); visibility: hidden; }
+            0% { transform: scale(1); opacity: 1; filter: blur(0px); text-shadow: 0 0 15px #d95b0e; }
+            40% { transform: scale(1.6); opacity: 0.9; filter: blur(6px); text-shadow: 0 0 45px #d95b0e; }
+            100% { transform: scale(3.2); opacity: 0; filter: blur(18px); visibility: hidden; }
         }
         @keyframes scanlines {
             0% { background-position: 0 0; }
@@ -140,57 +140,72 @@
         .loader-hidden {
             opacity: 0 !important;
             visibility: hidden !important;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
-        a-waves {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0; pointer-events: none;
-            transition: background 0.5s ease;
+        .main-outer {
+            transform: scale(0);
+            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.2, 0.95, 0.3, 1.1);
+            width: 100%;
+            max-width: 1460px;
+            height: 82vh;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
         }
-        a-waves.dark-bg {
-            background: radial-gradient(circle at 20% 30%, rgba(0, 20, 10, 0.4) 0%, #000000 90%) !important;
-        }
-        a-waves.light-bg {
-            background: radial-gradient(circle at 20% 30%, rgba(13, 148, 136, 0.12) 0%, #f0f4f8 90%) !important;
-        }
-        a-waves svg {
-            width: 100%; height: 100%; filter: drop-shadow(0 0 3px var(--neon-glow));
-        }
-        a-waves svg path {
-            fill: none; stroke: url(#waveGradient); stroke-width: 1.5px;
-            stroke-linecap: round; stroke-linejoin: round; opacity: 0.85;
-        }
-        body.light-mode a-waves svg path {
-            opacity: 0.9;
+        .main-outer.zoomed {
+            transform: scale(1);
         }
 
-        .pointer {
-            --width: 26px; --height: 26px;
-            position: fixed; top: calc(var(--height) / -2); left: calc(var(--width) / -2);
-            width: var(--width); height: var(--height);
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            pointer-events: none; z-index: 9999;
-            filter: drop-shadow(0 0 5px var(--neon-green));
+        .global-flash {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(220,80,30,0.45) 0%, rgba(255,200,100,0) 80%);
+            pointer-events: none;
+            z-index: 10001;
+            opacity: 0;
+            animation: flashBurst 0.5s ease-out forwards;
         }
-        .pointer div {
-            position: absolute; width: 100%; height: 100%;
-            border: 2px solid var(--neon-green); opacity: 0.95;
-            box-shadow: 0 0 8px var(--neon-green); transition: all 0.2s;
-        }
-        .pointer div:nth-child(1) { border-top-style: solid; border-left-style: solid; top: -2px; left: -2px; }
-        .pointer div:nth-child(2) { border-top-style: solid; border-right-style: solid; top: -2px; right: -2px; }
-        .pointer div:nth-child(3) { border-bottom-style: solid; border-left-style: solid; bottom: -2px; left: -2px; }
-        .pointer div:nth-child(4) { border-bottom-style: solid; border-right-style: solid; bottom: -2px; right: -2px; }
-        .pointer::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 3px; height: 3px; background: var(--neon-green);
-            border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 6px var(--neon-green);
+        @keyframes flashBurst {
+            0% { opacity: 0; }
+            15% { opacity: 0.7; }
+            100% { opacity: 0; visibility: hidden; }
         }
 
         .stage {
-            position: relative; z-index: 10; display: flex; align-items: center;
-            gap: 12px; width: 100%; max-width: 1160px; height: 82vh; max-height: 88vh;
+            position: relative; z-index: 10; display: flex; align-items: stretch;
+            gap: 18px; width: 100%; height: 100%;
+        }
+
+        .main-outer.zoomed .links a,
+        .main-outer.zoomed .links button {
+            animation: fadeSlideIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2) backwards;
+        }
+        .main-outer.zoomed .container {
+            animation: fadeSlideUp 0.55s ease-out 0.08s backwards;
+        }
+        .main-outer.zoomed .gallery-sidebar {
+            animation: fadeSlideUp 0.55s ease-out 0.18s backwards;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); filter: blur(6px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .links a, .links button {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .main-outer.zoomed .links a, .main-outer.zoomed .links button {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
         }
 
         .links {
@@ -253,12 +268,85 @@
             padding: 12px 0 4px; position: relative;
         }
         body:not(.light-mode) .hero { background: rgba(0, 0, 0, 0.35); }
-        .hero img {
-            width: 90%; max-width: 520px; height: auto; max-height: 150px; 
-            object-fit: contain; filter: drop-shadow(0 0 15px var(--neon-glow));
-            transition: transform 0.3s; border-radius: 20px;
+        
+        .carousel-container {
+            position: relative;
+            width: 75%;
+            max-width: 460px;
+            margin: 0 auto;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.2s;
         }
-        .hero img:hover { transform: scale(1.01); }
+        .carousel-slides {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 800 / 300;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .carousel-slide a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: none;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 8px var(--neon-glow));
+        }
+        .carousel-slide a:hover img {
+            transform: scale(1.02);
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 20;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 10px;
+            transition: all 0.2s;
+            cursor: none;
+            border: none;
+            padding: 0;
+        }
+        .dot.active {
+            width: 24px;
+            background: var(--neon-green);
+            box-shadow: 0 0 6px var(--neon-glow);
+        }
+        @media (max-width: 850px) {
+            .carousel-container { width: 80%; max-width: 380px; }
+        }
+        @media (max-width: 550px) {
+            .carousel-container { width: 85%; max-width: 320px; }
+        }
 
         .content {
             flex: 1; padding: 24px 50px; max-width: 850px; margin: 0 auto; width: 100%;
@@ -294,26 +382,194 @@
         .worldline {
             position: absolute; bottom: 20px; right: 28px; font-family: 'VT323', monospace;
             font-size: 12px; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 30px;
-            backdrop-filter: blur(4px); color: var(--neon-green); letter-spacing: 1px; z-index: 15;
-            pointer-events: none; border-left: 2px solid var(--neon-green);
+            backdrop-filter: blur(4px); color: #d85a1a; letter-spacing: 1px; z-index: 15;
+            pointer-events: none; border-left: 2px solid #c93a0e; text-shadow: 0 0 5px #b83e0a;
         }
-        body.light-mode .worldline { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-left: 2px solid var(--neon-green); }
+        body.light-mode .worldline { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-left: 2px solid #c93a0e; color:#b04510;}
 
+        .gallery-sidebar {
+            flex-shrink: 0;
+            width: 400px;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2), 0 0 15px var(--neon-glow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .gallery-header {
+            padding: 12px 12px 0px 12px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            cursor: none;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+        }
+        .tab-btn.active {
+            color: var(--neon-green);
+            border-bottom-color: var(--neon-green);
+            text-shadow: 0 0 6px var(--neon-glow);
+        }
+        .tab-btn:hover {
+            color: var(--neon-green);
+            background: rgba(0,255,157,0.1);
+        }
+        .vertical-card-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .vertical-card-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .vertical-card-list::-webkit-scrollbar-thumb {
+            background: var(--neon-green);
+            border-radius: 8px;
+        }
+        .cert-card {
+            background: var(--gallery-card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            cursor: pointer;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0;
+            min-height: 130px;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        .main-outer.zoomed .cert-card {
+            animation: cardRise 0.4s ease-out forwards;
+        }
+        @keyframes cardRise {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cert-card:hover {
+            transform: translateX(-5px) scale(1.02);
+            border-color: var(--neon-green);
+            box-shadow: 0 8px 20px var(--neon-glow), 0 0 0 1px var(--neon-green) inset;
+        }
+        .card-img {
+            width: 105px;
+            height: 90px;
+            flex-shrink: 0;
+            object-fit: contain;
+            background: #0a0f14;
+            padding: 4px;
+        }
+        body.light-mode .card-img {
+            background: #eef2f5;
+        }
+        .card-textbox {
+            flex: 1;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.65);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            word-break: break-word;
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
+        body.light-mode .card-textbox {
+            background: rgba(235, 245, 250, 0.9);
+        }
+        .card-rank {
+            font-family: 'VT323', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-green);
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            color: var(--text-color);
+        }
+        .card-meta {
+            font-size: 0.65rem;
+            opacity: 0.8;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+        .card-full-desc {
+            font-size: 0.65rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            padding-top: 4px;
+            border-top: 1px dashed rgba(0,255,157,0.3);
+            color: var(--cyan);
+            line-height: 1.3;
+        }
+        .cert-card:hover .card-textbox {
+            background: rgba(0, 20, 10, 0.9);
+        }
+        body.light-mode .cert-card:hover .card-textbox {
+            background: rgba(200, 240, 230, 0.95);
+        }
+
+        @media (max-width: 1100px) {
+            .gallery-sidebar { width: 360px; }
+            .card-img { width: 95px; height: 80px; }
+        }
         @media (max-width: 850px) {
             body { padding: 10px; }
-            .stage { flex-direction: column; height: 90vh; max-height: 94vh; gap: 0; }
-            .links { flex-direction: row; justify-content: center; flex-wrap: wrap; width: 100%; margin-bottom: 12px; gap: 10px; }
-            .links a, .links button { width: auto; font-size: 13px; border-left-width: 1px; border-bottom: 2px solid var(--neon-green); border-radius: 20px; padding: 6px 16px; }
-            .links a:hover, .links button:hover { transform: translateY(-3px); }
+            .main-outer { height: auto; max-height: none; }
+            .stage { flex-direction: column; height: auto; max-height: none; gap: 14px; overflow-y: auto; }
+            .links { flex-direction: row; justify-content: center; flex-wrap: wrap; width: 100%; margin-bottom: 4px; gap: 8px; }
+            .links a, .links button { width: auto; font-size: 12px; padding: 6px 14px; border-left-width: 1px; border-bottom: 2px solid var(--neon-green); border-radius: 30px; }
+            .container { height: auto; min-height: 440px; }
+            .gallery-sidebar { width: 100%; height: auto; max-height: 400px; margin-top: 8px; }
+            .vertical-card-list { flex-direction: row; overflow-x: auto; gap: 14px; padding: 12px; }
+            .cert-card { min-width: 280px; flex-shrink: 0; }
+            .card-img { width: 90px; height: 75px; }
         }
-        @media (max-width: 500px) {
-            .content { padding: 16px 20px; }
-            .stage { height: 92vh; }
-        }
+        a-waves { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; transition: background 0.5s ease; }
+        a-waves.dark-bg { background: radial-gradient(circle at 20% 30%, rgba(0, 20, 10, 0.4) 0%, #000000 90%) !important; }
+        a-waves.light-bg { background: radial-gradient(circle at 20% 30%, rgba(13, 148, 136, 0.12) 0%, #f0f4f8 90%) !important; }
+        a-waves svg { width: 100%; height: 100%; filter: drop-shadow(0 0 3px var(--neon-glow)); }
+        a-waves svg path { fill: none; stroke: url(#waveGradient); stroke-width: 1.5px; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+        .pointer { --width: 26px; --height: 26px; position: fixed; top: calc(var(--height) / -2); left: calc(var(--width) / -2); width: var(--width); height: var(--height); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); pointer-events: none; z-index: 9999; filter: drop-shadow(0 0 5px var(--neon-green)); }
+        .pointer div { position: absolute; width: 100%; height: 100%; border: 2px solid var(--neon-green); opacity: 0.95; box-shadow: 0 0 8px var(--neon-green); transition: all 0.2s; }
+        .pointer div:nth-child(1) { border-top-style: solid; border-left-style: solid; top: -2px; left: -2px; }
+        .pointer div:nth-child(2) { border-top-style: solid; border-right-style: solid; top: -2px; right: -2px; }
+        .pointer div:nth-child(3) { border-bottom-style: solid; border-left-style: solid; bottom: -2px; left: -2px; }
+        .pointer div:nth-child(4) { border-bottom-style: solid; border-right-style: solid; bottom: -2px; right: -2px; }
+        .pointer::after { content: ''; position: absolute; top: 50%; left: 50%; width: 3px; height: 3px; background: var(--neon-green); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 6px var(--neon-green); }
     </style>
 </head>
 <body>
-
 <div id="amadeus-loader">
     <div class="crt-screen"></div>
     <div class="crt-noise"></div>
@@ -322,347 +578,47 @@
         <div class="worldline-number" id="worldlineNumber">0.000000</div>
     </div>
 </div>
-
-<a-waves>
-    <svg>
-        <defs>
-            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop id="stop1" offset="0%" stop-color="#00ff9d" stop-opacity="0.85" />
-                <stop id="stop2" offset="50%" stop-color="#3effb3" stop-opacity="0.95" />
-                <stop id="stop3" offset="100%" stop-color="#00e5ff" stop-opacity="0.7" />
-            </linearGradient>
-        </defs>
-    </svg>
-</a-waves>
-
-<div class="pointer">
-    <div></div><div></div><div></div><div></div>
-</div>
-
-<div class="stage">
-    <div class="links">
-        <button id="theme-toggle" class="_target">THEME</button>
-        <button id="lang-toggle" class="_target">EN / 中</button>
-        <a href="https://www.kaggle.com/kurisew" target="_blank" class="_target">KAGGLE</a>
-        <a href="https://github.com/Kurise0" target="_blank" class="_target">GITHUB</a>
-        <a href="https://x.com/KURISEW" target="_blank" class="_target">X (TWITTER)</a>
-        <a href="https://www.linkedin.com/in/%E5%8A%9B%E7%AB%8B-%E9%BE%99-7b41a9367" target="_blank" class="_target">LINKEDIN</a>
-    </div>
-
-    <div class="container">
-        <header>
-            <h1>Kurise</h1>
-            <div class="subtitle" id="worldline-header">世界线变动率</div>
-        </header>
-
-        <div class="hero">
-            <a href="https://steinsgate.jp/" target="_blank" class="_target" style="display: inline-block; border-radius: 20px;">
-                <img src="images/topimage.jpg" alt="Steins;Gate Gate of Steiner" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 800 300\'%3E%3Crect width=\'800\' height=\'300\' fill=\'%23000\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'26\' font-family=\'monospace\' fill=\'%2300ff9d\' text-anchor=\'middle\' dy=\'.3em\'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E';">
-            </a>
-        </div>
-
-        <div class="content">
-            <h2 data-i18n="heading">世界观测者档案</h2>
-            <p data-i18n="p1">你好，我是<strong>龙力立</strong>, 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong></p>
-            <p data-i18n="p2">在校本科生，目前专注于<strong class="highlight">机器学习</strong>与<strong class="highlight">数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class="highlight">Kaggle Master</strong> 成就。</p>
-            <p data-i18n="p3">喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。</p>
-        </div>
-
-        <footer>
-            <span data-i18n="footer">Kurise © 未来道具研究所 • Last updated: </span><span id="last-updated"></span>
-        </footer>
-        <div class="worldline" id="worldline-footer">世界线变动率: </div>
-    </div>
-</div>
-
+<a-waves><svg><defs><linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop id="stop1" offset="0%" stop-color="#00ff9d"/><stop id="stop2" offset="50%" stop-color="#3effb3"/><stop id="stop3" offset="100%" stop-color="#00e5ff"/></linearGradient></defs></svg></a-waves>
+<div class="pointer"><div></div><div></div><div></div><div></div></div>
+<div class="main-outer" id="mainOuter"><div class="stage"><div class="links"><button id="theme-toggle" class="_target">THEME</button><button id="lang-toggle" class="_target">EN / 中</button><a href="https://www.kaggle.com/kurisew" target="_blank" class="_target">KAGGLE</a><a href="https://github.com/Kurise0" target="_blank" class="_target">GITHUB</a><a href="https://x.com/KURISEW" target="_blank" class="_target">X (TWITTER)</a><a href="https://www.linkedin.com/in/%E5%8A%9B%E7%AB%8B-%E9%BE%99-7b41a9367" target="_blank" class="_target">LINKEDIN</a></div><div class="container"><header><h1>Kurise</h1><div class="subtitle" id="worldline-header">世界线变动率</div></header><div class="hero"><div class="carousel-container" id="carousel"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-dots" id="carouselDots"></div></div></div><div class="content"><h2 data-i18n="heading">世界观测者档案</h2><p data-i18n="p1">你好，我是<strong>龙力立</strong>, 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong></p><p data-i18n="p2">在校本科生，目前专注于<strong class="highlight">机器学习</strong>与<strong class="highlight">数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class="highlight">Kaggle Competition Master</strong> 成就。</p><p data-i18n="p3">喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。</p></div><footer><span data-i18n="footer">Kurise • Last updated: </span><span id="last-updated"></span></footer><div class="worldline" id="worldline-footer">世界线变动率: </div></div><div class="gallery-sidebar"><div class="gallery-header" id="tabHeader"><button class="tab-btn active" data-tab="competition" data-i18n-tab="competition">Competition</button><button class="tab-btn" data-tab="projects" data-i18n-tab="projects">Projects</button><button class="tab-btn" data-tab="papers" data-i18n-tab="papers">Papers</button></div><div class="vertical-card-list" id="galleryList"></div></div></div></div>
 <script>
-    let currentLang = 'zh';
-    let currentRate = '0.000000'; 
-
-    const i18n = {
-        zh: {
-            heading: "世界观测者档案",
-            p1: "你好，我是<strong>龙力立</strong>， 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong>",
-            p2: "在校本科生，目前专注于<strong class='highlight'>机器学习</strong>与<strong class='highlight'>数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class='highlight'>Kaggle Competition Master</strong> 成就。",
-            p3: "喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。",
-            footer: "Kurise © 未来道具研究所 • Last updated: ",
-            worldlineH: "世界线变动率",
-            worldlineF: "世界线变动率: "
-        },
-        en: {
-            heading: "World Observer Archives",
-            p1: "Hello, I am <strong>Lili Long</strong>, Online nickname<strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Kurisu Makise</strong> from <strong>Steins;Gate</strong>",
-            p2: "A undergraduate student currently focusing on <strong class='highlight'>Machine Learning</strong> and <strong class='highlight'>Data Science</strong>.<br>Passionate about Kaggle competitions, proud <strong class='highlight'>Kaggle Competition Master</strong>.",
-            p3: "I love turning complex problems into practical solutions and exploring cutting-edge tech. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.",
-            footer: "Kurise © Future Gadget Lab • Last updated: ",
-            worldlineH: "Divergence Meter",
-            worldlineF: "Divergence Ratio: "
-        }
-    };
-
-    const stop1 = document.getElementById('stop1');
-    const stop2 = document.getElementById('stop2');
-    const stop3 = document.getElementById('stop3');
-
-    function setWavesBackground(lightMode) {
-        const waves = document.querySelector('a-waves');
-        if (!waves) return;
-        if (lightMode) {
-            waves.classList.remove('dark-bg');
-            waves.classList.add('light-bg');
-        } else {
-            waves.classList.remove('light-bg');
-            waves.classList.add('dark-bg');
-        }
-    }
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        
-        if (isLight) {
-            stop1.setAttribute('stop-color', '#0d9488');
-            stop2.setAttribute('stop-color', '#14b8a6');
-            stop3.setAttribute('stop-color', '#06b6d4');
-        } else {
-            stop1.setAttribute('stop-color', '#00ff9d');
-            stop2.setAttribute('stop-color', '#3effb3');
-            stop3.setAttribute('stop-color', '#00e5ff');
-        }
-        
-        setWavesBackground(isLight);
-    });
-
-    document.getElementById('lang-toggle').addEventListener('click', () => {
-        currentLang = currentLang === 'zh' ? 'en' : 'zh';
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (i18n[currentLang][key]) {
-                el.innerHTML = i18n[currentLang][key];
-            }
-        });
-        updateWorldlineText();
-    });
-
-    function updateWorldlineText() {
-        document.getElementById('worldline-header').innerText = `${i18n[currentLang].worldlineH} ${currentRate}%`;
-        document.getElementById('worldline-footer').innerText = `${i18n[currentLang].worldlineF}${currentRate}%`;
-    }
-
-    class AWaves extends HTMLElement {
-        connectedCallback() {
-            this.svg = this.querySelector('svg');
-            this.mouse = { x: 0, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0 };
-            this.lines = []; this.paths = [];
-            this.bindEvents(); this.setSize(); this.setLines();
-            requestAnimationFrame(this.tick.bind(this));
-        }
-        bindEvents() {
-            window.addEventListener('resize', () => { this.setSize(); this.setLines(); });
-            const update = (x, y) => {
-                if (!this.bounding) return;
-                this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top;
-            };
-            window.addEventListener('mousemove', e => update(e.clientX, e.clientY));
-            window.addEventListener('touchmove', e => { if(e.touches.length) update(e.touches[0].clientX, e.touches[0].clientY); });
-            window.addEventListener('touchstart', e => { if(e.touches.length) update(e.touches[0].clientX, e.touches[0].clientY); });
-        }
-        setSize() {
-            this.bounding = this.getBoundingClientRect();
-            this.svg.style.width = `${this.bounding.width}px`;
-            this.svg.style.height = `${this.bounding.height}px`;
-        }
-        setLines() {
-            const { width, height } = this.bounding;
-            if (width === 0 || height === 0) return;
-            this.lines = []; this.paths.forEach(p => p.remove()); this.paths = [];
-            const xGap = 10, yGap = 28, oWidth = width + 200, oHeight = height + 40;
-            const totalLines = Math.ceil(oWidth / xGap), totalPoints = Math.ceil(oHeight / yGap);
-            const xStart = (width - xGap * totalLines) / 2, yStart = (height - yGap * totalPoints) / 2;
-            for (let i = 0; i <= totalLines; i++) {
-                const points = [];
-                for (let j = 0; j <= totalPoints; j++) {
-                    points.push({ x: xStart + xGap * i, y: yStart + yGap * j, cursor: { x: 0, y: 0, vx: 0, vy: 0 } });
-                }
-                this.lines.push(points);
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('stroke', 'url(#waveGradient)');
-                this.svg.appendChild(path); this.paths.push(path);
-            }
-        }
-        movePoints() {
-            const { lines, mouse } = this;
-            if (!lines.length) return;
-            lines.forEach(points => {
-                points.forEach(p => {
-                    const dx = p.x - mouse.sx, dy = p.y - mouse.sy, d = Math.hypot(dx, dy), l = Math.max(160, mouse.vs);
-                    if (d < l) {
-                        const f = 1 - d / l;
-                        p.cursor.vx += Math.cos(mouse.a) * f * mouse.vs * 0.072;
-                        p.cursor.vy += Math.sin(mouse.a) * f * mouse.vs * 0.072;
-                    }
-                    p.cursor.vx += (0 - p.cursor.x) * 0.006; p.cursor.vy += (0 - p.cursor.y) * 0.006;
-                    p.cursor.vx *= 0.93; p.cursor.vy *= 0.93;
-                    p.cursor.x += p.cursor.vx * 1.9; p.cursor.y += p.cursor.vy * 1.9;
-                    p.cursor.x = Math.min(90, Math.max(-90, p.cursor.x)); p.cursor.y = Math.min(90, Math.max(-90, p.cursor.y));
-                });
-            });
-        }
-        moved(point, withCursorForce = true) {
-            return {
-                x: Math.round((point.x + (withCursorForce ? point.cursor.x : 0)) * 10) / 10,
-                y: Math.round((point.y + (withCursorForce ? point.cursor.y : 0)) * 10) / 10,
-            };
-        }
-        drawLines() {
-            const { lines, paths } = this;
-            if (!lines.length) return;
-            lines.forEach((points, lIndex) => {
-                if (!points.length) return;
-                let p1 = this.moved(points[0], false), d = `M ${p1.x} ${p1.y}`;
-                points.forEach((p, idx) => {
-                    const isLast = idx === points.length - 1;
-                    const cur = this.moved(p, !isLast);
-                    d += `L ${cur.x} ${cur.y}`;
-                });
-                if (paths[lIndex]) paths[lIndex].setAttribute('d', d);
-            });
-        }
-        tick() {
-            if (this.bounding) {
-                this.mouse.sx += (this.mouse.x - this.mouse.sx) * 0.1; this.mouse.sy += (this.mouse.y - this.mouse.sy) * 0.1;
-                const dx = this.mouse.x - this.mouse.lx, dy = this.mouse.y - this.mouse.ly, d = Math.hypot(dx, dy);
-                this.mouse.vs += (d - this.mouse.vs) * 0.1; this.mouse.vs = Math.min(95, this.mouse.vs);
-                this.mouse.lx = this.mouse.x; this.mouse.ly = this.mouse.y; this.mouse.a = Math.atan2(dy, dx);
-                this.movePoints(); this.drawLines();
-            }
-            requestAnimationFrame(this.tick.bind(this));
-        }
-    }
-    if (!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
-
-    const pointer = {
-        container: document.querySelector(".pointer"),
-        current_target: null,
-        init() {
-            window.addEventListener("mousemove", this.move.bind(this));
-            this.bind_targets();
-        },
-        move(e) {
-            let x = e.clientX, y = e.clientY;
-            if (this.current_target) {
-                const rect = this.current_target.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
-                x = cx + (x - cx) * 0.1; y = cy + (y - cy) * 0.1;
-            }
-            this.container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        },
-        bind_targets() {
-            document.querySelectorAll("._target").forEach(el => {
-                el.addEventListener("mouseenter", () => {
-                    this.current_target = el;
-                    const rect = el.getBoundingClientRect(), w = rect.width * 1.1, h = rect.height * 1.3;
-                    this.container.style.setProperty("--width", `${Math.max(28, w)}px`);
-                    this.container.style.setProperty("--height", `${Math.max(28, h)}px`);
-                });
-                el.addEventListener("mouseleave", () => {
-                    this.current_target = null;
-                    this.container.style.setProperty("--width", "26px");
-                    this.container.style.setProperty("--height", "26px");
-                });
-            });
-        }
-    };
-    pointer.init();
-
-    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-    (function crtLoader() {
-        const loaderDiv = document.getElementById('amadeus-loader');
-        const numberSpan = document.getElementById('worldlineNumber');
-        const container = document.getElementById('digitContainer');
-        
-        const finalValue = (Math.random() * 1.8 + 0.2).toFixed(6);
-        currentRate = finalValue;
-        updateWorldlineText();
-
-        let frameCount = 0;
-        let transitionStarted = false;
-        let zoomTriggered = false;
-        let animFrame = null;
-        const startVal = 0;
-        const targetVal = parseFloat(finalValue);
-        
-        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-        
-        function updateNumber() {
-            if (frameCount < 75) {
-                let progress = frameCount / 75;
-                let ease = easeOutCubic(progress);
-                let noiseRange = 0.8 * (1 - ease) + 0.02;
-                let rawNoise = (Math.random() - 0.5) * noiseRange * 2.2;
-                let centerVal = startVal * (1 - ease) + targetVal * ease;
-                let noisy = centerVal + rawNoise;
-                noisy = Math.min(1.999999, Math.max(0.000001, noisy));
-                numberSpan.innerText = noisy.toFixed(6);
-                frameCount++;
-                animFrame = requestAnimationFrame(updateNumber);
-            } else if (!transitionStarted) {
-                transitionStarted = true;
-                let step = 0;
-                const maxStep = 28;
-                function smooth() {
-                    if (step <= maxStep) {
-                        let t = step / maxStep;
-                        let smoothVal = startVal * (1 - t) + targetVal * t;
-                        numberSpan.innerText = smoothVal.toFixed(6);
-                        step++;
-                        requestAnimationFrame(smooth);
-                    } else {
-                        numberSpan.innerText = finalValue;
-                        currentRate = finalValue;
-                        updateWorldlineText();
-                        setTimeout(() => {
-                            if (!zoomTriggered && loaderDiv) {
-                                zoomTriggered = true;
-                                container.classList.add('digit-zoom-out');
-                                setTimeout(() => {
-                                    loaderDiv.classList.add('loader-hidden');
-                                    setTimeout(() => { if (loaderDiv && loaderDiv.parentNode) loaderDiv.remove(); }, 400);
-                                    if (animFrame) cancelAnimationFrame(animFrame);
-                                }, 550);
-                            }
-                        }, 380);
-                    }
-                }
-                smooth();
-            }
-        }
-        
-        animFrame = requestAnimationFrame(updateNumber);
-        
-        setTimeout(() => {
-            if (!zoomTriggered && loaderDiv && loaderDiv.parentNode) {
-                numberSpan.innerText = finalValue;
-                currentRate = finalValue;
-                updateWorldlineText();
-                container.classList.add('digit-zoom-out');
-                setTimeout(() => {
-                    loaderDiv.classList.add('loader-hidden');
-                    setTimeout(() => { if (loaderDiv && loaderDiv.parentNode) loaderDiv.remove(); }, 400);
-                    if (animFrame) cancelAnimationFrame(animFrame);
-                }, 500);
-            }
-        }, 3500);
-    })();
-
-    window.addEventListener('load', () => {
-        const waves = document.querySelector('a-waves');
-        if (waves && waves.setSize) { waves.setSize(); waves.setLines(); }
-        if (pointer && pointer.bind_targets) { pointer.bind_targets(); }
-        const isLight = document.body.classList.contains('light-mode');
-        setWavesBackground(isLight);
-    });
+    const COMPETITIONS_DATA_ZH = [
+        { img: "images/header1.png", rank: "943支队伍中第7名", title: "图像匹配挑战赛 2025", publisher: "Kaggle · 2025年6月", fullDetail: "第7名 (943支队伍) · 图像检索和3D重建", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
+        { img: "images/header5.jpg", rank: "1147支队伍中第37名", title: "RSNA 颅内动脉瘤检测", publisher: "Kaggle · 2025年10月", fullDetail: "第37名 (1147支队伍) · 医学影像动脉瘤检测", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
+        { img: "images/header4.png", rank: "2445支队伍中第49名", title: "Jigsaw - 敏捷社区规则分类", publisher: "Kaggle · 2025年10月", fullDetail: "第49名 (2445支队伍) · NLP 内容审核", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
+        { img: "images/header3.jpg", rank: "1857支队伍中第95名", title: "MAP - 学生数学误解分析", publisher: "Kaggle · 2025年10月", fullDetail: "第95名 (1857支队伍) · NLP 教育", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
+        { img: "images/header2.png", rank: "2657支队伍中第100名", title: "CMI - 传感器行为检测", publisher: "Kaggle · 2025年9月", fullDetail: "第100名 (2657支队伍) · 传感器多模态时序分析", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
+        { img: "images/header6.jpg", rank: "1455支队伍中第82名", title: "ARC Prize 2025", publisher: "Kaggle · 2025年12月", fullDetail: "第82名 (1455支队伍) · 抽象推理挑战", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
+    ];
+    const COMPETITIONS_DATA_EN = [
+        { img: "images/header1.png", rank: "7th out of 943 teams", title: "Image Matching Challenge 2025", publisher: "Kaggle · June 2025", fullDetail: "7th place among 943 teams · Image retrieval & 3D reconstruction", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
+        { img: "images/header5.jpg", rank: "37th out of 1147 teams", title: "RSNA Intracranial Aneurysm Detection", publisher: "Kaggle · Oct 2025", fullDetail: "37th place among 1147 teams · Medical imaging aneurysm detection", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
+        { img: "images/header4.png", rank: "49th out of 2445 teams", title: "Jigsaw - Agile Community Rules Classification", publisher: "Kaggle · Oct 2025", fullDetail: "49th place among 2445 teams · NLP content moderation", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
+        { img: "images/header3.jpg", rank: "95th out of 1857 teams", title: "MAP - Charting Student Math Misunderstandings", publisher: "Kaggle · Oct 2025", fullDetail: "95th place among 1857 teams · NLP education", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
+        { img: "images/header2.png", rank: "100th out of 2657 teams", title: "CMI - Detect Behavior with Sensor Data", publisher: "Kaggle · Sep 2025", fullDetail: "100th place among 2657 teams · Sensor multimodal time-series analysis", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
+        { img: "images/header6.jpg", rank: "82nd out of 1455 teams", title: "ARC Prize 2025", publisher: "Kaggle · Dec 2025", fullDetail: "82nd place among 1455 teams · Abstract reasoning challenge", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
+    ];
+    const PROJECTS_DATA_ZH = [{ img: "images/eridanus.svg", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" }];
+    const PROJECTS_DATA_EN = [{ img: "images/eridanus.svg", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }];
+    const PAPERS_DATA = [];
+    let currentTab = 'competition', currentLang = 'zh', currentRate = '0.000000';
+    const i18n = { zh: { heading: "世界观测者档案", p1: "你好，我是<strong>龙力立</strong>， 网名<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖</strong>", p2: "在校本科生，目前专注于<strong class='highlight'>机器学习</strong>与<strong class='highlight'>数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，已获得 <strong class='highlight'>Kaggle Competition Master</strong> 成就。", p3: "喜欢将复杂问题转化为可落地解决方案，也热爱探索前沿技术。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。", footer: "Kurise • 最后更新: ", worldlineH: "世界线变动率", worldlineF: "世界线变动率: ", competition: "竞赛", projects: "项目", papers: "论文", noPapers: "暂无论文" }, en: { heading: "World Observer Archives", p1: "Hello, I am <strong>Lili Long</strong>, online nickname <strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Kurisu Makise</strong> from <strong>Steins;Gate</strong>", p2: "A undergraduate student currently focusing on <strong class='highlight'>Machine Learning</strong> and <strong class='highlight'>Data Science</strong>.<br>Passionate about Kaggle competitions, proud <strong class='highlight'>Kaggle Competition Master</strong>.", p3: "I love turning complex problems into practical solutions and exploring cutting-edge tech. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.", footer: "Kurise © Future Gadget Lab • Last updated: ", worldlineH: "Divergence Meter", worldlineF: "Divergence Ratio: ", competition: "Competition", projects: "Projects", papers: "Papers", noPapers: "No papers yet" } };
+    function updateWorldlineText() { document.getElementById('worldline-header').innerText = `${i18n[currentLang].worldlineH} ${currentRate}%`; document.getElementById('worldline-footer').innerText = `${i18n[currentLang].worldlineF}${currentRate}%`; }
+    function setWavesBackground(lightMode) { const waves = document.querySelector('a-waves'); if(waves) lightMode ? (waves.classList.remove('dark-bg'), waves.classList.add('light-bg')) : (waves.classList.remove('light-bg'), waves.classList.add('dark-bg')); }
+    function createCardElement(imgSrc, rankText, titleText, metaText, descText, linkUrl) { const cardDiv = document.createElement('div'); cardDiv.className = 'cert-card _target'; cardDiv.addEventListener('click', (e) => { e.stopPropagation(); if(linkUrl) window.open(linkUrl, '_blank'); }); const img = document.createElement('img'); img.src = imgSrc; img.className = 'card-img'; img.loading = 'lazy'; img.onerror = function() { this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231a1f26'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='14' text-anchor='middle' dy='.3em'%3EKurise%3C/text%3E%3C/svg%3E"; }; const textBox = document.createElement('div'); textBox.className = 'card-textbox'; const rankSpan = document.createElement('div'); rankSpan.className = 'card-rank'; rankSpan.innerText = rankText; const titleSpan = document.createElement('div'); titleSpan.className = 'card-title'; titleSpan.innerText = titleText; const metaSpan = document.createElement('div'); metaSpan.className = 'card-meta'; metaSpan.innerText = metaText; const fullDescSpan = document.createElement('div'); fullDescSpan.className = 'card-full-desc'; fullDescSpan.innerText = descText; textBox.append(rankSpan, titleSpan, metaSpan, fullDescSpan); cardDiv.append(img, textBox); return cardDiv; }
+    function renderContent(tab) { const container = document.getElementById('galleryList'); if(!container) return; container.innerHTML = ''; if(tab === 'competition') { (currentLang === 'zh' ? COMPETITIONS_DATA_ZH : COMPETITIONS_DATA_EN).forEach(c => container.appendChild(createCardElement(c.img, c.rank, c.title, c.publisher, c.fullDetail, c.url))); } else if(tab === 'projects') { (currentLang === 'zh' ? PROJECTS_DATA_ZH : PROJECTS_DATA_EN).forEach(p => container.appendChild(createCardElement(p.img, p.rank, p.title, p.publisher, p.fullDetail, p.url))); } else { const msgDiv = document.createElement('div'); msgDiv.style.cssText = 'text-align:center; padding:32px 16px; color:var(--text-muted); font-family:VT323;'; msgDiv.innerText = i18n[currentLang].noPapers; container.appendChild(msgDiv); } }
+    function initTabs() { document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => { currentTab = btn.getAttribute('data-tab'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderContent(currentTab); }); }); }
+    function updateTabButtonTexts() { document.querySelectorAll('.tab-btn').forEach(btn => { const key = btn.getAttribute('data-tab'); if(key && i18n[currentLang][key]) btn.innerText = i18n[currentLang][key]; }); }
+    document.getElementById('theme-toggle')?.addEventListener('click', () => { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); const stops = [document.getElementById('stop1'), document.getElementById('stop2'), document.getElementById('stop3')]; if(isLight){ stops[0]?.setAttribute('stop-color','#0d9488'); stops[1]?.setAttribute('stop-color','#14b8a6'); stops[2]?.setAttribute('stop-color','#06b6d4'); } else{ stops[0]?.setAttribute('stop-color','#00ff9d'); stops[1]?.setAttribute('stop-color','#3effb3'); stops[2]?.setAttribute('stop-color','#00e5ff'); } setWavesBackground(isLight); });
+    document.getElementById('lang-toggle')?.addEventListener('click', () => { currentLang = currentLang === 'zh' ? 'en' : 'zh'; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(i18n[currentLang][key]) el.innerHTML = i18n[currentLang][key]; }); updateTabButtonTexts(); updateWorldlineText(); renderContent(currentTab); });
+    class AWaves extends HTMLElement { connectedCallback() { this.svg = this.querySelector('svg'); this.mouse = { x:0,y:0,lx:0,ly:0,sx:0,sy:0,v:0,vs:0,a:0 }; this.lines = []; this.paths = []; this.bindEvents(); this.setSize(); this.setLines(); requestAnimationFrame(this.tick.bind(this)); } bindEvents() { window.addEventListener('resize',()=>{ this.setSize(); this.setLines(); }); const upd = (x,y)=>{ if(!this.bounding) return; this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top; }; window.addEventListener('mousemove',e=>upd(e.clientX,e.clientY)); window.addEventListener('touchmove',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); window.addEventListener('touchstart',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); } setSize() { this.bounding = this.getBoundingClientRect(); this.svg.style.width = `${this.bounding.width}px`; this.svg.style.height = `${this.bounding.height}px`; } setLines() { const {width,height}=this.bounding; if(width===0||height===0) return; this.lines = []; this.paths.forEach(p=>p.remove()); this.paths=[]; const xGap=10,yGap=28,oWidth=width+200,oHeight=height+40; const totalLines=Math.ceil(oWidth/xGap), totalPoints=Math.ceil(oHeight/yGap); const xStart=(width-xGap*totalLines)/2, yStart=(height-yGap*totalPoints)/2; for(let i=0;i<=totalLines;i++){ const points=[]; for(let j=0;j<=totalPoints;j++) points.push({ x:xStart+xGap*i, y:yStart+yGap*j, cursor:{x:0,y:0,vx:0,vy:0} }); this.lines.push(points); const path = document.createElementNS('http://www.w3.org/2000/svg','path'); path.setAttribute('stroke','url(#waveGradient)'); this.svg.appendChild(path); this.paths.push(path); } } movePoints() { const {lines,mouse}=this; if(!lines.length) return; lines.forEach(points=>points.forEach(p=>{ const dx=p.x-mouse.sx, dy=p.y-mouse.sy, d=Math.hypot(dx,dy), l=Math.max(160,mouse.vs); if(d<l){ const f=1-d/l; p.cursor.vx+=Math.cos(mouse.a)*f*mouse.vs*0.072; p.cursor.vy+=Math.sin(mouse.a)*f*mouse.vs*0.072; } p.cursor.vx+=(0-p.cursor.x)*0.006; p.cursor.vy+=(0-p.cursor.y)*0.006; p.cursor.vx*=0.93; p.cursor.vy*=0.93; p.cursor.x+=p.cursor.vx*1.9; p.cursor.y+=p.cursor.vy*1.9; p.cursor.x=Math.min(90,Math.max(-90,p.cursor.x)); p.cursor.y=Math.min(90,Math.max(-90,p.cursor.y)); })); } moved(point, withCursorForce=true) { return { x:Math.round((point.x+(withCursorForce?point.cursor.x:0))*10)/10, y:Math.round((point.y+(withCursorForce?point.cursor.y:0))*10)/10 }; } drawLines() { const {lines,paths}=this; if(!lines.length) return; lines.forEach((points,lIndex)=>{ if(!points.length) return; let p1=this.moved(points[0],false), d=`M ${p1.x} ${p1.y}`; points.forEach((p,idx)=>{ const isLast=idx===points.length-1; const cur=this.moved(p,!isLast); d+=`L ${cur.x} ${cur.y}`; }); if(paths[lIndex]) paths[lIndex].setAttribute('d',d); }); } tick() { if(this.bounding){ this.mouse.sx+=(this.mouse.x-this.mouse.sx)*0.1; this.mouse.sy+=(this.mouse.y-this.mouse.sy)*0.1; const dx=this.mouse.x-this.mouse.lx, dy=this.mouse.y-this.mouse.ly, d=Math.hypot(dx,dy); this.mouse.vs+=(d-this.mouse.vs)*0.1; this.mouse.vs=Math.min(95,this.mouse.vs); this.mouse.lx=this.mouse.x; this.mouse.ly=this.mouse.y; this.mouse.a=Math.atan2(dy,dx); this.movePoints(); this.drawLines(); } requestAnimationFrame(this.tick.bind(this)); } }
+    if(!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
+    const pointer=document.querySelector(".pointer"); let targetElem=null;
+    document.addEventListener('mouseenter',(e)=>{ if(e.target.closest?.('._target')) targetElem=e.target.closest('._target'); },true);
+    document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
+    window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
+    (()=>{ const loader=document.getElementById('amadeus-loader'), numberSpan=document.getElementById('worldlineNumber'), containerDigit=document.getElementById('digitContainer'), mainOuter=document.getElementById('mainOuter'); const finalValue=(Math.random()*1.8+0.2).toFixed(6); currentRate=finalValue; updateWorldlineText(); let frame=0, maxFrames=52, zoomStarted=false; const startVal=0, targetVal=parseFloat(finalValue); function easeOutCubic(t){return 1-Math.pow(1-t,3);} function updateBlurAndOpacity(p){ const blurAmount=Math.max(0,12*(1-p)); const opacityVal=Math.min(1,0.5+p*0.7); numberSpan.style.filter=`blur(${blurAmount}px)`; numberSpan.style.opacity=opacityVal; numberSpan.style.textShadow=`0 0 ${5+(1-p)*12}px #c93a0e, 0 0 18px #7a2e00`; } function animateNumber(){ if(frame<maxFrames){ let progress=frame/maxFrames, eased=easeOutCubic(progress), noiseRange=0.9*(1-eased)+0.01, rawNoise=(Math.random()-0.5)*noiseRange*2.2, centerVal=startVal*(1-eased)+targetVal*eased, noisy=Math.min(1.999999,Math.max(0.000001,centerVal+rawNoise)); numberSpan.innerText=noisy.toFixed(6); updateBlurAndOpacity(eased); frame++; requestAnimationFrame(animateNumber); } else { numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); setTimeout(()=>{ if(!zoomStarted && loader){ zoomStarted=true; containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); }, 600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },150); } },200); } } requestAnimationFrame(animateNumber); setTimeout(()=>{ if(!zoomStarted && loader){ numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); },600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },120); } },4000); })();
+    const carouselItems=[{img:"images/topimage.jpg",link:"https://steinsgate.jp/"},{img:"images/kurisu.jpg",link:"https://www.pixiv.net/artworks/126362853"}]; let currentSlide=0, autoInterval=null; const slidesContainer=document.getElementById('carouselSlides'), dotsContainer=document.getElementById('carouselDots'); let totalSlides=carouselItems.length; function buildCarousel(){ slidesContainer.innerHTML=''; dotsContainer.innerHTML=''; carouselItems.forEach((item,idx)=>{ const slideDiv=document.createElement('div'); slideDiv.className='carousel-slide'; if(idx===0) slideDiv.classList.add('active'); const link=document.createElement('a'); link.href=item.link; link.target='_blank'; link.classList.add('_target'); const img=document.createElement('img'); img.src=item.img; img.onerror=function(){ this.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; }; link.appendChild(img); slideDiv.appendChild(link); slidesContainer.appendChild(slideDiv); const dot=document.createElement('button'); dot.classList.add('dot'); if(idx===0) dot.classList.add('active'); dot.addEventListener('click',()=>goToSlide(idx)); dotsContainer.appendChild(dot); }); } function updateCarousel(){ document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); } function goToSlide(idx){ currentSlide=(idx+totalSlides)%totalSlides; updateCarousel(); resetAutoPlay(); } function nextSlide(){ goToSlide(currentSlide+1); } function resetAutoPlay(){ if(autoInterval) clearInterval(autoInterval); autoInterval=setInterval(()=>nextSlide(),4500); } function pauseAutoPlay(){ if(autoInterval) clearInterval(autoInterval); } function resumeAutoPlay(){ resetAutoPlay(); } function bindCarouselEvents(){ const c=document.getElementById('carousel'); if(c){ c.addEventListener('mouseenter',pauseAutoPlay); c.addEventListener('mouseleave',resumeAutoPlay); } } window.addEventListener('load',()=>{ const waves=document.querySelector('a-waves'); if(waves&&waves.setSize){ waves.setSize(); waves.setLines(); } setWavesBackground(document.body.classList.contains('light-mode')); initTabs(); renderContent('competition'); updateTabButtonTexts(); document.getElementById('last-updated').textContent=new Date().toLocaleDateString('zh-CN'); buildCarousel(); bindCarouselEvents(); resetAutoPlay(); });
 </script>
 </body>
 </html>
