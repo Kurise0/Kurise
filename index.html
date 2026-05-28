@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Kurise - 世界线观测者 | 命运石之门</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -42,7 +42,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
-            height: 100%; width: 100%; overflow: hidden; position: fixed;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
         }
 
         body {
@@ -543,17 +546,103 @@
             .gallery-sidebar { width: 360px; }
             .card-img { width: 95px; height: 80px; }
         }
+
         @media (max-width: 850px) {
-            body { padding: 10px; }
-            .main-outer { height: auto; max-height: none; }
-            .stage { flex-direction: column; height: auto; max-height: none; gap: 14px; overflow-y: auto; }
-            .links { flex-direction: row; justify-content: center; flex-wrap: wrap; width: 100%; margin-bottom: 4px; gap: 8px; }
-            .links a, .links button { width: auto; font-size: 12px; padding: 6px 14px; border-left-width: 1px; border-bottom: 2px solid var(--neon-green); border-radius: 30px; }
-            .container { height: auto; min-height: 440px; }
-            .gallery-sidebar { width: 100%; height: auto; max-height: 400px; margin-top: 8px; }
-            .vertical-card-list { flex-direction: row; overflow-x: auto; gap: 14px; padding: 12px; }
-            .cert-card { min-width: 280px; flex-shrink: 0; }
-            .card-img { width: 90px; height: 75px; }
+            html, body {
+                overflow: auto !important;
+                position: static !important;
+                height: auto !important;
+                min-height: 100vh;
+            }
+            body {
+                padding: 12px;
+                cursor: auto;
+                display: block;
+                align-items: unset;
+                justify-content: unset;
+            }
+            .main-outer {
+                height: auto !important;
+                max-height: none !important;
+                transform: scale(1);
+            }
+            .stage {
+                flex-direction: column;
+                height: auto !important;
+                overflow: visible;
+                gap: 16px;
+            }
+            .links {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                margin-bottom: 4px;
+                gap: 8px;
+            }
+            .links a, .links button {
+                width: auto;
+                font-size: 12px;
+                padding: 6px 14px;
+                border-left-width: 1px;
+                border-bottom: 2px solid var(--neon-green);
+                border-radius: 30px;
+            }
+            .container {
+                height: auto !important;
+                min-height: auto;
+                overflow: visible;
+            }
+            .content {
+                overflow-y: visible !important;
+                max-height: none !important;
+                padding: 16px 24px;
+            }
+            .gallery-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: none !important;
+                margin-top: 8px;
+            }
+            .vertical-card-list {
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 14px;
+                padding: 12px;
+                flex: 0 0 auto;
+                height: auto;
+            }
+            .cert-card {
+                min-width: 280px;
+                flex-shrink: 0;
+            }
+            .card-img {
+                width: 90px;
+                height: 75px;
+            }
+            .pointer {
+                display: none;
+            }
+            .worldline {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                display: inline-block;
+                margin: 8px auto 12px auto;
+                width: fit-content;
+                background: var(--glass-bg);
+                border: 1px solid var(--glass-border);
+                border-left: 2px solid #c93a0e;
+                text-align: center;
+                font-size: 11px;
+                backdrop-filter: blur(8px);
+            }
+            footer {
+                margin-top: 0;
+                padding: 12px;
+                font-size: 11px;
+            }
         }
         a-waves { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; transition: background 0.5s ease; }
         a-waves.dark-bg { background: radial-gradient(circle at 20% 30%, rgba(0, 20, 10, 0.4) 0%, #000000 90%) !important; }
@@ -614,9 +703,11 @@
     class AWaves extends HTMLElement { connectedCallback() { this.svg = this.querySelector('svg'); this.mouse = { x:0,y:0,lx:0,ly:0,sx:0,sy:0,v:0,vs:0,a:0 }; this.lines = []; this.paths = []; this.bindEvents(); this.setSize(); this.setLines(); requestAnimationFrame(this.tick.bind(this)); } bindEvents() { window.addEventListener('resize',()=>{ this.setSize(); this.setLines(); }); const upd = (x,y)=>{ if(!this.bounding) return; this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top; }; window.addEventListener('mousemove',e=>upd(e.clientX,e.clientY)); window.addEventListener('touchmove',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); window.addEventListener('touchstart',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); } setSize() { this.bounding = this.getBoundingClientRect(); this.svg.style.width = `${this.bounding.width}px`; this.svg.style.height = `${this.bounding.height}px`; } setLines() { const {width,height}=this.bounding; if(width===0||height===0) return; this.lines = []; this.paths.forEach(p=>p.remove()); this.paths=[]; const xGap=10,yGap=28,oWidth=width+200,oHeight=height+40; const totalLines=Math.ceil(oWidth/xGap), totalPoints=Math.ceil(oHeight/yGap); const xStart=(width-xGap*totalLines)/2, yStart=(height-yGap*totalPoints)/2; for(let i=0;i<=totalLines;i++){ const points=[]; for(let j=0;j<=totalPoints;j++) points.push({ x:xStart+xGap*i, y:yStart+yGap*j, cursor:{x:0,y:0,vx:0,vy:0} }); this.lines.push(points); const path = document.createElementNS('http://www.w3.org/2000/svg','path'); path.setAttribute('stroke','url(#waveGradient)'); this.svg.appendChild(path); this.paths.push(path); } } movePoints() { const {lines,mouse}=this; if(!lines.length) return; lines.forEach(points=>points.forEach(p=>{ const dx=p.x-mouse.sx, dy=p.y-mouse.sy, d=Math.hypot(dx,dy), l=Math.max(160,mouse.vs); if(d<l){ const f=1-d/l; p.cursor.vx+=Math.cos(mouse.a)*f*mouse.vs*0.072; p.cursor.vy+=Math.sin(mouse.a)*f*mouse.vs*0.072; } p.cursor.vx+=(0-p.cursor.x)*0.006; p.cursor.vy+=(0-p.cursor.y)*0.006; p.cursor.vx*=0.93; p.cursor.vy*=0.93; p.cursor.x+=p.cursor.vx*1.9; p.cursor.y+=p.cursor.vy*1.9; p.cursor.x=Math.min(90,Math.max(-90,p.cursor.x)); p.cursor.y=Math.min(90,Math.max(-90,p.cursor.y)); })); } moved(point, withCursorForce=true) { return { x:Math.round((point.x+(withCursorForce?point.cursor.x:0))*10)/10, y:Math.round((point.y+(withCursorForce?point.cursor.y:0))*10)/10 }; } drawLines() { const {lines,paths}=this; if(!lines.length) return; lines.forEach((points,lIndex)=>{ if(!points.length) return; let p1=this.moved(points[0],false), d=`M ${p1.x} ${p1.y}`; points.forEach((p,idx)=>{ const isLast=idx===points.length-1; const cur=this.moved(p,!isLast); d+=`L ${cur.x} ${cur.y}`; }); if(paths[lIndex]) paths[lIndex].setAttribute('d',d); }); } tick() { if(this.bounding){ this.mouse.sx+=(this.mouse.x-this.mouse.sx)*0.1; this.mouse.sy+=(this.mouse.y-this.mouse.sy)*0.1; const dx=this.mouse.x-this.mouse.lx, dy=this.mouse.y-this.mouse.ly, d=Math.hypot(dx,dy); this.mouse.vs+=(d-this.mouse.vs)*0.1; this.mouse.vs=Math.min(95,this.mouse.vs); this.mouse.lx=this.mouse.x; this.mouse.ly=this.mouse.y; this.mouse.a=Math.atan2(dy,dx); this.movePoints(); this.drawLines(); } requestAnimationFrame(this.tick.bind(this)); } }
     if(!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
     const pointer=document.querySelector(".pointer"); let targetElem=null;
-    document.addEventListener('mouseenter',(e)=>{ if(e.target.closest?.('._target')) targetElem=e.target.closest('._target'); },true);
-    document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
-    window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
+    if(window.innerWidth > 850) {
+        document.addEventListener('mouseenter',(e)=>{ if(e.target.closest?.('._target')) targetElem=e.target.closest('._target'); },true);
+        document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
+        window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
+    } else { if(pointer) pointer.style.display = 'none'; }
     (()=>{ const loader=document.getElementById('amadeus-loader'), numberSpan=document.getElementById('worldlineNumber'), containerDigit=document.getElementById('digitContainer'), mainOuter=document.getElementById('mainOuter'); const finalValue=(Math.random()*1.8+0.2).toFixed(6); currentRate=finalValue; updateWorldlineText(); let frame=0, maxFrames=52, zoomStarted=false; const startVal=0, targetVal=parseFloat(finalValue); function easeOutCubic(t){return 1-Math.pow(1-t,3);} function updateBlurAndOpacity(p){ const blurAmount=Math.max(0,12*(1-p)); const opacityVal=Math.min(1,0.5+p*0.7); numberSpan.style.filter=`blur(${blurAmount}px)`; numberSpan.style.opacity=opacityVal; numberSpan.style.textShadow=`0 0 ${5+(1-p)*12}px #c93a0e, 0 0 18px #7a2e00`; } function animateNumber(){ if(frame<maxFrames){ let progress=frame/maxFrames, eased=easeOutCubic(progress), noiseRange=0.9*(1-eased)+0.01, rawNoise=(Math.random()-0.5)*noiseRange*2.2, centerVal=startVal*(1-eased)+targetVal*eased, noisy=Math.min(1.999999,Math.max(0.000001,centerVal+rawNoise)); numberSpan.innerText=noisy.toFixed(6); updateBlurAndOpacity(eased); frame++; requestAnimationFrame(animateNumber); } else { numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); setTimeout(()=>{ if(!zoomStarted && loader){ zoomStarted=true; containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); }, 600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },150); } },200); } } requestAnimationFrame(animateNumber); setTimeout(()=>{ if(!zoomStarted && loader){ numberSpan.innerText=finalValue; updateBlurAndOpacity(1); currentRate=finalValue; updateWorldlineText(); containerDigit.classList.add('digit-zoom-out'); mainOuter.classList.add('zoomed'); const flashDiv=document.createElement('div'); flashDiv.classList.add('global-flash'); document.body.appendChild(flashDiv); setTimeout(()=>{ flashDiv.remove(); },600); setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); },120); } },4000); })();
     const carouselItems=[{img:"images/topimage.jpg",link:"https://steinsgate.jp/"},{img:"images/kurisu.jpg",link:"https://www.pixiv.net/artworks/126362853"}]; let currentSlide=0, autoInterval=null; const slidesContainer=document.getElementById('carouselSlides'), dotsContainer=document.getElementById('carouselDots'); let totalSlides=carouselItems.length; function buildCarousel(){ slidesContainer.innerHTML=''; dotsContainer.innerHTML=''; carouselItems.forEach((item,idx)=>{ const slideDiv=document.createElement('div'); slideDiv.className='carousel-slide'; if(idx===0) slideDiv.classList.add('active'); const link=document.createElement('a'); link.href=item.link; link.target='_blank'; link.classList.add('_target'); const img=document.createElement('img'); img.src=item.img; img.onerror=function(){ this.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; }; link.appendChild(img); slideDiv.appendChild(link); slidesContainer.appendChild(slideDiv); const dot=document.createElement('button'); dot.classList.add('dot'); if(idx===0) dot.classList.add('active'); dot.addEventListener('click',()=>goToSlide(idx)); dotsContainer.appendChild(dot); }); } function updateCarousel(){ document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); } function goToSlide(idx){ currentSlide=(idx+totalSlides)%totalSlides; updateCarousel(); resetAutoPlay(); } function nextSlide(){ goToSlide(currentSlide+1); } function resetAutoPlay(){ if(autoInterval) clearInterval(autoInterval); autoInterval=setInterval(()=>nextSlide(),4500); } function pauseAutoPlay(){ if(autoInterval) clearInterval(autoInterval); } function resumeAutoPlay(){ resetAutoPlay(); } function bindCarouselEvents(){ const c=document.getElementById('carousel'); if(c){ c.addEventListener('mouseenter',pauseAutoPlay); c.addEventListener('mouseleave',resumeAutoPlay); } } window.addEventListener('load',()=>{ const waves=document.querySelector('a-waves'); if(waves&&waves.setSize){ waves.setSize(); waves.setLines(); } setWavesBackground(document.body.classList.contains('light-mode')); initTabs(); renderContent('competition'); updateTabButtonTexts(); document.getElementById('last-updated').textContent=new Date().toLocaleDateString('zh-CN'); buildCarousel(); bindCarouselEvents(); resetAutoPlay(); });
 </script>
