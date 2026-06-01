@@ -848,7 +848,12 @@
         const name = currentLang === 'zh' ? currentWorldline.nameZh : currentWorldline.nameEn;
         const desc = currentLang === 'zh' ? currentWorldline.descZh : currentWorldline.descEn;
         document.getElementById('worldlineDesc').innerHTML = `${name}<br><span style="font-size:10px;">${desc}</span>`;
-        document.getElementById('worldline-header').innerHTML = `${i18n[currentLang].worldlineH} <span style="font-family:'VT323'; background:#1a1a1a; padding:2px 8px; border-radius:20px; margin-left:6px;">${currentRateDisplay}%</span>`;
+        
+        const isLightMode = document.body.classList.contains('light-mode');
+        const spanBg = isLightMode ? '#e0d6d0' : '#1a1a1a';
+        const spanColor = isLightMode ? '#c93a0e' : '#ffffff';
+        
+        document.getElementById('worldline-header').innerHTML = `${i18n[currentLang].worldlineH} <span style="font-family:'VT323'; background:${spanBg}; color:${spanColor}; padding:2px 8px; border-radius:20px; margin-left:6px;">${currentRateDisplay}%</span>`;
         
         const congratsDiv = document.getElementById('congratsContainer');
     }
