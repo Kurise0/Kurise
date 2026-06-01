@@ -160,8 +160,8 @@
             transition: transform 0.8s cubic-bezier(0.2, 0.95, 0.3, 1.1);
             width: 100%;
             max-width: 1460px;
-            height: 82vh;
-            max-height: 88vh;
+            height: 92vh;
+            max-height: 92vh;
             display: flex;
             flex-direction: column;
         }
@@ -365,7 +365,7 @@
             box-shadow: 0 0 6px var(--neon-glow);
         }
         .content {
-            flex: 1; padding: 24px 50px; max-width: 850px; margin: 0 auto; width: 100%;
+            flex: 1; padding: 40px 60px; max-width: 950px; margin: 0 auto; width: 100%;
             overflow-y: auto; -webkit-overflow-scrolling: touch;
         }
         .content::-webkit-scrollbar { width: 5px; }
@@ -392,13 +392,34 @@
         }
         body:not(.light-mode) footer { background: rgba(0, 0, 0, 0.5); }
         #last-updated { color: var(--neon-green); font-weight: 600; }
-        .worldline {
-            position: absolute; bottom: 20px; right: 28px; font-family: 'VT323', monospace;
-            font-size: 12px; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 30px;
-            backdrop-filter: blur(4px); color: #d85a1a; letter-spacing: 1px; z-index: 15;
-            pointer-events: none; border-left: 2px solid #c93a0e; text-shadow: 0 0 5px #b83e0a;
+        .worldline-title-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        body.light-mode .worldline { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-left: 2px solid #c93a0e; color:#b04510;}
+        .congrats-text {
+            font-family: 'VT323', monospace;
+            font-size: clamp(12px, 1.6vw, 16px);
+            color: #ffd966;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 40px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px #ffaa33;
+            white-space: nowrap;
+        }
+        .worldline-desc {
+            margin-top: 8px;
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+            color: #00ff9d;
+            text-shadow: 0 0 2px rgba(0,255,157,0.3);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            text-align: center;
+        }
         .gallery-sidebar {
             flex-shrink: 0;
             width: 400px;
@@ -636,20 +657,6 @@
             .pointer {
                 display: none;
             }
-            .worldline {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                display: inline-block;
-                margin: 8px auto 12px auto;
-                width: fit-content;
-                background: var(--glass-bg);
-                border: 1px solid var(--glass-border);
-                border-left: 2px solid #c93a0e;
-                text-align: center;
-                font-size: 11px;
-                backdrop-filter: blur(8px);
-            }
             footer {
                 margin-top: 0;
                 padding: 12px;
@@ -695,7 +702,11 @@
         <div class="container">
             <header>
                 <h1>Kurise</h1>
-                <div class="subtitle" id="worldline-header">世界线变动率</div>
+                <div class="worldline-title-row">
+                    <div class="subtitle" id="worldline-header">世界线变动率</div>
+                    <div id="congratsContainer"></div>
+                </div>
+                <div id="worldlineDesc" class="worldline-desc"></div>
             </header>
             <div class="hero">
                 <div class="carousel-container" id="carousel">
@@ -713,7 +724,6 @@
                 <span data-i18n="footer">Kurise • Last updated: </span>
                 <span id="last-updated"></span>
             </footer>
-            <div class="worldline" id="worldline-footer">世界线变动率: </div>
         </div>
         <div class="gallery-sidebar">
             <div class="gallery-header" id="tabHeader">
@@ -731,28 +741,75 @@
     const loaderStartTime = Date.now();
     let revealTriggered = false;
     
-    const COMPETITIONS_DATA_ZH = [
-        { img: "images/header1.png", rank: "943支队伍中第7名", title: "图像匹配挑战赛 2025", publisher: "Kaggle · 2025年6月", fullDetail: "第7名 (943支队伍) · 图像检索和3D重建", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
-        { img: "images/header5.jpg", rank: "1147支队伍中第37名", title: "RSNA 颅内动脉瘤检测", publisher: "Kaggle · 2025年10月", fullDetail: "第37名 (1147支队伍) · 医学影像动脉瘤检测", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
-        { img: "images/header4.png", rank: "2445支队伍中第49名", title: "Jigsaw - 敏捷社区规则分类", publisher: "Kaggle · 2025年10月", fullDetail: "第49名 (2445支队伍) · NLP 内容审核", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
-        { img: "images/header3.jpg", rank: "1857支队伍中第95名", title: "MAP - 学生数学误解分析", publisher: "Kaggle · 2025年10月", fullDetail: "第95名 (1857支队伍) · NLP 教育", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
-        { img: "images/header2.png", rank: "2657支队伍中第100名", title: "CMI - 传感器行为检测", publisher: "Kaggle · 2025年9月", fullDetail: "第100名 (2657支队伍) · 传感器多模态时序分析", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
-        { img: "images/header6.jpg", rank: "1455支队伍中第82名", title: "ARC Prize 2025", publisher: "Kaggle · 2025年12月", fullDetail: "第82名 (1455支队伍) · 抽象推理挑战", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
+    const WORLD_LINES = [
+        { id:"α", nameZh:"α世界线", nameEn:"α Attractor Field", 
+          descZh:"由300人委员会支配的反乌托邦，SERN统治的绝望未来；真由理必定死亡，红莉栖存活成为\"时光机之母\"。",
+          descEn:"A dystopia ruled by the Committee of 300 and SERN; Mayuri's death is convergent, while Kurisu survives and becomes the \"Mother of Time Machine\".",
+          rateFunc:()=> Math.random()*1, weight:25 },
+        { id:"β", nameZh:"β世界线", nameEn:"β Attractor Field", 
+          descZh:"第三次世界大战的序幕，牧濑红莉栖于2010年7月28日死亡；冈部伦太郎在此见证并开启拯救助手的0篇章。",
+          descEn:"The prologue to World War III; Kurisu dies on July 28, 2010. Okabe witnesses this and begins the journey of Steins;Gate 0 to save her.",
+          rateFunc:()=> 1 + Math.random()*1, weight:25 },
+        { id:"SteinsGate", nameZh:"命运石之门世界线", nameEn:"Steins;Gate World Line", 
+          descZh:"恭喜你！这是一条既没有反乌托邦也没有第三次世界大战，无人牺牲的未知世界。抵达者将得到祝福。",
+          descEn:"Congratulations! This is a world with neither dystopia nor World War III — an uncharted future where no one has to die. Blessings be upon those who arrive.",
+          rateFunc:()=> 1.048596, weight:5 },
+        { id:"R", nameZh:"R世界线", nameEn:"R World Line", 
+          descZh:"与SG线偏差仅0.000001%；冈部伦太郎因过度使用Reading Steiner而逐渐被世界遗忘与消除。",
+          descEn:"Only 0.000001% divergence from the Steins;Gate line; due to overusing Reading Steiner, Okabe gradually fades from the world.",
+          rateFunc:()=> 1.048596 + (Math.random()*0.000002 - 0.000001), weight:5 },
+        { id:"Ω", nameZh:"Ω世界线", nameEn:"Ω Attractor Field", 
+          descZh:"菲莉丝主导的世界线，Lab成员关系发生剧变；冈部独自承担着原本世界线的记忆，在陌生的日常中生存。",
+          descEn:"Feyris' world line; the relationships among Lab members are drastically altered. Okabe bears the memories of the original world line alone.",
+          rateFunc:()=> -Math.random()*2, weight:12 },
+        { id:"ε", nameZh:"ε世界线", nameEn:"ε Attractor Field", 
+          descZh:"世界线发生巨大分歧，真由理死亡。",
+          descEn:"A massive divergence occurs in the world line, leading to Mayuri's death.",
+          rateFunc:()=> 4 + Math.random()*1, weight:12 },
+        { id:"δ", nameZh:"δ世界线", nameEn:"δ Attractor Field", 
+          descZh:"恭喜你！八名Lab成员全员聚齐，没有阴谋与死亡，围绕冈部的日常恋爱喜剧世界线。",
+          descEn:"Congratulations! A peaceful romantic comedy world where all eight Lab members are together — no conspiracies, no deaths.",
+          rateFunc:()=> 3 + Math.random()*1, weight:6 },
+        { id:"γ", nameZh:"γ世界线", nameEn:"γ Attractor Field", 
+          descZh:"冈部伦太郎成为Rounder首领与300人委员会成员，统治日本的独裁者。",
+          descEn:"Okabe becomes the leader of the Rounders and a member of the Committee of 300 — a dictator ruling over Japan.",
+          rateFunc:()=> 2 + Math.random()*1, weight:10 }
     ];
-    const COMPETITIONS_DATA_EN = [
-        { img: "images/header1.png", rank: "7th out of 943 teams", title: "Image Matching Challenge 2025", publisher: "Kaggle · June 2025", fullDetail: "7th place among 943 teams · Image retrieval & 3D reconstruction", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
-        { img: "images/header5.jpg", rank: "37th out of 1147 teams", title: "RSNA Intracranial Aneurysm Detection", publisher: "Kaggle · Oct 2025", fullDetail: "37th place among 1147 teams · Medical imaging aneurysm detection", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
-        { img: "images/header4.png", rank: "49th out of 2445 teams", title: "Jigsaw - Agile Community Rules Classification", publisher: "Kaggle · Oct 2025", fullDetail: "49th place among 2445 teams · NLP content moderation", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
-        { img: "images/header3.jpg", rank: "95th out of 1857 teams", title: "MAP - Charting Student Math Misunderstandings", publisher: "Kaggle · Oct 2025", fullDetail: "95th place among 1857 teams · NLP education", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
-        { img: "images/header2.png", rank: "100th out of 2657 teams", title: "CMI - Detect Behavior with Sensor Data", publisher: "Kaggle · Sep 2025", fullDetail: "100th place among 2657 teams · Sensor multimodal time-series analysis", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
-        { img: "images/header6.jpg", rank: "82nd out of 1455 teams", title: "ARC Prize 2025", publisher: "Kaggle · Dec 2025", fullDetail: "82nd place among 1455 teams · Abstract reasoning challenge", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
-    ];
-    const PROJECTS_DATA_ZH = [{ img: "images/eridanus.png", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" }];
-    const PROJECTS_DATA_EN = [{ img: "images/eridanus.png", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }];
-    let currentTab = 'competition', currentLang = 'zh', currentRateDisplay = '0.000000';
-    let finalTargetRate = (Math.random() * 1.8 + 0.2).toFixed(6);
+    
+    let currentWorldline = null;
+    let finalTargetRate = "0.000000";
+    
+    function getCarouselItemsForWorldline(worldlineId) {
+        return [
+            {img:"images/topimage.jpg", link:"https://steinsgate.jp/"},
+            {img:"images/kurisu.jpg", link:"https://www.pixiv.net/artworks/126362853"}
+        ];
+    }
+    
+    function selectRandomWorldline() {
+        const totalWeight = WORLD_LINES.reduce((sum, wl) => sum + wl.weight, 0);
+        let rand = Math.random() * totalWeight;
+        let accum = 0;
+        for (let wl of WORLD_LINES) {
+            accum += wl.weight;
+            if (rand < accum) {
+                const selected = { ...wl };
+                let rate = selected.rateFunc();
+                if (typeof rate === 'function') rate = rate();
+                rate = parseFloat(rate.toFixed(6));
+                selected.currentRate = rate;
+                return selected;
+            }
+        }
+        const fallback = { ...WORLD_LINES[0] };
+        fallback.currentRate = parseFloat(fallback.rateFunc().toFixed(6));
+        return fallback;
+    }
+    
+    let currentLang = 'zh';
+    let currentRateDisplay = '0.000000';
     let preloadCount = 0;
-    let preloadTotal = 2;      
+    let preloadTotal = 2;
     let isWindowLoaded = false;
     const i18n = { 
         zh: { 
@@ -762,13 +819,12 @@
             p3: "对世界模型，大语言模型，空间智能感兴趣。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。", 
             footer: "Kurise • 最后更新: ", 
             worldlineH: "世界线变动率", 
-            worldlineF: "世界线变动率: ", 
             competition: "竞赛", 
             projects: "项目", 
             papers: "论文", 
             noPapers: "暂无论文",
             email: "EMAIL"
-        }, 
+        },
         en: { 
             heading: "World Observer Archives", 
             p1: "Hello, I am <strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Makise Kurisu</strong> from <strong>Steins;Gate</strong>", 
@@ -776,22 +832,27 @@
             p3: "Interested on World Model, LLM, Spatial Intelligence. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.", 
             footer: "Kurise • Last updated: ", 
             worldlineH: "Divergence Meter", 
-            worldlineF: "Divergence Ratio: ", 
             competition: "Competition", 
             projects: "Projects", 
             papers: "Papers", 
             noPapers: "No papers yet",
             email: "EMAIL"
-        } 
+        }
     };
     
     const LAST_UPDATED_ZH = "2026年5月29日";
     const LAST_UPDATED_EN = "May 29, 2026";
     
-    function updateWorldlineText() { 
-        document.getElementById('worldline-header').innerText = `${i18n[currentLang].worldlineH} ${currentRateDisplay}%`; 
-        document.getElementById('worldline-footer').innerText = `${i18n[currentLang].worldlineF}${currentRateDisplay}%`; 
+    function updateWorldlineUI() {
+        if (!currentWorldline) return;
+        const name = currentLang === 'zh' ? currentWorldline.nameZh : currentWorldline.nameEn;
+        const desc = currentLang === 'zh' ? currentWorldline.descZh : currentWorldline.descEn;
+        document.getElementById('worldlineDesc').innerHTML = `${name}<br><span style="font-size:10px;">${desc}</span>`;
+        document.getElementById('worldline-header').innerHTML = `${i18n[currentLang].worldlineH} <span style="font-family:'VT323'; background:#1a1a1a; padding:2px 8px; border-radius:20px; margin-left:6px;">${currentRateDisplay}%</span>`;
+        
+        const congratsDiv = document.getElementById('congratsContainer');
     }
+    
     function setWavesBackground(lightMode) { 
         const waves = document.querySelector('a-waves'); 
         if(waves) lightMode ? (waves.classList.remove('dark-bg'), waves.classList.add('light-bg')) : (waves.classList.remove('light-bg'), waves.classList.add('dark-bg')); 
@@ -804,7 +865,7 @@
         currentRateDisplay = displayNum; 
         const numberSpan = document.getElementById('worldlineNumber'); 
         if(numberSpan) numberSpan.innerText = displayNum; 
-        updateWorldlineText(); 
+        updateWorldlineUI(); 
         let blurAmount = Math.max(0, 12 * (1 - progress)); 
         let opacityVal = Math.min(1, 0.7 + progress * 0.7); 
         if(numberSpan) {
@@ -826,7 +887,6 @@
         revealTriggered = true;
         clearInterval(scrambleInterval);
         updateNumberByProgress(1.0);
-        
         const loader = document.getElementById('amadeus-loader');
         const mainOuter = document.getElementById('mainOuter');
         const containerDigit = document.getElementById('digitContainer');
@@ -890,6 +950,30 @@
         return cardDiv; 
     }
     
+    const COMPETITIONS_DATA_ZH = [
+        { img: "images/header1.png", rank: "943支队伍中第7名", title: "图像匹配挑战赛 2025", publisher: "Kaggle · 2025年6月", fullDetail: "图像检索和3D重建", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
+        { img: "images/header4.png", rank: "2445支队伍中第49名", title: "Jigsaw - 敏捷社区规则分类", publisher: "Kaggle · 2025年10月", fullDetail: "NLP 内容审核", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
+        { img: "images/header5.jpg", rank: "1147支队伍中第37名", title: "RSNA 颅内动脉瘤检测", publisher: "Kaggle · 2025年10月", fullDetail: "医学影像动脉瘤检测", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
+        { img: "images/header2.png", rank: "2657支队伍中第100名", title: "CMI - 传感器行为检测", publisher: "Kaggle · 2025年9月", fullDetail: "传感器多模态时序分析", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
+        { img: "images/header3.jpg", rank: "1857支队伍中第95名", title: "MAP - 学生数学误解分析", publisher: "Kaggle · 2025年10月", fullDetail: "NLP 教育", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
+        { img: "images/header6.jpg", rank: "1455支队伍中第82名", title: "ARC Prize 2025", publisher: "Kaggle · 2025年12月", fullDetail: "抽象推理挑战", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
+    ];
+    const COMPETITIONS_DATA_EN = [
+        { img: "images/header1.png", rank: "7th out of 943 teams", title: "Image Matching Challenge 2025", publisher: "Kaggle · June 2025", fullDetail: "Image retrieval & 3D reconstruction", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
+        { img: "images/header4.png", rank: "49th out of 2445 teams", title: "Jigsaw - Agile Community Rules Classification", publisher: "Kaggle · Oct 2025", fullDetail: "NLP content moderation", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
+        { img: "images/header5.jpg", rank: "37th out of 1147 teams", title: "RSNA Intracranial Aneurysm Detection", publisher: "Kaggle · Oct 2025", fullDetail: "Medical imaging aneurysm detection", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
+        { img: "images/header2.png", rank: "100th out of 2657 teams", title: "CMI - Detect Behavior with Sensor Data", publisher: "Kaggle · Sep 2025", fullDetail: "Sensor multimodal time-series analysis", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
+        { img: "images/header3.jpg", rank: "95th out of 1857 teams", title: "MAP - Charting Student Math Misunderstandings", publisher: "Kaggle · Oct 2025", fullDetail: "NLP education", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
+        { img: "images/header6.jpg", rank: "82nd out of 1455 teams", title: "ARC Prize 2025", publisher: "Kaggle · Dec 2025", fullDetail: "Abstract reasoning challenge", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
+    ];
+    const PROJECTS_DATA_ZH = [
+        { img: "images/eridanus.png", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" },
+    ];
+    const PROJECTS_DATA_EN = [
+        { img: "images/eridanus.png", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }
+    ];
+    let currentTab = 'competition';
+    
     function renderContent(tab) { 
         const container = document.getElementById('galleryList'); 
         if(!container) return; 
@@ -928,13 +1012,80 @@
         document.getElementById('last-updated').textContent = currentLang === 'zh' ? LAST_UPDATED_ZH : LAST_UPDATED_EN;
     }
     
+    let currentSlide = 0, autoInterval = null;
+    let slidesContainer = document.getElementById('carouselSlides');
+    let dotsContainer = document.getElementById('carouselDots');
+    let totalSlides = 0;
+    
+    function buildCarousel() {
+        if (!slidesContainer || !dotsContainer) return;
+        const carouselItems = getCarouselItemsForWorldline(currentWorldline.id);
+        totalSlides = carouselItems.length;
+        slidesContainer.innerHTML = ''; 
+        dotsContainer.innerHTML = '';
+        carouselItems.forEach((item, idx) => {
+            const slideDiv = document.createElement('div'); 
+            slideDiv.className = 'carousel-slide'; 
+            if(idx === 0) slideDiv.classList.add('active');
+            const link = document.createElement('a'); 
+            link.href = item.link; 
+            link.target = '_blank'; 
+            link.classList.add('_target');
+            const img = document.createElement('img'); 
+            img.src = item.img; 
+            img.loading = 'eager'; 
+            img.fetchPriority = 'high';
+            img.onerror = function(){ 
+                this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; 
+                onPreloadImageComplete(); 
+            };
+            img.addEventListener('load', onPreloadImageComplete);
+            img.addEventListener('error', onPreloadImageComplete);
+            link.appendChild(img); 
+            slideDiv.appendChild(link); 
+            slidesContainer.appendChild(slideDiv);
+            const dot = document.createElement('button'); 
+            dot.classList.add('dot'); 
+            if(idx === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(idx)); 
+            dotsContainer.appendChild(dot);
+        });
+        currentSlide = 0;
+        updateCarousel();
+        resetAutoPlay();
+    }
+    
+    function updateCarousel() { 
+        document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); 
+        document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); 
+    }
+    
+    function goToSlide(idx) { 
+        currentSlide = (idx + totalSlides) % totalSlides; 
+        updateCarousel(); 
+        resetAutoPlay(); 
+    }
+    
+    function nextSlide() { goToSlide(currentSlide+1); }
+    
+    function resetAutoPlay() { 
+        if(autoInterval) clearInterval(autoInterval); 
+        autoInterval = setInterval(()=>nextSlide(), 4500); 
+    }
+    
+    function bindCarouselEvents() { 
+        const c = document.getElementById('carousel'); 
+        if(c) { 
+            c.addEventListener('mouseenter', ()=> clearInterval(autoInterval)); 
+            c.addEventListener('mouseleave', resetAutoPlay); 
+        } 
+    }
+    
     document.getElementById('theme-toggle')?.addEventListener('click', () => { 
         const body = document.body;
         body.classList.add('theme-switching');
-        
         setTimeout(() => {
             body.classList.toggle('light-mode');
-            
             const isLight = body.classList.contains('light-mode');
             const stops = [document.getElementById('stop1'), document.getElementById('stop2'), document.getElementById('stop3')]; 
             if(isLight){ 
@@ -948,10 +1099,7 @@
             } 
             setWavesBackground(isLight);
         }, 10);
-        
-        setTimeout(() => {
-            body.classList.remove('theme-switching');
-        }, 2300);
+        setTimeout(() => { body.classList.remove('theme-switching'); }, 2300);
     });
     
     document.getElementById('lang-toggle')?.addEventListener('click', () => { 
@@ -962,7 +1110,7 @@
         }); 
         document.getElementById('email-text').textContent = i18n[currentLang].email;
         updateTabButtonTexts(); 
-        updateWorldlineText(); 
+        updateWorldlineUI(); 
         updateLastUpdated();
         renderContent(currentTab); 
     });
@@ -980,26 +1128,16 @@
         } 
         bindEvents() { 
             window.addEventListener('resize',()=>{ this.setSize(); this.setLines(); }); 
-            const upd = (x,y)=>{ 
-                if(!this.bounding) return; 
-                this.mouse.x = x - this.bounding.left; 
-                this.mouse.y = y - this.bounding.top; 
-            }; 
+            const upd = (x,y)=>{ if(!this.bounding) return; this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top; }; 
             window.addEventListener('mousemove',e=>upd(e.clientX,e.clientY)); 
             window.addEventListener('touchmove',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); 
             window.addEventListener('touchstart',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); 
         } 
-        setSize() { 
-            this.bounding = this.getBoundingClientRect(); 
-            this.svg.style.width = `${this.bounding.width}px`; 
-            this.svg.style.height = `${this.bounding.height}px`; 
-        } 
+        setSize() { this.bounding = this.getBoundingClientRect(); this.svg.style.width = `${this.bounding.width}px`; this.svg.style.height = `${this.bounding.height}px`; } 
         setLines() { 
             const {width,height}=this.bounding; 
             if(width===0||height===0) return; 
-            this.lines = []; 
-            this.paths.forEach(p=>p.remove()); 
-            this.paths=[]; 
+            this.lines = []; this.paths.forEach(p=>p.remove()); this.paths=[]; 
             const xGap=10,yGap=28,oWidth=width+200,oHeight=height+40; 
             const totalLines=Math.ceil(oWidth/xGap), totalPoints=Math.ceil(oHeight/yGap); 
             const xStart=(width-xGap*totalLines)/2, yStart=(height-yGap*totalPoints)/2; 
@@ -1018,58 +1156,27 @@
             if(!lines.length) return; 
             lines.forEach(points=>points.forEach(p=>{ 
                 const dx=p.x-mouse.sx, dy=p.y-mouse.sy, d=Math.hypot(dx,dy), l=Math.max(160,mouse.vs); 
-                if(d<l){ 
-                    const f=1-d/l; 
-                    p.cursor.vx+=Math.cos(mouse.a)*f*mouse.vs*0.072; 
-                    p.cursor.vy+=Math.sin(mouse.a)*f*mouse.vs*0.072; 
-                } 
-                p.cursor.vx+=(0-p.cursor.x)*0.006; 
-                p.cursor.vy+=(0-p.cursor.y)*0.006; 
-                p.cursor.vx*=0.93; 
-                p.cursor.vy*=0.93; 
-                p.cursor.x+=p.cursor.vx*1.9; 
-                p.cursor.y+=p.cursor.vy*1.9; 
-                p.cursor.x=Math.min(90,Math.max(-90,p.cursor.x)); 
-                p.cursor.y=Math.min(90,Math.max(-90,p.cursor.y)); 
+                if(d<l){ const f=1-d/l; p.cursor.vx+=Math.cos(mouse.a)*f*mouse.vs*0.072; p.cursor.vy+=Math.sin(mouse.a)*f*mouse.vs*0.072; } 
+                p.cursor.vx+=(0-p.cursor.x)*0.006; p.cursor.vy+=(0-p.cursor.y)*0.006; 
+                p.cursor.vx*=0.93; p.cursor.vy*=0.93; p.cursor.x+=p.cursor.vx*1.9; p.cursor.y+=p.cursor.vy*1.9; 
+                p.cursor.x=Math.min(90,Math.max(-90,p.cursor.x)); p.cursor.y=Math.min(90,Math.max(-90,p.cursor.y)); 
             })); 
         } 
-        moved(point, withCursorForce=true) { 
-            return { 
-                x:Math.round((point.x+(withCursorForce?point.cursor.x:0))*10)/10, 
-                y:Math.round((point.y+(withCursorForce?point.cursor.y:0))*10)/10 
-            }; 
-        } 
+        moved(point, withCursorForce=true) { return { x:Math.round((point.x+(withCursorForce?point.cursor.x:0))*10)/10, y:Math.round((point.y+(withCursorForce?point.cursor.y:0))*10)/10 }; } 
         drawLines() { 
-            const {lines,paths}=this; 
-            if(!lines.length) return; 
-            lines.forEach((points,lIndex)=>{ 
-                if(!points.length) return; 
-                let p1=this.moved(points[0],false), d=`M ${p1.x} ${p1.y}`; 
-                points.forEach((p,idx)=>{ 
-                    const isLast=idx===points.length-1; 
-                    const cur=this.moved(p,!isLast); 
-                    d+=`L ${cur.x} ${cur.y}`; 
-                }); 
-                if(paths[lIndex]) paths[lIndex].setAttribute('d',d); 
-            }); 
+            const {lines,paths}=this; if(!lines.length) return; 
+            lines.forEach((points,lIndex)=>{ if(!points.length) return; let p1=this.moved(points[0],false), d=`M ${p1.x} ${p1.y}`; points.forEach((p,idx)=>{ const isLast=idx===points.length-1; const cur=this.moved(p,!isLast); d+=`L ${cur.x} ${cur.y}`; }); if(paths[lIndex]) paths[lIndex].setAttribute('d',d); }); 
         } 
         tick() { 
             if(this.bounding){ 
-                this.mouse.sx+=(this.mouse.x-this.mouse.sx)*0.1; 
-                this.mouse.sy+=(this.mouse.y-this.mouse.sy)*0.1; 
+                this.mouse.sx+=(this.mouse.x-this.mouse.sx)*0.1; this.mouse.sy+=(this.mouse.y-this.mouse.sy)*0.1; 
                 const dx=this.mouse.x-this.mouse.lx, dy=this.mouse.y-this.mouse.ly, d=Math.hypot(dx,dy); 
-                this.mouse.vs+=(d-this.mouse.vs)*0.1; 
-                this.mouse.vs=Math.min(95,this.mouse.vs); 
-                this.mouse.lx=this.mouse.x; 
-                this.mouse.ly=this.mouse.y; 
-                this.mouse.a=Math.atan2(dy,dx); 
-                this.movePoints(); 
-                this.drawLines(); 
-            } 
-            requestAnimationFrame(this.tick.bind(this)); 
+                this.mouse.vs+=(d-this.mouse.vs)*0.1; this.mouse.vs=Math.min(95,this.mouse.vs); 
+                this.mouse.lx=this.mouse.x; this.mouse.ly=this.mouse.y; this.mouse.a=Math.atan2(dy,dx); 
+                this.movePoints(); this.drawLines(); 
+            } requestAnimationFrame(this.tick.bind(this)); 
         } 
     }
-    
     if(!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
     
     const pointer=document.querySelector(".pointer"); 
@@ -1077,119 +1184,29 @@
     if(window.innerWidth > 850) {
         document.addEventListener('mouseenter',(e)=>{ if(e.target.closest?.('._target')) targetElem=e.target.closest('._target'); },true);
         document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
-        window.addEventListener("mousemove",(e)=>{ 
-            let x=e.clientX,y=e.clientY; 
-            if(targetElem){ 
-                const r=targetElem.getBoundingClientRect(); 
-                const cx=r.left+r.width/2, cy=r.top+r.height/2; 
-                x=cx+(x-cx)*0.12; 
-                y=cy+(y-cy)*0.12; 
-                pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); 
-                pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); 
-            } else { 
-                pointer.style.setProperty("--width","26px"); 
-                pointer.style.setProperty("--height","26px"); 
-            } 
-            pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; 
-        });
-    } else { 
-        if(pointer) pointer.style.display = 'none'; 
-    }
-    
-    const carouselItems=[{img:"images/topimage.jpg",link:"https://steinsgate.jp/"},{img:"images/kurisu.jpg",link:"https://www.pixiv.net/artworks/126362853"}];
-    let currentSlide=0, autoInterval=null;
-    const slidesContainer=document.getElementById('carouselSlides'), dotsContainer=document.getElementById('carouselDots');
-    let totalSlides=carouselItems.length;
-    
-    function buildCarousel(){
-        slidesContainer.innerHTML=''; 
-        dotsContainer.innerHTML='';
-        carouselItems.forEach((item,idx)=>{
-            const slideDiv=document.createElement('div'); 
-            slideDiv.className='carousel-slide'; 
-            if(idx===0) slideDiv.classList.add('active');
-            const link=document.createElement('a'); 
-            link.href=item.link; 
-            link.target='_blank'; 
-            link.classList.add('_target');
-            const img=document.createElement('img'); 
-            img.src=item.img; 
-            img.loading='eager'; 
-            img.fetchPriority='high';
-            img.onerror=function(){ 
-                this.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; 
-                onPreloadImageComplete(); 
-            };
-            img.addEventListener('load', onPreloadImageComplete);
-            img.addEventListener('error', onPreloadImageComplete);
-            link.appendChild(img); 
-            slideDiv.appendChild(link); 
-            slidesContainer.appendChild(slideDiv);
-            const dot=document.createElement('button'); 
-            dot.classList.add('dot'); 
-            if(idx===0) dot.classList.add('active');
-            dot.addEventListener('click',()=>goToSlide(idx)); 
-            dotsContainer.appendChild(dot);
-        });
-    }
-    
-    function updateCarousel(){ 
-        document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); 
-        document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); 
-    }
-    
-    function goToSlide(idx){ 
-        currentSlide=(idx+totalSlides)%totalSlides; 
-        updateCarousel(); 
-        resetAutoPlay(); 
-    }
-    
-    function nextSlide(){ 
-        goToSlide(currentSlide+1); 
-    }
-    
-    function resetAutoPlay(){ 
-        if(autoInterval) clearInterval(autoInterval); 
-        autoInterval=setInterval(()=>nextSlide(),4500); 
-    }
-    
-    function pauseAutoPlay(){ 
-        if(autoInterval) clearInterval(autoInterval); 
-    }
-    
-    function resumeAutoPlay(){ 
-        resetAutoPlay(); 
-    }
-    
-    function bindCarouselEvents(){ 
-        const c=document.getElementById('carousel'); 
-        if(c){ 
-            c.addEventListener('mouseenter',pauseAutoPlay); 
-            c.addEventListener('mouseleave',resumeAutoPlay); 
-        } 
-    }
+        window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
+    } else { if(pointer) pointer.style.display = 'none'; }
     
     window.addEventListener('load', () => {
+        currentWorldline = selectRandomWorldline();
+        finalTargetRate = currentWorldline.currentRate.toFixed(6);
+        currentRateDisplay = finalTargetRate;
+        document.getElementById('worldlineNumber').innerText = finalTargetRate;
+        updateWorldlineUI();
+        
         const waves = document.querySelector('a-waves');
-        if(waves && waves.setSize){ 
-            waves.setSize(); 
-            waves.setLines(); 
-        }
+        if(waves && waves.setSize){ waves.setSize(); waves.setLines(); }
         setWavesBackground(document.body.classList.contains('light-mode'));
+        
         buildCarousel();
         bindCarouselEvents();
-        resetAutoPlay();
         initTabs();
         renderContent('competition');
         updateTabButtonTexts();
         updateLastUpdated();
         
         setTimeout(() => { 
-            if(!revealTriggered) {
-                preloadCount = preloadTotal;
-                isWindowLoaded = true;
-                checkRevealCondition();
-            }
+            if(!revealTriggered) { preloadCount = preloadTotal; isWindowLoaded = true; checkRevealCondition(); }
         }, 6000);
         isWindowLoaded = true;
         checkRevealCondition();
