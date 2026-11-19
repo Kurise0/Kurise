@@ -1,0 +1,35 @@
+/* v9 / persistent, dual-sided particle reveal across competition and projects.
+   Raw SVG/HTML artwork remains in the DOM as a geometry source and fallback;
+   it is never exposed during a transition once the Canvas cloud is mounted. */
+#competition .archive-card-visual.formation-host,
+#project .panel-art.formation-host{position:relative!important;isolation:isolate;overflow:hidden!important}
+#competition .archive-card-visual.formation-ready > :not(.formation-canvas),
+#project .panel-art.formation-ready > :not(.formation-canvas){
+ visibility:hidden!important;opacity:0!important;pointer-events:none!important;
+}
+#competition .archive-card-visual .formation-canvas,
+#project .panel-art .formation-canvas{
+ position:absolute!important;inset:0!important;display:block!important;
+ z-index:4!important;pointer-events:none!important;max-width:none!important;
+ opacity:1!important;mix-blend-mode:normal!important;
+ filter:none!important;transform:none!important;
+}
+/* Original single-card flow points must not compete with the per-slide renderer. */
+#competition .form-status{display:none!important}
+/* The reveal seam remains visible but both sides are now Canvas particle forms. */
+#competition .archive-card-visual,
+#project .panel-art{contain:paint}
+/* The introduction no longer has a secondary CTA: use room for typography. */
+#index .hero-subrow{display:flex!important;justify-content:flex-start!important;align-items:flex-start!important;max-width:min(650px,88vw)!important}
+#index .hero-subrow p{max-width:570px!important}
+#index .hero-title{margin-bottom:clamp(18px,2.7vh,30px)!important}
+#index .hero-end{margin-top:clamp(8px,1.5vh,20px)}
+/* Full moving image precedes typography for approximately one second. */
+#index.hero-intro-ready .hero-stencil{transition-delay:0ms}
+#index.hero-intro-ready .hero-visual{transition-delay:85ms}
+#index.hero-intro-ready .hero-small-head,#index.hero-intro-ready .hero-coordinate{transition-delay:130ms}
+#index.hero-intro-ready .hero-eyebrow{transition-delay:200ms}
+#index.hero-intro-ready .hero-title{transition-delay:260ms}
+#index.hero-intro-ready .hero-subrow{transition-delay:430ms}
+#index.hero-intro-ready .hero-end{transition-delay:590ms}
+@media (max-width:580px){#index .hero-subrow{max-width:90vw!important}}

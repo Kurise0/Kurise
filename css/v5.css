@@ -1,0 +1,116 @@
+/* KURISE V5 — animated text + horizontal real-content reveal */
+:root{--kinetic-delay:0s}
+/* Full motion is deliberate default; ?motion=reduce is the explicit escape hatch. */
+#revealEdge{display:block!important}
+body.motion-reduced #revealEdge{display:none!important}
+/* Animated editorial words cross the same seam that reveals the chapter. */
+.kinetic-word{display:inline-block;transform-origin:16% 86%;will-change:transform,opacity}
+.spa-page.is-revealing .kinetic-word:not(.kinetic-popped){opacity:0;transform:translate3d(0,38px,0) scale(.89) rotate(-2deg)}
+.spa-page.is-revealing .kinetic-word.kinetic-popped{animation:kurise-word-pop .69s cubic-bezier(.19,1.2,.24,1) both;animation-delay:var(--kinetic-delay,0s)}
+@keyframes kurise-word-pop{
+ 0%{opacity:0;transform:translate3d(0,38px,0) scale(.88) rotate(-2.5deg);filter:blur(3px)}
+ 57%{opacity:1;filter:blur(0);transform:translate3d(0,-6px,0) scale(1.025) rotate(.3deg)}
+ 100%{opacity:1;transform:translate3d(0,0,0) scale(1) rotate(0);filter:blur(0)}
+}
+/* v4 used a 100vw-wide continuous horizontal translation. In v5 both real
+   nested DOM panels are superimposed and the incoming panel is clipped. */
+#archiveTrack,#projectsTrack{
+ position:relative!important;width:100%!important;height:100%!important;display:block!important;
+ transform:none!important;will-change:auto!important;overflow:visible!important;
+}
+#archiveTrack>.archive-card,#projectsTrack>.cinema-panel{
+ position:absolute!important;inset:0!important;left:0!important;top:0!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ height:100%!important;max-height:100%!important;
+ opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+ transform:none!important;z-index:0;
+}
+#archiveTrack>.archive-card.is-current,#projectsTrack>.cinema-panel.is-current{
+ opacity:1!important;visibility:visible!important;pointer-events:auto!important;z-index:1;
+}
+#archiveTrack>.archive-card.slide-outgoing,#projectsTrack>.cinema-panel.slide-outgoing{
+ opacity:1!important;visibility:visible!important;pointer-events:none!important;z-index:2;
+}
+#archiveTrack>.archive-card.slide-incoming,#projectsTrack>.cinema-panel.slide-incoming{
+ opacity:1!important;visibility:visible!important;pointer-events:none!important;z-index:3;
+ will-change:clip-path;
+}
+#archiveViewport,#cinemaWindow{position:relative!important;isolation:isolate;overflow:hidden!important}
+.slide-reveal-seam{
+ position:absolute;z-index:7;top:0;bottom:0;width:2px;left:100%;pointer-events:none;
+ background:linear-gradient(180deg,transparent,rgba(241,252,249,.86) 22%,rgba(251,251,246,.95) 50%,rgba(241,252,249,.86) 78%,transparent);
+ box-shadow:0 0 12px rgba(230,242,235,.28);
+}
+.slide-reveal-seam::after{
+ content:"";position:absolute;left:-9px;top:0;bottom:0;width:20px;
+ background:linear-gradient(90deg,transparent,rgba(240,253,244,.11),transparent);
+}
+.slide-kinetic{transform-origin:16% 78%;will-change:opacity,transform}
+.slide-incoming .slide-kinetic:not(.slide-kinetic-in){opacity:0;transform:translate3d(24px,16px,0) scale(.9)}
+.slide-incoming .slide-kinetic.slide-kinetic-in{
+ animation:kurise-slide-pop .65s cubic-bezier(.19,1.25,.23,1) both;
+}
+@keyframes kurise-slide-pop{
+ 0%{opacity:0;transform:translate3d(24px,16px,0) scale(.9);filter:blur(3px)}
+ 60%{opacity:1;filter:blur(0);transform:translate3d(-5px,-4px,0) scale(1.025)}
+ 100%{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+body.motion-reduced .slide-reveal-seam{display:none}
+/* Compact and left align the Project gallery to the same editorial gutter. */
+@media(min-width:861px){
+ #project .projects-horizontal{
+   width:calc(100vw - 2 * var(--gutter) - 35px)!important;
+   max-width:1340px!important;
+   height:calc(100dvh - var(--header-h) - clamp(94px,12vh,128px))!important;
+   margin:clamp(12px,2.3vh,24px) auto 0!important;
+   margin-left:auto!important;
+   left:auto!important;transform:none!important;min-height:0!important;
+   border:1px solid rgba(222,236,220,.2);
+ }
+ #project .cinema-panel{padding-inline:clamp(25px,4.1vw,65px)!important}
+ #project .panel-copy{max-width:620px}
+ #project .panel-main{gap:clamp(20px,3.5vw,66px)}
+}
+/* Editorial rhythm: left edges and headings align across sections. */
+#about .about-mast,#about .about-copy,#competition .section-intro,
+#competition .archive-card-body,#project .panel-copy,#contact .contact-main{
+ text-align:left!important;
+}
+#competition .archive-card-body{padding-left:clamp(16px,3vw,48px)!important}
+#competition .archive-card-top{margin-inline:0!important}
+#competition .archive-card-visual{margin-right:clamp(10px,2vw,25px)}
+/* Dotfield overlays the semantic SVG illustration without swallowing pointer events. */
+#competition .archive-card-visual.flow-points-host{position:relative;isolation:isolate}
+#competition .archive-card-visual.flow-points-host svg{opacity:.46;position:relative;z-index:1}
+.flow-points-canvas{position:absolute;inset:0;z-index:2;display:block;pointer-events:none;mix-blend-mode:screen}
+@media(max-width:860px){
+ #project .projects-horizontal{width:calc(100vw - 2 * var(--gutter))!important;
+   margin:7px auto 0!important;margin-left:auto!important;left:auto!important;
+   height:calc(100dvh - var(--header-h) - 78px)!important;
+   min-height:0!important;border:1px solid rgba(222,236,220,.17)}
+ #project .cinema-panel{padding-inline:clamp(15px,3vw,25px)!important}
+}
+@media(max-width:580px){
+ #project .projects-horizontal{width:calc(100vw - 20px)!important;
+  height:calc(100dvh - var(--header-h) - 62px)!important}
+ #project .cinema-panel{padding-inline:16px!important}
+ #competition .archive-card-body{padding-left:2px!important}
+}
+@media(max-height:600px){
+ #project .projects-horizontal{height:calc(100dvh - var(--header-h) - 50px)!important;margin-top:4px!important}
+}
+/* The competition's flex child used to shrink to intrinsic content width,
+   producing a centered masthead unrelated to the card's 90px left margin. */
+#competition>.container:first-child{width:100%!important;max-width:1600px!important;flex:0 0 auto;margin:0 auto!important}
+#competition .section-intro{justify-content:space-between;text-align:left}
+/* Bring oversized editorial titles into the reduced project viewport. */
+@media(min-width:861px){
+ #project .panel-prologue .panel-copy h3,#project .panel-epilogue .panel-copy h3{
+   font-size:clamp(52px,6.7vw,101px)!important;line-height:1.01!important;
+   letter-spacing:-.045em;
+ }
+ #project .panel-agent .panel-copy h3,#project .panel-order .panel-copy h3{
+   font-size:clamp(42px,5.4vw,86px)!important;
+ }
+ #project .panel-copy>p:not(.panel-mini){font-size:clamp(12px,1vw,15px);line-height:1.65}
+}

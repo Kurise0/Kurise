@@ -1,0 +1,154 @@
+/* KURISE v11 — quiet editorial layout + cinematic contact / user-authored v10 content preserved. */
+
+/* 1 — No decorative directions in the main viewport. Actual navigation stays in the header. */
+.global-scroll-cue, #globalScrollCue, .scroll-indicator, .scroll-down {display:none!important}
+
+/* 2 — Research follows the same grid rhythm and baselines as Profile. */
+#about .research > .research-profile{
+  display:flex; flex-direction:column; height:100%; min-height:0;
+  padding-bottom:clamp(10px,1.7vh,22px); box-sizing:border-box;
+}
+#about .research-grid{
+  display:grid; grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);
+  flex:1 1 auto; min-height:0; align-content:center; align-items:center;
+  gap:clamp(20px,5vw,76px);
+  padding-top:clamp(22px,4.6vh,60px);padding-bottom:clamp(12px,3vh,32px);
+}
+#about .research-mast h2{font-size:clamp(64px,6.2vw,112px)!important;line-height:1.08;letter-spacing:-.06em}
+#about .research-mast .title-indented{color:var(--orange)!important;-webkit-text-stroke:0!important}
+#about .research-copy{padding:0; max-width:none; gap:0}
+#about .research-copy .lead{
+  color:var(--v6-fg)!important;font-size:clamp(20px,1.7vw,29px);line-height:1.5;
+  margin-bottom:clamp(18px,3vh,30px)
+}
+#about .research-focus-strip{
+  flex:0 0 auto; display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  border-top:2px solid var(--v6-line); border-bottom:1px solid var(--v6-line);
+  min-width:0;
+}
+#about .research-focus-strip .research-row{
+  min-width:0; border:0!important; background:transparent!important;
+  padding:clamp(14px,2.2vh,25px) clamp(14px,2vw,30px);
+}
+#about .research-focus-strip .research-row:first-child{border-right:1px solid var(--v6-line)!important}
+#about .research-focus-strip .research-row>button{
+  padding:0!important; width:100%; min-height:52px; display:grid;
+  grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto;
+  gap:8px 14px; align-content:start; align-items:center; text-align:left;
+  border:0!important; background:none!important
+}
+#about .research-focus-strip .research-row>button span{grid-column:1;grid-row:1;color:var(--v6-muted)!important;font-size:10px}
+#about .research-focus-strip .research-row>button strong{
+  grid-column:1;grid-row:2;font-size:clamp(17px,1.5vw,24px);line-height:1.3;
+  color:var(--v6-fg)!important;overflow-wrap:anywhere
+}
+#about .research-focus-strip .research-row>button i{grid-column:2;grid-row:2;justify-self:end;color:var(--orange)}
+#about .research-focus-strip .research-description p{
+  padding:0!important; margin:0; font-size:clamp(11px,.92vw,14px);
+  line-height:1.6!important;color:var(--v6-muted)!important;max-width:unset
+}
+#about .research-focus-strip .research-row.is-open .research-description p{padding-top:12px!important}
+#about .research-profile>.section-footnote{flex:none}
+@media(max-width:860px){
+ #about .research-grid{grid-template-columns:1fr;gap:clamp(10px,2vh,20px);padding-top:clamp(47px,6vh,72px);padding-bottom:10px;align-content:center}
+ #about .research-mast h2{font-size:clamp(43px,8.5vw,77px)!important}
+ #about .research-copy .small-index{margin-bottom:8px}
+ #about .research-copy .lead{font-size:clamp(15px,2.7vw,21px);line-height:1.45;margin-bottom:8px}
+ #about .research-copy .about-signature{padding-top:10px}
+ #about .research-focus-strip .research-row{padding:13px 13px}
+ #about .research-focus-strip .research-row>button strong{font-size:clamp(15px,2.4vw,20px)}
+}
+@media(max-width:580px){
+ #about .research-grid{padding-top:clamp(46px,7vh,68px);gap:10px}
+ #about .research-mast h2{font-size:clamp(42px,11vw,64px)!important}
+ #about .research-copy .lead{font-size:clamp(14px,3.2vw,18px)}
+ #about .research-copy .about-signature{padding-top:7px;gap:9px}
+ #about .research-copy .about-signature b{font-size:10px}
+ #about .research-focus-strip .research-row{padding:12px 9px}
+ #about .research-focus-strip .research-row>button{gap:5px 7px}
+ #about .research-focus-strip .research-row>button strong{font-size:clamp(13px,3.35vw,18px)}
+ #about .research-focus-strip .research-row>button span{font-size:8px}
+ #about .research-focus-strip .research-description p{font-size:10px}
+}
+@media(max-height:710px){
+ #about .research > .research-profile{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ #about .research-grid{flex:1 0 auto;min-height:190px;padding-top:50px}
+ #about .research-focus-strip{flex-shrink:0}
+}
+
+/* 3 — One restrained, wordless horizontal signal for BOTH inner galleries.
+   It glides left-to-right and fades away, like the old vertical signal. */
+#competition .archive-bottom>span, #project .projects-motion-meta [data-i18n="projectsMotion"]{display:none!important}
+#competition .gallery-motion-line, #project .gallery-motion-line{
+  position:relative!important;display:block!important; flex:0 0 auto;
+  height:2px!important;min-height:2px!important;
+  width:clamp(95px,13vw,185px)!important;max-width:38vw;
+  background:color-mix(in srgb,var(--v6-fg),transparent 82%)!important;
+  overflow:hidden!important;border:0!important;border-radius:0;
+}
+#competition .gallery-motion-line>div,#project .gallery-motion-line>div{display:none!important}
+#competition .gallery-motion-line::after,#project .gallery-motion-line::after{
+  content:"";position:absolute;left:0;top:0;height:100%;width:27%;
+  background:var(--orange);box-shadow:0 0 9px color-mix(in srgb,var(--orange),transparent 45%);
+  animation:kurise-h-signal 1.65s cubic-bezier(.28,.12,.25,1) infinite;
+}
+@keyframes kurise-h-signal{
+  0%{transform:translateX(-115%);opacity:0}
+  18%{opacity:1}
+  65%{opacity:1}
+  100%{transform:translateX(385%);opacity:0}
+}
+#competition .archive-bottom{justify-content:space-between!important}
+#project .project-dots{display:none!important}
+#project .projects-motion-meta{justify-content:space-between!important}
+#project .projects-motion-bottom{gap:clamp(14px,2.7vw,30px)}
+#project .projects-motion-bottom .gallery-motion-line{margin-right:auto}
+@media(prefers-reduced-motion:reduce){
+ #competition .gallery-motion-line::after,#project .gallery-motion-line::after{animation:none;transform:translateX(110%);opacity:.85}
+}
+
+/* 4 — Contact receives its own full-bleed background video. Foreground stays
+   left-aligned, legible and in sync with the global light/dark theme. */
+#contact{position:relative!important;isolation:isolate;overflow:hidden!important}
+#contact .contact-film{
+  position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:#15090d url('../assets/contact-poster.jpg') center/cover no-repeat;
+}
+#contact .contact-film video{
+  width:100%;height:100%;display:block;object-fit:cover;object-position:center center;
+  filter:saturate(.92) contrast(1.04);transform:scale(1.005);
+}
+#contact .contact-film-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(6,10,13,.87) 0%,rgba(9,12,16,.78) 41%,rgba(8,8,13,.35) 77%,rgba(5,8,10,.25) 100%),
+             linear-gradient(0deg,rgba(5,10,12,.84),transparent 26%,transparent 73%,rgba(5,8,12,.52));
+}
+html[data-theme="light"] #contact .contact-film-shade{
+  background:linear-gradient(90deg,rgba(245,239,228,.91) 0%,rgba(245,239,230,.79) 46%,rgba(236,232,229,.44) 80%,rgba(236,232,229,.25) 100%),
+             linear-gradient(0deg,rgba(245,239,228,.77),transparent 29%,transparent 70%,rgba(245,239,228,.45));
+}
+#contact>.container{position:relative;z-index:2}
+#contact>.footer{position:relative;z-index:2}
+#contact .contact-main{position:relative;z-index:2}
+#contact .contact-grid{
+  position:relative;z-index:2;background:rgba(15,24,28,.42)!important;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+#contact .social-tile{background:rgba(13,18,23,.16)!important;border-color:rgba(244,239,227,.19)!important}
+#contact .social-tile:hover{background:rgba(68,76,72,.31)!important}
+#contact .footer{background:rgba(10,15,18,.34)!important;color:var(--v6-fg)!important;border-top:1px solid rgba(244,239,227,.19)!important;backdrop-filter:blur(12px)}
+#contact .contact-main>p,#contact .contact-pre{color:var(--v6-fg)!important;opacity:.87}
+#contact .contact-main h2,#contact .social-tile strong,#contact .social-brand,
+#contact .email-large,#contact .footer-inner strong{color:var(--v6-fg)!important}
+#contact .social-tile>span,#contact .footer-inner p,#contact .footer-inner small{color:var(--v6-fg)!important;opacity:.73}
+#contact .section-cap{border-color:var(--v6-line)!important}
+html[data-theme="light"] #contact .contact-grid{background:rgba(249,243,234,.56)!important}
+html[data-theme="light"] #contact .social-tile{background:rgba(249,243,234,.22)!important;border-color:rgba(23,35,32,.17)!important}
+html[data-theme="light"] #contact .social-tile:hover{background:rgba(249,243,234,.58)!important}
+html[data-theme="light"] #contact .footer{background:rgba(244,239,230,.54)!important;border-top-color:rgba(23,35,32,.17)!important}
+@media(max-width:860px){
+ #contact .contact-film video{object-position:68% center}
+ #contact .contact-film-shade{background:linear-gradient(90deg,rgba(7,11,14,.90),rgba(7,11,14,.65) 72%,rgba(7,11,14,.53))}
+ html[data-theme="light"] #contact .contact-film-shade{background:linear-gradient(90deg,rgba(246,241,231,.92),rgba(246,241,231,.71) 72%,rgba(246,241,231,.58))}
+}
+@media(max-height:560px){#contact .contact-film-shade{background-color:rgba(4,8,10,.2)}}

@@ -1,0 +1,79 @@
+/* KURISE WORLDLINE v7: 5-route navigation, permanent scroll cue,
+   true particle form reconstruction, and unified project day/night. */
+:root {--v7-particle-main:#aeead7;--v7-particle-accent:#ff7851}
+html[data-theme="light"] {--v7-particle-main:#245c51;--v7-particle-accent:#cc6747}
+/* Five primary destinations, aligned and always in canonical order. */
+.site-header{gap:clamp(10px,1.4vw,22px)}
+#mainNavigation{display:flex;align-items:stretch;justify-content:center;gap:clamp(3px,.45vw,10px);margin-left:auto;flex:0 1 auto;min-width:0}
+#mainNavigation .nav-text{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;
+ min-width:clamp(66px,6.5vw,105px);height:56px;padding:8px clamp(6px,.75vw,13px);border-bottom:2px solid transparent;
+ color:inherit;font-family:var(--mono);letter-spacing:.05em;text-decoration:none;white-space:nowrap;transform:none!important;transition:background .2s,border-color .2s,color .2s}
+#mainNavigation .nav-text span{font-size:10px;font-weight:700;opacity:.52;color:inherit}
+#mainNavigation .nav-text strong{font-size:clamp(11px,.9vw,13px);font-weight:800;line-height:1.15;color:inherit}
+#mainNavigation .nav-text:hover,#mainNavigation .nav-text.is-active{background:color-mix(in srgb,var(--v6-fg),transparent 93%);border-bottom-color:var(--orange)}
+#mainNavigation .nav-text.is-active span,#mainNavigation .nav-text.is-active strong{color:var(--orange);opacity:1}
+#mobilePanel [data-go].is-active{color:var(--orange)}
+.site-header .mark{flex-shrink:0}
+.site-header .lang-btn,.site-header .theme-toggle{flex-shrink:0}
+@media(max-width:1460px){.site-header .header-center{display:none!important}}
+@media(max-width:1120px){#mainNavigation .nav-text{min-width:60px;padding-inline:6px}
+ .site-header .mark-word small{display:none}}
+@media(max-width:860px){#mainNavigation{display:none!important}}
+/* Single persistent chapter cue, outside each page clipping layer. */
+.global-scroll-cue{position:fixed;z-index:112;left:50%;bottom:clamp(7px,1.2vh,17px);transform:translateX(-50%);
+ display:flex;align-items:center;justify-content:center;gap:12px;flex-direction:column;
+ width:70px;height:78px;background:none;border:0;cursor:pointer;color:var(--v6-fg);pointer-events:auto;
+ filter:drop-shadow(0 1px 8px rgba(0,0,0,.25))}
+.global-scroll-cue .cue-track{display:block;width:2px;height:42px;overflow:hidden;position:relative;
+ background:color-mix(in srgb,var(--v6-fg),transparent 74%)}
+.global-scroll-cue .cue-track i{position:absolute;left:0;top:-42%;width:100%;height:31%;background:var(--orange);
+ box-shadow:0 0 12px var(--orange);animation:v7-cue-travel 1.5s cubic-bezier(.36,0,.22,1) infinite}
+@keyframes v7-cue-travel{0%{top:-40%;opacity:0}18%{opacity:1}80%{opacity:1}100%{top:110%;opacity:0}}
+.global-scroll-cue .cue-text{font:800 9px var(--mono);letter-spacing:.09em;white-space:nowrap;text-shadow:0 2px 15px #0008}
+.global-scroll-cue:hover .cue-text{color:var(--orange)}
+.global-scroll-cue.cue-restart .cue-track i{animation-direction:reverse}
+/* Main hero is video-backed: always use pale signal color over the film. */
+body:has(#index.is-current) .global-scroll-cue{color:#fff}
+body:has(#index.is-current) .global-scroll-cue .cue-track{background:#ffffff66}
+@media(max-width:860px){.global-scroll-cue{bottom:7px;height:60px;width:58px;gap:6px}
+.global-scroll-cue .cue-track{height:30px}.global-scroll-cue .cue-text{font-size:8px}}
+@media(max-height:600px){.global-scroll-cue{height:46px;bottom:3px;gap:3px}.global-scroll-cue .cue-track{height:21px}}
+/* Particle world-form. SVG stays a semantic fallback but the dots create its form. */
+#competition .archive-card-visual.flow-points-host{position:relative;isolation:isolate;overflow:hidden}
+#competition .archive-card-visual.flow-points-host svg{opacity:.065!important;filter:none!important}
+#competition .flow-points-canvas{position:absolute;inset:0;z-index:2;display:block;pointer-events:none;
+ mix-blend-mode:normal!important;opacity:1}
+#competition .form-status{position:absolute;bottom:13px;right:15px;z-index:4;
+ display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font:800 9px var(--mono);
+ letter-spacing:.11em;color:var(--v6-muted);pointer-events:none}
+#competition .form-status i{display:block;width:5px;height:5px;border-radius:50%;background:var(--v7-particle-main);box-shadow:0 0 8px var(--v7-particle-main)}
+#competition .form-status.is-assembling i{background:var(--v7-particle-accent);animation:v7-light-pulse .55s ease-in-out infinite alternate}
+@keyframes v7-light-pulse{to{opacity:.3;scale:.6}}
+/* Project: no standalone orange or white panels; all obey site theme. */
+#project .projects-horizontal{border-color:var(--v6-line)!important;background:var(--v6-card)!important}
+#project .cinema-panel{color:var(--v6-fg)!important;filter:none!important;
+ background:linear-gradient(122deg,var(--v6-card),var(--v6-bg))!important}
+#project .panel-agent{background:linear-gradient(122deg,var(--v6-bg),color-mix(in srgb,var(--v6-card),var(--v7-particle-main) 6%))!important}
+#project .panel-order{background:linear-gradient(122deg,var(--v6-card),color-mix(in srgb,var(--v6-card),var(--orange) 7%))!important}
+#project .panel-epilogue{background:linear-gradient(122deg,var(--v6-bg),var(--v6-card))!important}
+#project .cinema-panel .panel-copy,#project .cinema-panel h3,#project .cinema-panel h3 em{color:var(--v6-fg)!important}
+#project .cinema-panel .panel-topline,#project .cinema-panel .panel-bottomline,
+#project .cinema-panel .panel-line,#project .cinema-panel .panel-mini,
+#project .cinema-panel p{color:var(--v6-muted)!important;border-color:var(--v6-line)!important}
+#project .cinema-panel .panel-kicker,#project .cinema-panel .cinema-period,
+#project .cinema-panel .panel-kicker i{color:var(--orange)!important}
+#project .cinema-panel .panel-kicker i{background:var(--orange)!important}
+#project .cinema-panel h3 .cinema-period,#project .cinema-panel .panel-copy h3 em{color:var(--orange)!important}
+#project .cinema-panel .panel-action{color:var(--orange)!important;border-color:var(--orange)!important}
+#project .cinema-panel .panel-action:hover{color:var(--v6-bg)!important;background:var(--orange)!important}
+#project .cinema-panel .panel-buildtag{border-color:var(--v6-line)!important;color:var(--v6-fg)!important}
+#project .cinema-panel .cinema-grid{background-image:linear-gradient(90deg,var(--v6-line) 1px,transparent 1px),linear-gradient(var(--v6-line) 1px,transparent 1px)!important;opacity:.48}
+#project .cinema-panel .cinema-decoration{color:var(--v6-fg)!important}
+#project .cinema-panel .panel-art{color:var(--orange)!important}
+#project .panel-order .panel-art svg,#project .panel-agent .panel-art svg{stroke:var(--v7-particle-main)!important}
+#project .panel-order .panel-kicker,#project .panel-order .panel-mini{color:var(--orange)!important}
+#project .panel-prologue .signal-ring,#project .panel-prologue .signal-core{border-color:var(--v7-particle-main)!important;color:var(--v6-fg)!important}
+html[data-theme="light"] #project .cinema-panel h3{color:#1b342c!important}
+html[data-theme="light"] #project .cinema-panel .panel-art{opacity:.8}
+/* Accessibility: cue and navigation are large enough to focus via keyboard. */
+.global-scroll-cue:focus-visible,#mainNavigation a:focus-visible{outline:2px solid var(--orange);outline-offset:3px}

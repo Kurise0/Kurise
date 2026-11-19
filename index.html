@@ -1,1286 +1,174 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Kurise - About me</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=VT323&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f0807;
-            --text-color: #fff4f0;
-            --text-muted: #b8a39f;
-            --neon-green: #ff5e4a;
-            --accent-warm: #ff7a66;
-            --deep-red: #e03c2e;
-            --neon-glow: rgba(255, 94, 74, 0.58);
-            --neon-glow-warm: rgba(255, 122, 102, 0.45);
-            --glass-bg: rgba(22, 12, 11, 0.82);
-            --glass-border: rgba(255, 94, 74, 0.36);
-            --glass-border-warm: rgba(255, 122, 102, 0.26);
-            --card-radius: 36px;
-            --header-bg: linear-gradient(135deg, rgba(15,8,7,0.94) 0%, rgba(35,12,10,0.85) 100%);
-            --gallery-card-bg: rgba(24, 14, 13, 0.88);
-        }
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#111615" name="theme-color"/>
+<meta content="Kurise — an independent machine learning builder. Selected Kaggle challenges, experiments, and engineering projects." name="description"/>
+<meta content="KURISE / Machine Learning &amp; Experiments" property="og:title"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta content="Selected experiments, Kaggle challenges, and independent engineering work." property="og:description"/>
+<title>KURISE — Research in Motion</title>
+<style>/* Prevent a white frame during the loading.html → index.html handoff. */
+html{background:#070b09} body{background:#070b09}
+</style>
 
-        body.light-mode {
-            --bg-color: #fff8f5;
-            --text-color: #2c1f1c;
-            --text-muted: #8c6f68;
-            --neon-green: #e03c2e;
-            --accent-warm: #f45a48;
-            --deep-red: #c12e22;
-            --neon-glow: rgba(224, 60, 46, 0.32);
-            --neon-glow-warm: rgba(244, 90, 72, 0.28);
-            --glass-bg: rgba(255, 248, 245, 0.92);
-            --glass-border: rgba(224, 60, 46, 0.32);
-            --glass-border-warm: rgba(244, 90, 72, 0.25);
-            --header-bg: linear-gradient(135deg, rgba(255,248,245,0.98) 0%, rgba(255,230,220,0.94) 100%);
-            --gallery-card-bg: rgba(255, 248, 245, 0.97);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            position: fixed;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--bg-color) 0%, #0a0f14 50%, var(--bg-color) 100%);
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 28px;
-            cursor: none;
-            transition: background 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        body.theme-switching {
-            transition: background 2.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        #amadeus-loader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(ellipse at center, #0a0c0a 0%, #000000 100%);
-            z-index: 100000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            font-family: 'VT323', 'Courier New', monospace;
-            overflow: hidden;
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-        .crt-screen {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(180, 60, 20, 0.06) 0px, rgba(180, 60, 20, 0.06) 2px, transparent 2px, transparent 6px);
-            pointer-events: none;
-            z-index: 2;
-            animation: scanlines 8s linear infinite;
-        }
-        .crt-noise {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMTUiLz48L3N2Zz4=');
-            background-repeat: repeat;
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: 2;
-            mix-blend-mode: screen;
-        }
-        .crt-glow {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            box-shadow: inset 0 0 80px rgba(200, 70, 20, 0.25), 0 0 50px rgba(180, 60, 15, 0.15);
-            pointer-events: none;
-            z-index: 2;
-        }
-        .worldline-digit-container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            width: 100%;
-            padding: 0 5%;
-            transform: scale(1);
-            transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
-        }
-        .worldline-number {
-            font-family: 'VT323', 'Courier New', monospace;
-            font-weight: 700;
-            font-size: clamp(4rem, 20vw, 16rem);
-            letter-spacing: 0.06em;
-            background: linear-gradient(135deg, #c93a0e 0%, #9b3a0a 40%, #732a06 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 12px #b84500, 0 0 20px #7a2e00;
-            white-space: nowrap;
-            overflow-x: auto;
-            transition: filter 0.1s linear, text-shadow 0.1s ease;
-            filter: blur(8px);
-            opacity: 0.7;
-        }
-        .digit-zoom-out {
-            animation: zoomPulse 0.7s cubic-bezier(0.2, 1.2, 0.8, 1) forwards !important;
-        }
-        @keyframes zoomPulse {
-            0% { transform: scale(1); opacity: 1; filter: blur(0px); text-shadow: 0 0 15px #d95b0e; }
-            40% { transform: scale(1.6); opacity: 0.9; filter: blur(6px); text-shadow: 0 0 45px #d95b0e; }
-            100% { transform: scale(3.2); opacity: 0; filter: blur(18px); visibility: hidden; }
-        }
-        @keyframes scanlines {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 20px; }
-        }
-        .loader-hidden {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .main-outer {
-            transform: scale(0);
-            transform-origin: center center;
-            transition: transform 0.8s cubic-bezier(0.2, 0.95, 0.3, 1.1);
-            width: 100%;
-            max-width: 1560px;
-            height: 92vh;
-            max-height: 92vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .main-outer.zoomed {
-            transform: scale(1);
-        }
-        .global-flash {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(220,80,30,0.45) 0%, rgba(255,200,100,0) 80%);
-            pointer-events: none;
-            z-index: 10001;
-            opacity: 0;
-            animation: flashBurst 0.5s ease-out forwards;
-        }
-        @keyframes flashBurst {
-            0% { opacity: 0; }
-            15% { opacity: 0.7; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-        .stage {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            align-items: stretch;
-            gap: 20px;
-            width: 100%;
-            height: 100%;
-        }
-        .main-outer.zoomed .links a,
-        .main-outer.zoomed .links button {
-            animation: fadeSlideIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2) backwards;
-        }
-        .main-outer.zoomed .container {
-            animation: fadeSlideUp 0.55s ease-out 0.08s backwards;
-        }
-        .main-outer.zoomed .gallery-sidebar {
-            animation: fadeSlideUp 0.55s ease-out 0.18s backwards;
-        }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(30px); filter: blur(6px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        .links a, .links button {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        .main-outer.zoomed .links a, .main-outer.zoomed .links button {
-            opacity: 1;
-            transform: translateX(0);
-            transition: opacity 0.3s, transform 0.3s, background 0.2s;
-        }
-        .links {
-            display: flex; flex-direction: column; gap: 14px; flex-shrink: 0;
-            width: 170px;
-        }
-        .links a, .links button {
-            color: var(--text-color);
-            text-decoration: none; 
-            font-size: 14.5px; 
-            font-family: 'VT323', monospace;
-            letter-spacing: 2px; 
-            padding: 12px 16px; 
-            width: 100%; 
-            text-align: left;
-            border: 1px solid var(--glass-border); 
-            border-left: 3px solid var(--neon-green);
-            border-radius: 14px; 
-            background: var(--glass-bg); 
-            backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
-            cursor: none;
-            box-shadow: -4px 0 12px rgba(0,0,0,0.05); 
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            outline: none;
-        }
-        .links button {
-            font-family: 'Inter', sans-serif; 
-            font-weight: 600; 
-            letter-spacing: 1px;
-            color: var(--neon-green);
-        }
-        .links a:hover, .links button:hover {
-            background: var(--neon-green); 
-            color: #fff;
-            transform: translateX(8px) scale(1.03);
-            box-shadow: 0 0 20px var(--neon-glow), inset 0 0 4px #fff; 
-            border-color: #fff;
-        }
-        .links i {
-            font-size: 16px;
-            width: 20px;
-        }
-        .container {
-            flex: 5;
-            height: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            border-radius: var(--card-radius);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 30px 50px rgba(0,0,0,0.25), 0 0 0 1px var(--glass-border) inset, 0 0 32px var(--neon-glow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
-        }
-        .container::before {
-            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(135deg, var(--neon-glow), transparent);
-            border-radius: calc(var(--card-radius) + 2px); z-index: -1; opacity: 0.55; pointer-events: none;
-        }
-        header {
-            background: var(--header-bg);
-            padding: 15px 25px 12px;
-            text-align: center;
-            flex-shrink: 0;
-            border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(4px);
-            position: relative;
-            transition: background 0.5s ease;
-        }
-        header::after {
-            content: ''; position: absolute; bottom: -1px; left: 15%; width: 70%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-green), var(--cyan), transparent); filter: blur(1px);
-        }
-        h1 {
-            font-family: 'VT323', monospace; font-size: clamp(48px, 5.5vw, 72px);
-            color: var(--neon-green); text-shadow: 0 0 16px var(--neon-glow);
-            letter-spacing: 6px; font-weight: 400;
-        }
-        .subtitle {
-            font-size: clamp(13px, 1.8vw, 18px); color: var(--text-color); margin-top: 10px;
-            letter-spacing: 3px; font-weight: 700; text-transform: uppercase;
-        }
-        .hero {
-            flex-shrink: 0; text-align: center; background: rgba(0, 0, 0, 0.15);
-            padding: 18px 0 10px; position: relative;
-        }
-        body:not(.light-mode) .hero { background: rgba(0, 0, 0, 0.45); }
-        .carousel-container {
-            position: relative;
-            width: 70%;
-            max-width: 520px;
-            margin: 0 auto;
-            border-radius: 32px;
-            overflow: hidden;
-            transition: all 0.2s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        .carousel-slides {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 800 / 300;
-        }
-        .carousel-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-        .carousel-slide.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .carousel-slide a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border-radius: 28px;
-            overflow: hidden;
-            cursor: none;
-        }
-        .carousel-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 0 6px var(--neon-glow));
-        }
-        .carousel-slide a:hover img {
-            transform: scale(1.02);
-        }
-        .carousel-dots {
-            position: absolute;
-            bottom: 14px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            z-index: 20;
-        }
-        .dot {
-            width: 9px;
-            height: 9px;
-            background: rgba(255,255,255,0.7);
-            border-radius: 12px;
-            transition: all 0.2s;
-            cursor: none;
-            border: none;
-            padding: 0;
-        }
-        .dot.active {
-            width: 28px;
-            background: var(--neon-green);
-            box-shadow: 0 0 8px var(--neon-glow);
-        }
-        .content {
-            flex: 1;
-            padding: 28px 40px;
-            max-width: 100%;
-            margin: 0 auto;
-            width: 100%;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .content::-webkit-scrollbar { width: 5px; }
-        .content::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
-        .content::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
-        h2 {
-            color: var(--neon-green); font-family: 'VT323', monospace; font-size: clamp(28px, 3.5vw, 36px);
-            margin: 8px 0 20px 0; letter-spacing: 2px; border-left: 5px solid var(--neon-green);
-            padding-left: 20px; text-shadow: 0 0 5px var(--neon-glow);
-        }
-        p {
-            font-size: clamp(15px, 1.8vw, 17px);
-            margin-bottom: 18px;
-            line-height: 1.7;
-            font-weight: 450;
-            color: var(--text-color);
-        }
-        .highlight {
-            color: var(--neon-green); font-weight: 700;
-            background: linear-gradient(120deg, var(--neon-glow), transparent);
-            padding: 0 6px; border-radius: 8px; text-shadow: 0 0 2px var(--neon-glow);
-        }
-        footer {
-            flex-shrink: 0; text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.2);
-            color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--glass-border);
-            backdrop-filter: blur(8px); letter-spacing: 0.8px;
-        }
-        body:not(.light-mode) footer { background: rgba(0, 0, 0, 0.55); }
-        #last-updated { color: var(--neon-green); font-weight: 700; }
-        .worldline-title-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .congrats-text {
-            font-family: 'VT323', monospace;
-            font-size: clamp(12px, 1.6vw, 17px);
-            color: #ffd966;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 14px;
-            border-radius: 60px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 6px #ffaa33;
-            white-space: nowrap;
-        }
-        body.light-mode .congrats-text {
-            background: rgba(0,0,0,0.15);
-            color: #b85c1a;
-            text-shadow: none;
-        }
-        .worldline-desc {
-            margin-top: 6px;
-            font-size: 13px;
-            font-family: 'VT323', monospace;
-            color: #00ff9d;
-            text-shadow: 0 0 2px rgba(0,255,157,0.3);
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-            text-align: center;
-            white-space: nowrap;
-            overflow-x: auto;
-            max-width: 100%;
-        }
+<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23111615'/%3E%3Cpath d='M17 13v38m0-19 30-19m-30 19 31 19' stroke='%23ff6942' stroke-width='7' fill='none'/%3E%3C/svg%3E" rel="icon"/>
 
-        body.light-mode .worldline-desc {
-            color: #1a5c4a;
-            text-shadow: none;
-            font-weight: 500;
-        }
-        .gallery-sidebar {
-            flex-shrink: 0;
-            width: 435px;
-            height: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            border-radius: 32px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 16px 32px rgba(0,0,0,0.25), 0 0 18px var(--neon-glow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        .gallery-header {
-            padding: 14px 18px 0px 18px;
-            display: flex;
-            gap: 16px;
-            border-bottom: 1px solid var(--glass-border);
-            background: rgba(0,0,0,0.2);
-        }
-        .tab-btn {
-            background: transparent;
-            border: none;
-            font-family: 'VT323', monospace;
-            font-size: 1.35rem;
-            letter-spacing: 1.5px;
-            padding: 14px 20px;
-            color: var(--text-muted);
-            cursor: none;
-            transition: all 0.2s;
-            border-bottom: 2px solid transparent;
-            flex: 1;
-            text-align: center;
-            font-weight: 600;
-        }
-        .tab-btn.active {
-            color: var(--neon-green);
-            border-bottom-color: var(--neon-green);
-            text-shadow: 0 0 8px var(--neon-glow);
-        }
-        .tab-btn:hover {
-            color: var(--neon-green);
-            background: rgba(0,255,157,0.08);
-        }
-        .vertical-card-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .vertical-card-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .vertical-card-list::-webkit-scrollbar-thumb {
-            background: var(--neon-green);
-            border-radius: 10px;
-        }
-        .cert-card {
-            background: var(--gallery-card-bg);
-            border-radius: 26px;
-            border: 1px solid rgba(0, 255, 157, 0.35);
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-            cursor: pointer;
-            overflow: hidden;
-            backdrop-filter: blur(6px);
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0;
-            min-height: 150px;
-            opacity: 0;
-            transform: translateY(15px);
-        }
-        .main-outer.zoomed .cert-card {
-            animation: cardRise 0.45s ease-out forwards;
-        }
-        @keyframes cardRise {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .cert-card:hover {
-            transform: translateX(-6px) scale(1.02);
-            border-color: var(--neon-green);
-            box-shadow: 0 12px 26px var(--neon-glow), 0 0 0 1px var(--neon-green) inset;
-        }
-        .card-img {
-            width: 100px;
-            height: 95px;
-            flex-shrink: 0;
-            object-fit: contain;
-            background: #0a0f14;
-            padding: 8px;
-            border-radius: 18px;
-            margin: 8px;
-        }
-        body.light-mode .card-img {
-            background: #eef2f5;
-        }
-        .card-textbox {
-            flex: 1;
-            padding: 14px 16px;
-            background: rgba(0, 0, 0, 0.7);
-            transition: background 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            word-break: break-word;
-            white-space: normal;
-            overflow-wrap: break-word;
-        }
 
-        body.light-mode .card-textbox {
-            background: rgba(245, 240, 235, 0.98);
-        }
-
-        .card-rank {
-            font-family: 'VT323', monospace;
-            font-size: 0.85rem;
-            color: var(--neon-green);
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: 0.8px;
-            line-height: 1.3;
-        }
-
-        body.light-mode .card-rank {
-            color: #c93a0e;
-        }
-
-        .card-title {
-            font-weight: 800;
-            font-size: 0.95rem;
-            line-height: 1.35;
-            margin-bottom: 5px;
-            color: var(--text-color);
-        }
-
-        body.light-mode .card-title {
-            color: #2c1f1c;
-        }
-
-        .card-meta {
-            font-size: 0.7rem;
-            opacity: 0.85;
-            letter-spacing: 0.4px;
-            margin-bottom: 8px;
-        }
-
-        body.light-mode .card-meta {
-            color: #6b4f45;
-        }
-
-        .card-full-desc {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            margin-top: 8px;
-            padding-top: 5px;
-            border-top: 1px dashed rgba(0,255,157,0.4);
-            color: #b3ffe0;
-            line-height: 1.4;
-        }
-
-        body.light-mode .card-full-desc {
-            color: #3a5c52;
-            border-top-color: rgba(201, 58, 14, 0.3);
-        }
-        .cert-card:hover .card-textbox {
-            background: rgba(0, 20, 10, 0.95);
-        }
-
-        body.light-mode .cert-card:hover .card-textbox {
-            background: rgba(230, 220, 210, 0.98);
-        }
-
-        body.light-mode .cert-card:hover .card-title {
-            color: #1a0f0c;
-        }
-
-        body.light-mode .cert-card:hover .card-full-desc {
-            color: #1e5c4a;
-        }
-        @media (max-width: 1100px) {
-            .gallery-sidebar { width: 400px; }
-            .card-img { width: 88px; height: 82px; }
-        }
-        @media (max-width: 850px) {
-            html, body {
-                overflow: auto !important;
-                position: static !important;
-                height: auto !important;
-                min-height: 100vh;
-            }
-            body {
-                padding: 16px;
-                cursor: auto;
-                display: block;
-                align-items: unset;
-                justify-content: unset;
-            }
-            .main-outer {
-                height: auto !important;
-                max-height: none !important;
-                transform: scale(1);
-            }
-            .stage {
-                flex-direction: column;
-                height: auto !important;
-                overflow: visible;
-                gap: 20px;
-            }
-            .links {
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-                width: 100%;
-                margin-bottom: 6px;
-                gap: 12px;
-            }
-            .links a, .links button {
-                width: auto;
-                min-width: 120px;
-                font-size: 13px;
-                padding: 10px 18px;
-                border-left-width: 2px;
-                border-bottom: 2px solid var(--neon-green);
-                border-radius: 40px;
-                justify-content: center;
-            }
-            .links i {
-                display: inline-block;
-            }
-            .container {
-                height: auto !important;
-                min-height: auto;
-                overflow: visible;
-            }
-            .content {
-                overflow-y: visible !important;
-                max-height: none !important;
-                padding: 24px 28px;
-            }
-            .gallery-sidebar {
-                width: 100%;
-                height: auto;
-                max-height: none !important;
-                margin-top: 10px;
-            }
-            .vertical-card-list {
-                flex-direction: row;
-                overflow-x: auto;
-                overflow-y: hidden;
-                gap: 18px;
-                padding: 16px;
-                flex: 0 0 auto;
-                height: auto;
-            }
-            .cert-card {
-                min-width: 300px;
-                flex-shrink: 0;
-            }
-            .card-img {
-                width: 85px;
-                height: 75px;
-            }
-            .pointer {
-                display: none;
-            }
-            footer {
-                margin-top: 0;
-                padding: 14px;
-                font-size: 12px;
-            }
-        }
-        a-waves { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        a-waves svg { width: 100%; height: 100%; filter: drop-shadow(0 0 3px var(--neon-glow)); }
-        a-waves svg path { fill: none; stroke: url(#waveGradient); stroke-width: 1.5px; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
-        .pointer { --width: 26px; --height: 26px; position: fixed; top: calc(var(--height) / -2); left: calc(var(--width) / -2); width: var(--width); height: var(--height); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); pointer-events: none; z-index: 9999; filter: drop-shadow(0 0 5px var(--neon-green)); }
-        .pointer div { position: absolute; width: 100%; height: 100%; border: 2px solid var(--neon-green); opacity: 0.95; box-shadow: 0 0 8px var(--neon-green); transition: all 0.2s; }
-        .pointer div:nth-child(1) { border-top-style: solid; border-left-style: solid; top: -2px; left: -2px; }
-        .pointer div:nth-child(2) { border-top-style: solid; border-right-style: solid; top: -2px; right: -2px; }
-        .pointer div:nth-child(3) { border-bottom-style: solid; border-left-style: solid; bottom: -2px; left: -2px; }
-        .pointer div:nth-child(4) { border-bottom-style: solid; border-right-style: solid; bottom: -2px; right: -2px; }
-        .pointer::after { content: ''; position: absolute; top: 50%; left: 50%; width: 3px; height: 3px; background: var(--neon-green); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 6px var(--neon-green); }
-    </style>
-</head>
-<body class="light-mode">
-<div id="amadeus-loader">
-    <div class="crt-screen"></div>
-    <div class="crt-noise"></div>
-    <div class="crt-glow"></div>
-    <div class="worldline-digit-container" id="digitContainer">
-        <div class="worldline-number" id="worldlineNumber">0.000000</div>
-    </div>
-</div>
-<a-waves><svg><defs><linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop id="stop1" offset="0%" stop-color="#00ff9d"/><stop id="stop2" offset="50%" stop-color="#3effb3"/><stop id="stop3" offset="100%" stop-color="#00e5ff"/></linearGradient></defs></svg></a-waves>
-<div class="pointer"><div></div><div></div><div></div><div></div></div>
-<div class="main-outer" id="mainOuter">
-    <div class="stage">
-        <div class="links">
-            <button id="theme-toggle" class="_target"><i class="fa-solid fa-palette"></i>THEME</button>
-            <button id="lang-toggle" class="_target"><i class="fa-solid fa-globe"></i>EN / 中</button>
-            <a href="https://www.kaggle.com/kurisew" target="_blank" class="_target"><i class="fa-brands fa-kaggle"></i>KAGGLE</a>
-            <a href="https://github.com/Kurise0" target="_blank" class="_target"><i class="fa-brands fa-github"></i>GITHUB</a>
-            <a href="https://x.com/KURISEW" target="_blank" class="_target"><i class="fa-brands fa-x-twitter"></i>X</a>
-            <a href="https://www.linkedin.com/in/%E5%8A%9B%E7%AB%8B-%E9%BE%99-7b41a9367" target="_blank" class="_target"><i class="fa-brands fa-linkedin"></i>LINKEDIN</a>
-            <a href="mailto:s.t.m.kurise@gmail.com" class="_target" id="email-link">
-                <i class="fa-solid fa-envelope"></i><span id="email-text">EMAIL</span>
-            </a>
-        </div>
-        <div class="container">
-            <header>
-                <h1>Kurise</h1>
-                <div class="worldline-title-row">
-                    <div class="subtitle" id="worldline-header">世界线变动率</div>
-                    <div id="congratsContainer"></div>
-                </div>
-                <div id="worldlineDesc" class="worldline-desc"></div>
-            </header>
-            <div class="hero">
-                <div class="carousel-container" id="carousel">
-                    <div class="carousel-slides" id="carouselSlides"></div>
-                    <div class="carousel-dots" id="carouselDots"></div>
-                </div>
-            </div>
-            <div class="content">
-                <h2 data-i18n="heading">世界观测者档案</h2>
-                <p data-i18n="p1">你好，我是<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖(Makise Kurisu)</strong></p>
-                <p data-i18n="p2">在校本科生，目前专注于<strong class="highlight">机器学习</strong>与<strong class="highlight">数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，目前是一名 <strong class="highlight">Kaggle Competition Master</strong></p>
-                <p data-i18n="p3">对世界模型，大语言模型，空间智能感兴趣。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。</p>
-            </div>
-            <footer>
-                <span data-i18n="footer">Kurise • Last updated: </span>
-                <span id="last-updated"></span>
-            </footer>
-        </div>
-        <div class="gallery-sidebar">
-            <div class="gallery-header" id="tabHeader">
-                <button class="tab-btn active" data-tab="competition" data-i18n-tab="competition">Competition</button>
-                <button class="tab-btn" data-tab="projects" data-i18n-tab="projects">Projects</button>
-                <button class="tab-btn" data-tab="papers" data-i18n-tab="papers">Papers</button>
-            </div>
-            <div class="vertical-card-list" id="galleryList"></div>
-        </div>
-    </div>
-</div>
-
+<link href="./css/original.css?v=11" rel="stylesheet"/><link href="./css/spa.css?v=11" rel="stylesheet"/><link href="./css/v5.css?v=11" rel="stylesheet"/><link href="./css/v6.css?v=11" rel="stylesheet"/><link href="./css/v7.css?v=11" rel="stylesheet"/><link href="./css/v8.css?v=11" rel="stylesheet"/><link href="./css/v9.css?v=11" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/v11.css?v=11"/>
 <script>
-    const LOADER_MIN_MS = 500;
-    const loaderStartTime = Date.now();
-    let revealTriggered = false;
-    
-    const WORLD_LINES = [
-        { id:"α", nameZh:"α世界线", nameEn:"α Attractor Field", 
-          descZh:"由300人委员会支配的反乌托邦，SERN统治的绝望未来；真由理必定死亡，红莉栖存活成为\"时光机之母\"。",
-          descEn:"A dystopia ruled by the Committee of 300 and SERN; Mayuri's death is convergent, while Kurisu survives and becomes the \"Mother of Time Machine\".",
-          rateFunc:()=> Math.random()*1, weight:25 },
-        { id:"β", nameZh:"β世界线", nameEn:"β Attractor Field", 
-          descZh:"第三次世界大战的序幕，牧濑红莉栖于2010年7月28日死亡；冈部伦太郎在此见证并开启拯救助手的0篇章。",
-          descEn:"The prologue to World War III; Kurisu dies on July 28, 2010. Okabe witnesses this and begins the journey of Steins;Gate 0 to save her.",
-          rateFunc:()=> 1 + Math.random()*1, weight:25 },
-        { id:"SteinsGate", nameZh:"命运石之门世界线", nameEn:"Steins;Gate World Line", 
-          descZh:"恭喜你！这是一条既没有反乌托邦也没有第三次世界大战，无人牺牲的未知世界。抵达者将得到祝福。",
-          descEn:"Congratulations! This is a world with neither dystopia nor World War III — an uncharted future where no one has to die. Blessings be upon those who arrive.",
-          rateFunc:()=> 1.048596, weight:5 },
-        { id:"R", nameZh:"R世界线", nameEn:"R World Line", 
-          descZh:"与SG线偏差仅0.000001%；冈部伦太郎因过度使用Reading Steiner而逐渐被世界遗忘与消除。",
-          descEn:"Only 0.000001% divergence from the Steins;Gate line; due to overusing Reading Steiner, Okabe gradually fades from the world.",
-          rateFunc:()=> 1.048596 + (Math.random()*0.000002 - 0.000001), weight:5 },
-        { id:"Ω", nameZh:"Ω世界线", nameEn:"Ω Attractor Field", 
-          descZh:"菲莉丝主导的世界线，Lab成员关系发生剧变；冈部独自承担着原本世界线的记忆，在陌生的日常中生存。",
-          descEn:"Feyris' world line; the relationships among Lab members are drastically altered. Okabe bears the memories of the original world line alone.",
-          rateFunc:()=> -Math.random()*2, weight:12 },
-        { id:"ε", nameZh:"ε世界线", nameEn:"ε Attractor Field", 
-          descZh:"世界线发生巨大分歧，真由理死亡。",
-          descEn:"A massive divergence occurs in the world line, leading to Mayuri's death.",
-          rateFunc:()=> 4 + Math.random()*1, weight:12 },
-        { id:"δ", nameZh:"δ世界线", nameEn:"δ Attractor Field", 
-          descZh:"恭喜你！八名Lab成员全员聚齐，没有阴谋与死亡，围绕冈部的日常恋爱喜剧世界线。",
-          descEn:"Congratulations! A peaceful romantic comedy world where all eight Lab members are together — no conspiracies, no deaths.",
-          rateFunc:()=> 3 + Math.random()*1, weight:6 },
-        { id:"γ", nameZh:"γ世界线", nameEn:"γ Attractor Field", 
-          descZh:"冈部伦太郎成为Rounder首领与300人委员会成员，统治日本的独裁者。",
-          descEn:"Okabe becomes the leader of the Rounders and a member of the Committee of 300 — a dictator ruling over Japan.",
-          rateFunc:()=> 2 + Math.random()*1, weight:10 }
-    ];
-    
-    let currentWorldline = null;
-    let finalTargetRate = "0.000000";
-    
-    function getCarouselItemsForWorldline(worldlineId) {
-        return [
-            {img:"images/topimage.jpg", link:"https://steinsgate.jp/"},
-            {img:"images/kurisu.jpg", link:"https://www.pixiv.net/artworks/126362853"}
-        ];
-    }
-    
-    function selectRandomWorldline() {
-        const totalWeight = WORLD_LINES.reduce((sum, wl) => sum + wl.weight, 0);
-        let rand = Math.random() * totalWeight;
-        let accum = 0;
-        for (let wl of WORLD_LINES) {
-            accum += wl.weight;
-            if (rand < accum) {
-                const selected = { ...wl };
-                let rate = selected.rateFunc();
-                if (typeof rate === 'function') rate = rate();
-                rate = parseFloat(rate.toFixed(6));
-                selected.currentRate = rate;
-                return selected;
-            }
-        }
-        const fallback = { ...WORLD_LINES[0] };
-        fallback.currentRate = parseFloat(fallback.rateFunc().toFixed(6));
-        return fallback;
-    }
-    
-    let currentLang = 'zh';
-    let currentRateDisplay = '0.000000';
-    let preloadCount = 0;
-    let preloadTotal = 2;
-    let isWindowLoaded = false;
-    const i18n = { 
-        zh: { 
-            heading: "世界观测者档案", 
-            p1: "你好，我是<strong>Kurise</strong>。这个名字灵感来自<strong>《命运石之门》</strong>中出色的角色<strong>牧濑红莉栖(Makise Kurisu)</strong>。", 
-            p2: "在校本科生，目前专注于<strong class='highlight'>机器学习</strong>与<strong class='highlight'>数据科学</strong>领域。<br>热衷于 Kaggle 竞赛，目前是一名 <strong class='highlight'>Kaggle Competition Master</strong> ", 
-            p3: "对世界模型，大语言模型，空间智能感兴趣。<br>我是《Steins;Gate》忠实粉丝，坚信「一切都是命运石之门的选择」。", 
-            footer: "Kurise • 最后更新: ", 
-            worldlineH: "世界线变动率", 
-            competition: "竞赛", 
-            projects: "项目", 
-            papers: "论文", 
-            noPapers: "暂无论文",
-            email: "EMAIL"
-        },
-        en: { 
-            heading: "World Observer Archives", 
-            p1: "Hello, I am <strong>Kurise</strong>. It's a name inspired by the brilliant character <strong>Makise Kurisu</strong> from <strong>Steins;Gate</strong>", 
-            p2: "A undergraduate student currently focusing on <strong class='highlight'>Machine Learning</strong> and <strong class='highlight'>Data Science</strong>.<br>Passionate about Kaggle competitions, proud <strong class='highlight'>Kaggle Competition Master</strong>.",
-            p3: "Interested on World Model, LLM, Spatial Intelligence. <br>As a loyal fan of Steins;Gate, I believe 'Everything is the choice of Steins Gate'.", 
-            footer: "Kurise • Last updated: ", 
-            worldlineH: "Divergence Meter", 
-            competition: "Competition", 
-            projects: "Projects", 
-            papers: "Papers", 
-            noPapers: "No papers yet",
-            email: "EMAIL"
-        }
-    };
-    
-    const LAST_UPDATED_ZH = "2026年5月29日";
-    const LAST_UPDATED_EN = "May 29, 2026";
-    
-    function updateWorldlineUI() {
-        if (!currentWorldline) return;
-        const name = currentLang === 'zh' ? currentWorldline.nameZh : currentWorldline.nameEn;
-        const desc = currentLang === 'zh' ? currentWorldline.descZh : currentWorldline.descEn;
-        document.getElementById('worldlineDesc').innerHTML = `<span style="font-weight:bold;">${name}</span> &nbsp;—&nbsp; <span style="font-size:11px;">${desc}</span>`;
-        
-        const isLight = document.body.classList.contains('light-mode');
-        const spanBg = isLight ? '#e0d6d0' : '#1a1a1a';
-        const spanColor = isLight ? '#c93a0e' : '#ffffff';
-        document.getElementById('worldline-header').innerHTML = `${i18n[currentLang].worldlineH} <span style="font-family:'VT323'; background:${spanBg}; color:${spanColor}; padding:2px 10px; border-radius:28px; margin-left:8px;">${currentRateDisplay}%</span>`;
-        
-        const congratsDiv = document.getElementById('congratsContainer');
-    }
-    
-    function setWavesBackground(lightMode) { 
-        const waves = document.querySelector('a-waves'); 
-        if(waves) lightMode ? (waves.classList.remove('dark-bg'), waves.classList.add('light-bg')) : (waves.classList.remove('light-bg'), waves.classList.add('dark-bg')); 
-    }
-    
-    function updateNumberByProgress(progress) { 
-        let val = parseFloat(finalTargetRate) * Math.min(1.0, progress); 
-        let displayNum = Math.min(parseFloat(finalTargetRate), val).toFixed(6); 
-        if(progress >= 1.0) displayNum = finalTargetRate; 
-        currentRateDisplay = displayNum; 
-        const numberSpan = document.getElementById('worldlineNumber'); 
-        if(numberSpan) numberSpan.innerText = displayNum; 
-        updateWorldlineUI(); 
-        let blurAmount = Math.max(0, 12 * (1 - progress)); 
-        let opacityVal = Math.min(1, 0.7 + progress * 0.7); 
-        if(numberSpan) {
-            numberSpan.style.filter = `blur(${blurAmount}px)`; 
-            numberSpan.style.opacity = opacityVal; 
-            numberSpan.style.textShadow = `0 0 ${5+(1-progress)*12}px #c93a0e, 0 0 18px #7a2e00`; 
-        }
-    }
+try{document.documentElement.dataset.theme=localStorage.getItem("kurise-theme") === "light" ? "light" : "dark";}catch(e){document.documentElement.dataset.theme="dark";}
+(function () {
+  const params = new URLSearchParams(location.search);
+  let seen = false;
+  try { seen = sessionStorage.getItem('kurise-intro-seen-v5') === '1'; } catch(e) {}
+  if (!params.has('entered') && !seen) {
+    const requested = decodeURIComponent(location.hash.slice(1) || 'index');
+    const dest = /^(index|about|competition|project|contact|research)$/.test(requested) ? requested : 'index';
+    location.replace('./loading.html?dest=' + encodeURIComponent(dest));
+  }
+})();
+</script></head>
+<body class="spa-mode">
 
-    let scrambleInterval = setInterval(() => {
-        if (revealTriggered) return;
-        let displayNum = (Math.random() * 1.999999).toFixed(6);
-        const numberSpan = document.getElementById('worldlineNumber');
-        if (numberSpan) numberSpan.innerText = displayNum;
-    }, 40);
-    
-    function revealMainContent() {
-        if(revealTriggered) return;
-        revealTriggered = true;
-        clearInterval(scrambleInterval);
-        updateNumberByProgress(1.0);
-        const loader = document.getElementById('amadeus-loader');
-        const mainOuter = document.getElementById('mainOuter');
-        const containerDigit = document.getElementById('digitContainer');
-        if(!loader) return;
-        mainOuter.classList.add('zoomed');
-        containerDigit.classList.add('digit-zoom-out');
-        const flashDiv = document.createElement('div');
-        flashDiv.classList.add('global-flash');
-        document.body.appendChild(flashDiv);
-        setTimeout(()=>{ flashDiv.remove(); }, 600);
-        setTimeout(()=>{ loader.classList.add('loader-hidden'); setTimeout(()=>{ if(loader&&loader.parentNode) loader.remove(); },500); }, 150);
-    }
-    
-    function checkRevealCondition() {
-        if (isWindowLoaded && preloadCount >= preloadTotal) {
-            let timeElapsed = Date.now() - loaderStartTime;
-            if (timeElapsed >= LOADER_MIN_MS) {
-                revealMainContent();
-            } else {
-                setTimeout(revealMainContent, LOADER_MIN_MS - timeElapsed);
-            }
-        }
-    }
-    
-    function onPreloadImageComplete() {
-        preloadCount++;
-        checkRevealCondition();
-    }
-    
-    function createCardElement(imgSrc, rankText, titleText, metaText, descText, linkUrl) { 
-        const cardDiv = document.createElement('div'); 
-        cardDiv.className = 'cert-card _target'; 
-        cardDiv.addEventListener('click', (e) => { 
-            e.stopPropagation(); 
-            if(linkUrl) window.open(linkUrl, '_blank'); 
-        }); 
-        const img = document.createElement('img'); 
-        img.src = imgSrc; 
-        img.className = 'card-img'; 
-        img.loading = 'lazy'; 
-        img.decoding = 'async'; 
-        img.onerror = function() { 
-            this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231a1f26'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='14' text-anchor='middle' dy='.3em'%3EKurise%3C/text%3E%3C/svg%3E"; 
-        }; 
-        const textBox = document.createElement('div'); 
-        textBox.className = 'card-textbox'; 
-        const rankSpan = document.createElement('div'); 
-        rankSpan.className = 'card-rank'; 
-        rankSpan.innerText = rankText; 
-        const titleSpan = document.createElement('div'); 
-        titleSpan.className = 'card-title'; 
-        titleSpan.innerText = titleText; 
-        const metaSpan = document.createElement('div'); 
-        metaSpan.className = 'card-meta'; 
-        metaSpan.innerText = metaText; 
-        const fullDescSpan = document.createElement('div'); 
-        fullDescSpan.className = 'card-full-desc'; 
-        fullDescSpan.innerText = descText; 
-        textBox.append(rankSpan, titleSpan, metaSpan, fullDescSpan); 
-        cardDiv.append(img, textBox); 
-        return cardDiv; 
-    }
-    
-    const COMPETITIONS_DATA_ZH = [
-        { img: "images/header1.png", rank: "943支队伍中第7名", title: "图像匹配挑战赛 2025", publisher: "Kaggle · 2025年6月", fullDetail: "图像检索和3D重建", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
-        { img: "images/header4.png", rank: "2445支队伍中第49名", title: "Jigsaw - 敏捷社区规则分类", publisher: "Kaggle · 2025年10月", fullDetail: "NLP 内容审核", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
-        { img: "images/header5.jpg", rank: "1147支队伍中第37名", title: "RSNA 颅内动脉瘤检测", publisher: "Kaggle · 2025年10月", fullDetail: "医学影像动脉瘤检测", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
-        { img: "images/header2.png", rank: "2657支队伍中第100名", title: "CMI - 传感器行为检测", publisher: "Kaggle · 2025年9月", fullDetail: "传感器多模态时序分析", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
-        { img: "images/header3.jpg", rank: "1857支队伍中第95名", title: "MAP - 学生数学误解分析", publisher: "Kaggle · 2025年10月", fullDetail: "NLP 教育", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
-        { img: "images/header6.jpg", rank: "1455支队伍中第82名", title: "ARC Prize 2025", publisher: "Kaggle · 2025年12月", fullDetail: "抽象推理挑战", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
-    ];
-    const COMPETITIONS_DATA_EN = [
-        { img: "images/header1.png", rank: "7th out of 943 teams", title: "Image Matching Challenge 2025", publisher: "Kaggle · June 2025", fullDetail: "Image retrieval & 3D reconstruction", url: "https://www.kaggle.com/competitions/image-matching-challenge-2025" },
-        { img: "images/header4.png", rank: "49th out of 2445 teams", title: "Jigsaw - Agile Community Rules Classification", publisher: "Kaggle · Oct 2025", fullDetail: "NLP content moderation", url: "https://www.kaggle.com/competitions/jigsaw-agile-community-rules" },
-        { img: "images/header5.jpg", rank: "37th out of 1147 teams", title: "RSNA Intracranial Aneurysm Detection", publisher: "Kaggle · Oct 2025", fullDetail: "Medical imaging aneurysm detection", url: "https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection" },
-        { img: "images/header2.png", rank: "100th out of 2657 teams", title: "CMI - Detect Behavior with Sensor Data", publisher: "Kaggle · Sep 2025", fullDetail: "Sensor multimodal time-series analysis", url: "https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data" },
-        { img: "images/header3.jpg", rank: "95th out of 1857 teams", title: "MAP - Charting Student Math Misunderstandings", publisher: "Kaggle · Oct 2025", fullDetail: "NLP education", url: "https://www.kaggle.com/competitions/map-charting-student-math-misunderstandings" },
-        { img: "images/header6.jpg", rank: "82nd out of 1455 teams", title: "ARC Prize 2025", publisher: "Kaggle · Dec 2025", fullDetail: "Abstract reasoning challenge", url: "https://www.kaggle.com/competitions/arc-prize-2025" }
-    ];
-    const PROJECTS_DATA_ZH = [
-        { img: "images/eridanus.png", rank: "ComfyUI · 扩散模型", title: "ComfyUI 生图嵌入聊天机器人", publisher: "个人项目 · 2025", fullDetail: "基于Eridanus聊天机器人项目，后端搭建文生图工作流，支持自然语言触发图像生成，支持线上爬图-图生图工作流，并且实现异步队列与多模态交互。", url: "https://github.com/Kurise0/Eridanus" },
-    ];
-    const PROJECTS_DATA_EN = [
-        { img: "images/eridanus.png", rank: "ComfyUI · Diffusion Model", title: "ComfyUI Image Generation Chatbot", publisher: "Personal Project · 2025", fullDetail: "Based on Eridanus chatbot project. Backend text-to-image workflow, natural language trigger for image generation, online image crawling + img2img pipeline, async queue and multimodal interaction.", url: "https://github.com/Kurise0/Eridanus" }
-    ];
-    let currentTab = 'competition';
-    
-    function renderContent(tab) { 
-        const container = document.getElementById('galleryList'); 
-        if(!container) return; 
-        container.innerHTML = ''; 
-        if(tab === 'competition') { 
-            (currentLang === 'zh' ? COMPETITIONS_DATA_ZH : COMPETITIONS_DATA_EN).forEach(c => container.appendChild(createCardElement(c.img, c.rank, c.title, c.publisher, c.fullDetail, c.url))); 
-        } else if(tab === 'projects') { 
-            (currentLang === 'zh' ? PROJECTS_DATA_ZH : PROJECTS_DATA_EN).forEach(p => container.appendChild(createCardElement(p.img, p.rank, p.title, p.publisher, p.fullDetail, p.url))); 
-        } else { 
-            const msgDiv = document.createElement('div'); 
-            msgDiv.style.cssText = 'text-align:center; padding:36px 16px; color:var(--text-muted); font-family:VT323; font-size:1.2rem;'; 
-            msgDiv.innerText = i18n[currentLang].noPapers; 
-            container.appendChild(msgDiv); 
-        } 
-    }
-    
-    function initTabs() { 
-        document.querySelectorAll('.tab-btn').forEach(btn => { 
-            btn.addEventListener('click', () => { 
-                currentTab = btn.getAttribute('data-tab'); 
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
-                btn.classList.add('active'); 
-                renderContent(currentTab); 
-            }); 
-        }); 
-    }
-    
-    function updateTabButtonTexts() { 
-        document.querySelectorAll('.tab-btn').forEach(btn => { 
-            const key = btn.getAttribute('data-tab'); 
-            if(key && i18n[currentLang][key]) btn.innerText = i18n[currentLang][key]; 
-        }); 
-    }
-    
-    function updateLastUpdated() {
-        document.getElementById('last-updated').textContent = currentLang === 'zh' ? LAST_UPDATED_ZH : LAST_UPDATED_EN;
-    }
-    
-    let currentSlide = 0, autoInterval = null;
-    let slidesContainer = document.getElementById('carouselSlides');
-    let dotsContainer = document.getElementById('carouselDots');
-    let totalSlides = 0;
-    
-    function buildCarousel() {
-        if (!slidesContainer || !dotsContainer) return;
-        const carouselItems = getCarouselItemsForWorldline(currentWorldline.id);
-        totalSlides = carouselItems.length;
-        slidesContainer.innerHTML = ''; 
-        dotsContainer.innerHTML = '';
-        carouselItems.forEach((item, idx) => {
-            const slideDiv = document.createElement('div'); 
-            slideDiv.className = 'carousel-slide'; 
-            if(idx === 0) slideDiv.classList.add('active');
-            const link = document.createElement('a'); 
-            link.href = item.link; 
-            link.target = '_blank'; 
-            link.classList.add('_target');
-            const img = document.createElement('img'); 
-            img.src = item.img; 
-            img.loading = 'eager'; 
-            img.fetchPriority = 'high';
-            img.onerror = function(){ 
-                this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Crect width='800' height='300' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' fill='%23c93a0e' font-family='monospace' font-size='26' text-anchor='middle' dy='.3em'%3EEL PSY KONGROO%3C/text%3E%3C/svg%3E"; 
-                onPreloadImageComplete(); 
-            };
-            img.addEventListener('load', onPreloadImageComplete);
-            img.addEventListener('error', onPreloadImageComplete);
-            link.appendChild(img); 
-            slideDiv.appendChild(link); 
-            slidesContainer.appendChild(slideDiv);
-            const dot = document.createElement('button'); 
-            dot.classList.add('dot'); 
-            if(idx === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(idx)); 
-            dotsContainer.appendChild(dot);
-        });
-        currentSlide = 0;
-        updateCarousel();
-        resetAutoPlay();
-    }
-    
-    function updateCarousel() { 
-        document.querySelectorAll('.carousel-slide').forEach((s,i)=> i===currentSlide ? s.classList.add('active'):s.classList.remove('active')); 
-        document.querySelectorAll('.dot').forEach((d,i)=> i===currentSlide ? d.classList.add('active'):d.classList.remove('active')); 
-    }
-    
-    function goToSlide(idx) { 
-        currentSlide = (idx + totalSlides) % totalSlides; 
-        updateCarousel(); 
-        resetAutoPlay(); 
-    }
-    
-    function nextSlide() { goToSlide(currentSlide+1); }
-    
-    function resetAutoPlay() { 
-        if(autoInterval) clearInterval(autoInterval); 
-        autoInterval = setInterval(()=>nextSlide(), 4500); 
-    }
-    
-    function bindCarouselEvents() { 
-        const c = document.getElementById('carousel'); 
-        if(c) { 
-            c.addEventListener('mouseenter', ()=> clearInterval(autoInterval)); 
-            c.addEventListener('mouseleave', resetAutoPlay); 
-        } 
-    }
-    
-    document.getElementById('theme-toggle')?.addEventListener('click', () => { 
-        const body = document.body;
-        body.classList.add('theme-switching');
-        setTimeout(() => {
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            const stops = [document.getElementById('stop1'), document.getElementById('stop2'), document.getElementById('stop3')]; 
-            if(isLight){ 
-                stops[0]?.setAttribute('stop-color','#0d9488'); 
-                stops[1]?.setAttribute('stop-color','#14b8a6'); 
-                stops[2]?.setAttribute('stop-color','#06b6d4'); 
-            } else{ 
-                stops[0]?.setAttribute('stop-color','#00ff9d'); 
-                stops[1]?.setAttribute('stop-color','#3effb3'); 
-                stops[2]?.setAttribute('stop-color','#00e5ff'); 
-            } 
-            setWavesBackground(isLight);
-            updateWorldlineUI();
-        }, 10);
-        setTimeout(() => { body.classList.remove('theme-switching'); }, 2300);
-    });
-    
-    document.getElementById('lang-toggle')?.addEventListener('click', () => { 
-        currentLang = currentLang === 'zh' ? 'en' : 'zh'; 
-        document.querySelectorAll('[data-i18n]').forEach(el => { 
-            const key = el.getAttribute('data-i18n'); 
-            if(i18n[currentLang][key]) el.innerHTML = i18n[currentLang][key]; 
-        }); 
-        document.getElementById('email-text').textContent = i18n[currentLang].email;
-        updateTabButtonTexts(); 
-        updateWorldlineUI(); 
-        updateLastUpdated();
-        renderContent(currentTab); 
-    });
-    
-    class AWaves extends HTMLElement { 
-        connectedCallback() { 
-            this.svg = this.querySelector('svg'); 
-            this.mouse = { x:0,y:0,lx:0,ly:0,sx:0,sy:0,v:0,vs:0,a:0 }; 
-            this.lines = []; 
-            this.paths = []; 
-            this.bindEvents(); 
-            this.setSize(); 
-            this.setLines(); 
-            requestAnimationFrame(this.tick.bind(this)); 
-        } 
-        bindEvents() { 
-            window.addEventListener('resize',()=>{ this.setSize(); this.setLines(); }); 
-            const upd = (x,y)=>{ if(!this.bounding) return; this.mouse.x = x - this.bounding.left; this.mouse.y = y - this.bounding.top; }; 
-            window.addEventListener('mousemove',e=>upd(e.clientX,e.clientY)); 
-            window.addEventListener('touchmove',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); 
-            window.addEventListener('touchstart',e=>{ if(e.touches.length) upd(e.touches[0].clientX,e.touches[0].clientY); }); 
-        } 
-        setSize() { this.bounding = this.getBoundingClientRect(); this.svg.style.width = `${this.bounding.width}px`; this.svg.style.height = `${this.bounding.height}px`; } 
-        setLines() { 
-            const {width,height}=this.bounding; 
-            if(width===0||height===0) return; 
-            this.lines = []; this.paths.forEach(p=>p.remove()); this.paths=[]; 
-            const xGap=10,yGap=28,oWidth=width+200,oHeight=height+40; 
-            const totalLines=Math.ceil(oWidth/xGap), totalPoints=Math.ceil(oHeight/yGap); 
-            const xStart=(width-xGap*totalLines)/2, yStart=(height-yGap*totalPoints)/2; 
-            for(let i=0;i<=totalLines;i++){ 
-                const points=[]; 
-                for(let j=0;j<=totalPoints;j++) points.push({ x:xStart+xGap*i, y:yStart+yGap*j, cursor:{x:0,y:0,vx:0,vy:0} }); 
-                this.lines.push(points); 
-                const path = document.createElementNS('http://www.w3.org/2000/svg','path'); 
-                path.setAttribute('stroke','url(#waveGradient)'); 
-                this.svg.appendChild(path); 
-                this.paths.push(path); 
-            } 
-        } 
-        movePoints() { 
-            const {lines,mouse}=this; 
-            if(!lines.length) return; 
-            lines.forEach(points=>points.forEach(p=>{ 
-                const dx=p.x-mouse.sx, dy=p.y-mouse.sy, d=Math.hypot(dx,dy), l=Math.max(160,mouse.vs); 
-                if(d<l){ const f=1-d/l; p.cursor.vx+=Math.cos(mouse.a)*f*mouse.vs*0.072; p.cursor.vy+=Math.sin(mouse.a)*f*mouse.vs*0.072; } 
-                p.cursor.vx+=(0-p.cursor.x)*0.006; p.cursor.vy+=(0-p.cursor.y)*0.006; 
-                p.cursor.vx*=0.93; p.cursor.vy*=0.93; p.cursor.x+=p.cursor.vx*1.9; p.cursor.y+=p.cursor.vy*1.9; 
-                p.cursor.x=Math.min(90,Math.max(-90,p.cursor.x)); p.cursor.y=Math.min(90,Math.max(-90,p.cursor.y)); 
-            })); 
-        } 
-        moved(point, withCursorForce=true) { return { x:Math.round((point.x+(withCursorForce?point.cursor.x:0))*10)/10, y:Math.round((point.y+(withCursorForce?point.cursor.y:0))*10)/10 }; } 
-        drawLines() { 
-            const {lines,paths}=this; if(!lines.length) return; 
-            lines.forEach((points,lIndex)=>{ if(!points.length) return; let p1=this.moved(points[0],false), d=`M ${p1.x} ${p1.y}`; points.forEach((p,idx)=>{ const isLast=idx===points.length-1; const cur=this.moved(p,!isLast); d+=`L ${cur.x} ${cur.y}`; }); if(paths[lIndex]) paths[lIndex].setAttribute('d',d); }); 
-        } 
-        tick() { 
-            if(this.bounding){ 
-                this.mouse.sx+=(this.mouse.x-this.mouse.sx)*0.1; this.mouse.sy+=(this.mouse.y-this.mouse.sy)*0.1; 
-                const dx=this.mouse.x-this.mouse.lx, dy=this.mouse.y-this.mouse.ly, d=Math.hypot(dx,dy); 
-                this.mouse.vs+=(d-this.mouse.vs)*0.1; this.mouse.vs=Math.min(95,this.mouse.vs); 
-                this.mouse.lx=this.mouse.x; this.mouse.ly=this.mouse.y; this.mouse.a=Math.atan2(dy,dx); 
-                this.movePoints(); this.drawLines(); 
-            } requestAnimationFrame(this.tick.bind(this)); 
-        } 
-    }
-    if(!customElements.get('a-waves')) customElements.define('a-waves', AWaves);
-    
-    const pointer=document.querySelector(".pointer"); 
-    let targetElem=null;
-    if(window.innerWidth > 850) {
-        document.addEventListener('mouseenter',(e)=>{ if(e.target.closest?.('._target')) targetElem=e.target.closest('._target'); },true);
-        document.addEventListener('mouseleave',(e)=>{ if(e.target.closest?.('._target')&&targetElem===e.target.closest('._target')){ targetElem=null; pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } },true);
-        window.addEventListener("mousemove",(e)=>{ let x=e.clientX,y=e.clientY; if(targetElem){ const r=targetElem.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2; x=cx+(x-cx)*0.12; y=cy+(y-cy)*0.12; pointer.style.setProperty("--width",`${Math.max(28,r.width*1.05)}px`); pointer.style.setProperty("--height",`${Math.max(28,r.height*1.2)}px`); } else { pointer.style.setProperty("--width","26px"); pointer.style.setProperty("--height","26px"); } pointer.style.transform=`translate3d(${x}px, ${y}px, 0)`; });
-    } else { if(pointer) pointer.style.display = 'none'; }
-    
-    window.addEventListener('load', () => {
-        currentWorldline = selectRandomWorldline();
-        finalTargetRate = currentWorldline.currentRate.toFixed(6);
-        currentRateDisplay = finalTargetRate;
-        document.getElementById('worldlineNumber').innerText = finalTargetRate;
-        updateWorldlineUI();
-        
-        const waves = document.querySelector('a-waves');
-        if(waves && waves.setSize){ waves.setSize(); waves.setLines(); }
-        setWavesBackground(document.body.classList.contains('light-mode'));
-        
-        buildCarousel();
-        bindCarouselEvents();
-        initTabs();
-        renderContent('competition');
-        updateTabButtonTexts();
-        updateLastUpdated();
-        
-        setTimeout(() => { 
-            if(!revealTriggered) { preloadCount = preloadTotal; isWindowLoaded = true; checkRevealCondition(); }
-        }, 6000);
-        isWindowLoaded = true;
-        checkRevealCondition();
-    });
-</script>
-</body>
+
+<div aria-hidden="true" class="cursor-craft"><div class="cursor-core"></div><div class="cursor-ring"></div></div>
+<div aria-hidden="true" class="global-progress" id="globalProgress"></div>
+<div aria-hidden="true" class="noise-layer"></div>
+<header class="site-header" id="topbar">
+<a aria-label="Kurise - home" class="mark magnetic" data-go="index" href="#index"><span class="mark-glyph">K<span>↗</span></span><span class="mark-word">KURISE <small>/ LAB. 00</small></span></a>
+<div class="header-center"><i class="online-signal"></i><span data-i18n="headerMeta">INDEPENDENT RESEARCH / ML SYSTEMS</span></div>
+<nav aria-label="Main navigation" class="header-links" id="mainNavigation">
+<a class="nav-text magnetic" data-go="index" href="#index"><span>00</span><strong data-i18n="navHome">首页</strong></a>
+<a class="nav-text magnetic" data-go="about" href="#about"><span>01</span><strong data-i18n="navAbout">关于</strong></a>
+<a class="nav-text magnetic" data-go="competition" href="#competition"><span>02</span><strong data-i18n="navCompetition">竞赛</strong></a>
+<a class="nav-text magnetic" data-go="project" href="#project"><span>03</span><strong data-i18n="navProjects">项目</strong></a>
+<a class="nav-text magnetic" data-go="contact" href="#contact"><span>04</span><strong data-i18n="navContact">联系</strong></a>
+</nav>
+<button type="button" aria-label="切换黑夜/白天模式" aria-pressed="false" class="theme-toggle" id="themeToggle" title="Day / Night"><span id="themeSymbol">☀</span><span class="theme-text">DAY</span></button>
+<button aria-label="Switch language" class="lang-btn magnetic" id="langToggle"><span id="langCurrent">ZH</span><span class="lang-divider">/</span><span id="langNext">EN</span></button>
+<button aria-expanded="false" aria-label="Open navigation" class="mobile-toggle" id="mobileToggle"><span></span><span></span></button>
+</header>
+<nav aria-label="Mobile navigation" class="mobile-panel" id="mobilePanel">
+<a data-go="index" href="#index"><span>00</span><span data-i18n="navHome">首页</span><b>↗</b></a>
+<a data-go="about" href="#about"><span>01</span><span data-i18n="navAbout">关于</span><b>↗</b></a>
+<a data-go="competition" href="#competition"><span>02</span><span data-i18n="navCompetition">竞赛</span><b>↗</b></a>
+<a data-go="project" href="#project"><span>03</span><span data-i18n="navProjects">项目</span><b>↗</b></a>
+<a data-go="contact" href="#contact"><span>04</span><span data-i18n="navContact">联系</span><b>↗</b></a>
+</nav>
+
+
+<div class="spa-viewport" id="spaViewport"><main aria-label="Main panels" class="spa-track" id="spaTrack">
+<section class="hero section-sentinel spa-page hero-intro-pending" id="index" tabindex="-1">
+<div class="hero-film" aria-hidden="true"><video id="heroFilm" autoplay loop muted playsinline preload="metadata" poster="./assets/worldline-poster.jpg?v=11"><source src="./assets/worldline-background.mp4?v=11" type="video/mp4"></video></div>
+<div class="hero-film-shade" aria-hidden="true"></div>
+<div class="hero-stencil" aria-hidden="true"><svg viewBox="0 0 1200 380" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg"><defs><mask id="heroCutMask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1200" height="380"><rect width="1200" height="380" fill="white"/><text x="-27" y="306" fill="black" font-family="Impact,Arial Black,Arial,sans-serif" font-size="350" font-weight="1000" letter-spacing="-16" textLength="1190" lengthAdjust="spacingAndGlyphs">KURISE</text></mask></defs><rect width="1200" height="380" fill="var(--stencil-ink)" mask="url(#heroCutMask)"/></svg><span class="stencil-top">K / LAB. 00 &nbsp; // &nbsp; WORLDLINE INTERFACE</span><span class="stencil-bottom">RESEARCH &nbsp; / &nbsp; IN MOTION</span></div>
+<div aria-hidden="true" class="hero-coordinate co-a">08° / 4' / 596"<br/>FIELD RESEARCH</div>
+<div aria-hidden="true" class="hero-coordinate co-b">MACHINE / LEARNING<br/>EXPERIMENT / DESIGN</div>
+<div aria-hidden="true" class="hero-guides"><span></span><span></span><span></span><span></span></div>
+<div class="hero-visual" id="heroVisual" aria-hidden="true"><canvas id="worldlineCanvas"></canvas><div class="radar-caption"><span>WORLDLINE / SIGNAL MAP</span><strong id="heroWorldline">--.------%</strong><span id="worldlineSignal">DIVERGENCE SYNCHRONIZED</span></div></div>
+<div class="hero-inner container">
+<div class="hero-small-head"><span class="tracking-code">K / 000 — PUBLIC RESEARCH FILE</span><span class="hero-status"><i class="online-signal"></i><span data-i18n="heroStatus">AVAILABLE FOR IDEAS &amp; COLLABORATION</span></span></div>
+<div class="hero-main">
+<div class="hero-eyebrow"><span class="mini-block"></span><span data-i18n="heroEyebrow">机器学习 · 智能系统 · 工程探索</span></div>
+<h1 class="hero-title" aria-label="KURISE / RESEARCH IN MOTION"><span class="hero-title-fill" data-text="KURISE">KURISE</span><span class="hero-title-outline">RESEARCH <em>IN MOTION.</em></span></h1>
+<div class="hero-subrow"><p data-i18n="heroDesc">围绕机器学习与智能系统，不断提出问题、进行实验，并让想法在真实世界中运行。</p></div>
+</div>
+<div class="hero-end"><div class="small-column"><span class="mono">ACCESS / PUBLIC</span><strong>2026.11 — KURISE</strong></div><a aria-label="Replay worldline animation" class="hero-corner hero-replay" href="./loading.html?replay=1&amp;dest=index" id="replayBoot" title="Replay divergence meter">↻ [ --.------ % ]</a></div>
+</div>
+</section>
+<section class="about section-sentinel light-section spa-page" id="about" tabindex="-1">
+<div class="container about-profile" id="aboutProfile">
+<div class="section-cap"><span>01 / <span data-i18n="aboutCap">关于 · 操作员档案</span></span><span>PROFILE / OPEN RECORD</span></div>
+<div class="about-grid">
+<div class="about-mast reveal"><p class="section-tag">A. / <span data-i18n="aboutTag">一份关于探索的说明</span></p><h2><span data-i18n="aboutTitle1">好奇心，</span><br/><span class="title-indented" data-i18n="aboutTitle2">驱动实验。</span></h2><div class="about-annotation">EXPERIMENTS<br/>OVER<br/>ASSUMPTIONS.<span class="orange">↗</span></div></div>
+<div class="about-copy reveal"><span class="small-index">[ ABOUT / KURISE ]</span><p class="lead" data-i18n="aboutLead">你好，我是 <strong>Kurise</strong>。我喜欢把复杂的问题拆解成可验证的假设，从数据和模型出发，再走向能够真正运行的系统。</p><p class="copy-secondary" data-i18n="aboutSecondary">机器学习、计算机视觉、自然语言处理、生物声学与智能体，是我不断探索的领域。</p><div class="about-signature"><span class="pulse-dot"></span><div><b data-i18n="aboutIdentity">Independent ML Builder</b><small>KURISE</small></div></div></div>
+</div>
+<div class="impact-strip reveal"><div class="impact-cell"><span>01 / GOLD</span><strong>01</strong><small data-i18n="goldMedal">金牌</small></div><div class="impact-cell"><span>02 / SILVER</span><strong>04</strong><small data-i18n="silverMedal">银牌</small></div><div class="impact-cell"><span>03 / BRONZE</span><strong>03</strong><small data-i18n="bronzeMedal">铜牌</small></div><div class="impact-cell accent-cell"><span>04 / KAGGLE</span><strong>631<sup>*</sup></strong><small data-i18n="highestRank">历史最高全球排名</small></div><div class="impact-label">DATA / 2025<br/>MASTER<br/><i>★</i></div></div>
+<div class="section-footnote"><span>PUBLIC ARCHIVE</span></div>
+</div>
+<nav class="about-modes" aria-label="About subpages"><button class="about-mode is-active" type="button" data-about-tab="profile" aria-pressed="true">A / PROFILE</button><button class="about-mode" type="button" data-about-tab="research" aria-pressed="false">B / RESEARCH ↗</button></nav>
+<section class="research section-sentinel light-section" id="research" aria-hidden="true">
+<div class="container research-profile">
+<div class="section-cap"><span>01.B / <span data-i18n="researchCap">研究兴趣</span></span><span>R&amp;D / ONGOING EXPLORATION</span></div>
+<div class="about-grid research-grid">
+  <div class="about-mast research-mast reveal">
+    <p class="section-tag">B. / <span data-i18n="researchCap">研究兴趣</span></p>
+    <h2><span data-i18n="researchTitle1">持续提出</span><br/><span class="title-indented" data-i18n="researchTitle2">更好的问题。</span></h2>
+  </div>
+  <div class="about-copy research-copy reveal">
+    <span class="small-index">[ RESEARCH / KURISE ]</span>
+    <p class="lead" data-i18n="researchIntro">我更在意一个方法为什么有效、它在复杂条件下是否稳健，以及能不能以更低成本真正落地。</p>
+    <div class="about-signature"><span class="pulse-dot"></span><div><b>HYPOTHESIS / EXPERIMENT / ITERATION</b><small>KURISE · R&amp;D</small></div></div>
+  </div>
+</div>
+<div class="research-focus-strip" id="researchList">
+<article class="research-row is-open" data-index="0"><button aria-expanded="true"><span>01 / EFFICIENCY</span><strong data-i18n="researchItem2">轻量化学习与高效推理</strong><i>↗</i></button><div class="research-description"><p data-i18n="researchDesc2">关注知识蒸馏、模型压缩与推理优化，让模型不仅能够被训练，也能够在现实硬件限制下运行。</p></div></article>
+<article class="research-row" data-index="1"><button aria-expanded="false"><span>02 / INTELLIGENCE</span><strong data-i18n="researchItem3">多模态理解与自主智能体</strong><i>↗</i></button><div class="research-description"><p data-i18n="researchDesc3">研究语言、视觉、声音与行动之间的联系，从信息理解走向工具使用和自动化工作流。</p></div></article>
+</div>
+<div class="section-footnote"><span>RESEARCH NOTES / OPEN</span></div>
+</div>
+</section></section>
+<section class="competition-zone section-sentinel dark-section spa-page" id="competition" tabindex="-1">
+<div class="container">
+<div class="section-cap cap-dark"><span>02 / <span data-i18n="competitionCap">竞赛档案</span></span><span>FIELD NOTES / VERIFIED CHALLENGES</span></div>
+<div class="section-intro reveal"><div><p class="section-tag">KAGGLE / SELECTED CHALLENGES</p><h2 class="display-big"><span data-i18n="competitionTitle1">真实问题。</span><br/><span class="outline-title" data-i18n="competitionTitle2">不止分数。</span></h2></div><div class="intro-aside"><p data-i18n="competitionIntro">我通过竞赛来验证假设、学习新技术，并让想法在真实世界中运行。</p><span>08 RECORDS / 06 DOMAINS / 2025—26</span></div></div>
+<div class="archive-controls reveal"><div aria-label="Filter challenges" class="filter-tabs" id="competitionFilters"><button aria-pressed="true" class="is-active" data-filter="all"><span data-i18n="allFilter">全部</span><b>08</b></button><button aria-pressed="false" data-filter="gold"><span data-i18n="goldFilter">金牌</span><b>01</b></button><button aria-pressed="false" data-filter="silver"><span data-i18n="silverFilter">银牌</span><b>04</b></button><button aria-pressed="false" data-filter="bronze"><span data-i18n="bronzeFilter">铜牌</span><b>03</b></button></div><div class="archive-arrows"><span id="archiveCount">01 / 08</span><button aria-label="Previous competition" class="magnetic" id="archivePrev">←</button><button aria-label="Next competition" class="magnetic" id="archiveNext">→</button></div></div>
+</div>
+<div aria-label="Competition full-screen slides; scroll up or down to browse, then continue to the next page" class="archive-viewport" id="archiveViewport" tabindex="0"><div class="archive-track" id="archiveTrack"></div></div>
+<div class="container archive-bottom"><div class="archive-progress gallery-motion-line"><div id="archiveProgress"></div></div><a class="underline-link magnetic" href="https://www.kaggle.com/kurisew" rel="noopener noreferrer" target="_blank"><span data-i18n="viewKaggle">查看 Kaggle 主页</span> ↗</a></div>
+</section>
+
+<section class="projects section-sentinel dark-section spa-page" id="project" tabindex="-1">
+<div class="container">
+<div class="section-cap cap-dark"><span>03 / <span data-i18n="projectsCap">独立项目</span></span><span>BUILD / TEST / DEPLOY</span></div>
+<div class="projects-heading reveal"><p class="section-tag">SYSTEMS / BEYOND THE LEADERBOARD</p><h2 class="display-big"><span data-i18n="projectsTitle1">从想法，</span><br/><span class="outline-title" data-i18n="projectsTitle2">到可运行。</span></h2><p data-i18n="projectsIntro">除了竞赛，我也喜欢构建完整的交互和服务，让技术变成可以被使用的系统。</p></div>
+<div aria-label="Horizontal projects gallery" class="projects-horizontal" id="projectsHorizontal">
+<div class="projects-pin" id="projectsPin">
+<div class="projects-motion-meta"><span>03 / SYSTEMS EXHIBITION</span><span>EXHIBIT / K — 2026</span></div>
+<div aria-label="Project slides. Scroll vertically or use arrow controls." class="cinema-window" id="cinemaWindow" tabindex="0">
+<div class="cinema-track" id="projectsTrack">
+<article class="cinema-panel panel-prologue">
+<div class="cinema-grid"></div><div class="cinema-decoration huge-type">03</div>
+<div class="panel-topline"><span>RHODES / DESIGN STUDY</span><span>PROJECT LOG // 001</span></div>
+<div class="panel-main prologue-main"><div class="panel-copy"><div class="panel-kicker"><i></i> ARCHIVE / OPEN EXHIBITION</div><h3><span data-i18n="panelTitleA">IDEAS</span><br/><em data-i18n="panelTitleB">→ SYSTEMS.</em></h3><p data-i18n="panelIntro">以真实问题为起点，尝试将想法变成可以持续使用的系统。</p><div class="panel-line"><span>01 — 03</span></div></div><div aria-hidden="true" class="panel-art signal-art"><span class="signal-ring ring-a"></span><span class="signal-ring ring-b"></span><span class="signal-ring ring-c"></span><span class="signal-core">K</span><span class="signal-ray"></span><b>FIELD / 003</b></div></div>
+<div class="panel-bottomline"><span>CONCEPT / SYSTEM</span><span>001 / OPEN</span></div>
+</article>
+<article class="cinema-panel panel-order">
+<div class="cinema-grid"></div><div class="cinema-decoration order-ghost">SERVICE</div>
+<div class="panel-topline"><span>PROJECT / P.01</span><span>REAL-WORLD ENGINEERING</span></div>
+<div class="panel-main feature-main"><div class="panel-copy"><div class="panel-kicker"><i></i> OPERATIONS / SYSTEM DESIGN</div><h3>ORDERING<span class="cinema-period">.</span></h3><p class="panel-mini" data-i18n="projectLabel2">全栈产品工程</p><p data-i18n="projectText2">一个实际部署的点餐服务项目，涉及用户交互、业务流程、订单库存与后端系统的完整协作。</p><div class="panel-line"><span>GO / GIN</span><span>VUE 3 / MYSQL</span></div><span class="panel-buildtag" data-i18n="panelDeployed">已部署 · 产品工程</span></div><div aria-hidden="true" class="panel-art order-art"><div class="order-browser"><div class="order-browser-bar"><b></b><b></b><b></b><span>API / ORDER.MANAGER</span></div><div class="order-metric"><i>01</i><span>GATEWAY</span><strong>200</strong></div><div class="order-metric"><i>02</i><span>INVENTORY</span><strong>SYNC</strong></div><div class="order-metric"><i>03</i><span>QUEUE</span><strong>LIVE</strong></div><div class="order-footer">SYS. ONLINE <span>● ● ● ● ● ● ● ●</span></div></div><span class="order-stamp">OPERATING / NORMAL</span></div></div>
+<div class="panel-bottomline"><span>FULL-STACK DELIVERY</span><span>002 / DEPLOY</span></div>
+</article>
+<article class="cinema-panel panel-epilogue">
+<div class="cinema-grid"></div><div class="cinema-decoration huge-type">∞</div>
+<div class="panel-topline"><span>KURISE / WORK IN PROGRESS</span><span>NO FINAL VERSION</span></div>
+<div class="panel-main prologue-main"><div class="panel-copy"><div class="panel-kicker"><i></i> INFINITE ITERATION</div><h3><span data-i18n="panelFutureA">NEXT</span><br/><em data-i18n="panelFutureB">EXPERIMENT.</em></h3><p data-i18n="panelFutureText">探索不会在这里结束。新的问题、新的模型和新的系统，始终处于迭代之中。</p><div class="panel-line"><span>FILE / END</span><span>NEW IDEAS / WELCOME</span></div><a class="panel-action light-action" data-go="contact" data-i18n="panelConnect" href="#contact">开始交流 ↗</a></div><div aria-hidden="true" class="panel-art epilogue-art"><div class="epi-orbit"></div><div class="epi-core">↗</div></div></div>
+<div class="panel-bottomline"><span>END / BEGINNING</span><span>003 / NEXT</span></div>
+</article>
+</div>
+</div>
+<div class="projects-motion-bottom"><span class="motion-numbers" id="projectsCounter">01 <i>/</i> 03</span><div class="motion-track gallery-motion-line"><div id="projectsProgress"></div></div><div aria-label="Exhibition progress" class="project-dots"><button aria-label="Panel 1" class="is-active" data-panel="0"></button><button aria-label="Panel 2" data-panel="1"></button><button aria-label="Panel 3" data-panel="2"></button></div><div class="projects-arrows"><button aria-label="Previous panel" class="project-step magnetic" id="projectsPrev" type="button">←</button><button aria-label="Next panel" class="project-step magnetic" id="projectsNext" type="button">→</button></div></div>
+</div>
+</div>
+</div>
+</section>
+<section class="contact section-sentinel light-section spa-page" id="contact" tabindex="-1">
+<div class="contact-film" aria-hidden="true"><video id="contactFilm" muted loop playsinline preload="none" poster="./assets/contact-poster.jpg?v=11"><source data-src="./assets/contact-background.mp4?v=11" type="video/mp4"></video></div>
+<div class="contact-film-shade" aria-hidden="true"></div>
+<div class="container">
+<div class="section-cap"><span>04 / <span data-i18n="contactCap">连接与交流</span></span><span>COMMUNICATION / OPEN CHANNEL</span></div>
+<div class="contact-main reveal"><div class="contact-pre"><i class="online-signal"></i><span data-i18n="contactOpen">欢迎讨论有意思的问题</span></div><h2><span data-i18n="contactTitle1">下一次</span><br/><span data-i18n="contactTitle2">思想碰撞。</span><span class="contact-star">✳</span></h2><p data-i18n="contactIntro">欢迎聊聊机器学习、竞赛、研究想法，或者正在构建的有趣项目。</p><a aria-label="Send email" class="email-large magnetic" href="mailto:s.t.m.kurise@gmail.com"><span data-i18n="sendEmail">发起一场对话</span><svg aria-hidden="true" viewbox="0 0 100 100"><circle cx="50" cy="50" r="46"></circle><path d="M31 68L68 31M38 31H68V61"></path></svg></a></div>
+<div class="contact-grid"><a class="social-tile magnetic" href="https://www.kaggle.com/kurisew" rel="noopener noreferrer" target="_blank"><span>01</span><svg aria-label="Kaggle" class="social-brand" role="img" viewBox="0 0 24 24"><path d="M5.2 2.3h3.2v11l6.2-6.8h4.1l-6.6 7.3 7.1 8h-4.3l-6.5-7.5v7.5H5.2z" fill="currentColor"></path></svg><strong>KAGGLE</strong><i>↗</i></a><a class="social-tile magnetic" href="https://github.com/Kurise0" rel="noopener noreferrer" target="_blank"><span>02</span><svg aria-label="GitHub" class="social-brand" role="img" viewBox="0 0 24 24"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.63c.55.1.75-.24.75-.53v-1.93c-3.05.67-3.69-1.29-3.69-1.29-.5-1.27-1.22-1.6-1.22-1.6-.99-.68.07-.67.07-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.67 2.57 1.19 3.2.91.1-.71.38-1.2.7-1.48-2.43-.28-4.98-1.22-4.98-5.47 0-1.2.43-2.19 1.13-2.96-.12-.28-.49-1.4.1-2.92 0 0 .92-.3 3.05 1.13a10.58 10.58 0 0 1 5.55 0c2.12-1.43 3.05-1.13 3.05-1.13.6 1.52.22 2.64.11 2.92.7.77 1.12 1.76 1.12 2.96 0 4.26-2.56 5.18-5 5.45.39.34.74 1.01.74 2.04V22c0 .3.19.64.76.53A11.1 11.1 0 0 0 12 .9Z" fill="currentColor"></path></svg><strong>GITHUB</strong><i>↗</i></a><a class="social-tile magnetic" href="https://x.com/KURISEW" rel="noopener noreferrer" target="_blank"><span>03</span><svg aria-label="X" class="social-brand" role="img" viewBox="0 0 24 24"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.26l-4.9-7.45L5.53 22H2.4l7.25-8.29L1.92 2h6.41l4.43 6.76L18.9 2Zm-1.1 18h1.74L7.38 3.89H5.52L17.8 20Z" fill="currentColor"></path></svg><strong>X / TWITTER</strong><i>↗</i></a><a class="social-tile magnetic" href="https://www.linkedin.com/in/%E5%8A%9B%E7%AB%8B-%E9%BE%99-7b41a9367" rel="noopener noreferrer" target="_blank"><span>04</span><svg aria-label="LinkedIn" class="social-brand" role="img" viewBox="0 0 24 24"><path d="M20.45 2H3.55C2.7 2 2 2.67 2 3.51v16.98c0 .84.7 1.51 1.55 1.51h16.9c.85 0 1.55-.67 1.55-1.51V3.51c0-.84-.7-1.51-1.55-1.51ZM7.93 18.75H4.97V9.21h2.96v9.54ZM6.45 7.91a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42Zm12.3 10.84h-2.96v-4.64c0-1.11-.02-2.53-1.54-2.53-1.55 0-1.79 1.21-1.79 2.45v4.72H9.5V9.21h2.84v1.3h.04c.4-.74 1.37-1.53 2.8-1.53 3 0 3.57 1.98 3.57 4.56v5.21Z" fill="currentColor"></path></svg><strong>LINKEDIN</strong><i>↗</i></a></div>
+</div>
+<footer class="footer"><div class="container footer-inner"><div><strong>KURISE<span>.</span></strong><small>RESEARCH IN MOTION / 2026</small></div><p data-i18n="footerCaption">好奇心永不离线。 · Everything is the choice of Steins;Gate.</p><button class="back-top" data-go="index">BACK TO TOP ↑</button></div></footer></section>
+</main></div>
+
+
+<noscript><div class="noscript-note">This site works without frameworks, but JavaScript is needed for the interactive gallery and language switch. / 请启用 JavaScript 体验交互和双语切换。</div></noscript>
+<script defer="" src="./js/typography.js?v=11"></script><script defer="" src="./js/slide-reveal.js?v=11"></script><script defer="" src="./js/content.js?v=11"></script><script defer="" src="./js/projects.js?v=11"></script><script defer="" src="./js/flow-points.js?v=11"></script><script defer="" src="./js/router.js?v=11"></script><script defer="" src="./js/worldline.js?v=11"></script><script defer="" src="./js/theme.js?v=11"></script><script defer src="./js/contact-film.js?v=11"></script></body>
 </html>

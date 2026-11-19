@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b09">
+<title>WORLD LINE DIVERGENCE // KURISE</title>
+<style>
+:root{color-scheme:dark;--ink:#e8ece5;--muted:#82958a;--signal:#ff905c;--signal-bright:#ffba79;--edge:#cadccc32;--bg:#070b09;--mono:Consolas,'SFMono-Regular','Liberation Mono',monospace;--display:'Bahnschrift Condensed','Arial Narrow',Impact,Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html,body{width:100%;min-height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink)}
+body{height:100dvh;font-family:var(--mono)}button{font:inherit;cursor:pointer}
+.scene{position:relative;isolation:isolate;display:grid;grid-template-rows:72px minmax(0,1fr) 71px;height:100%;min-height:380px;overflow:hidden;background:radial-gradient(ellipse 65% 60% at 50% 49%,#213028 0%,#0b1710 42%,#070b09 88%)}
+.scene::before{content:'';position:absolute;inset:-10%;z-index:-2;pointer-events:none;background:radial-gradient(circle at 50% 48%,#ff905c0a 0 13%,transparent 52%);animation:ambient 4.6s ease-in-out infinite alternate}
+.scene::after{content:'';position:absolute;inset:0;z-index:14;pointer-events:none;opacity:.1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E")}
+@keyframes ambient{to{transform:scale(1.18);opacity:.38}}
+.scan-grid{position:absolute;z-index:-1;inset:0;pointer-events:none;background-image:linear-gradient(90deg,#c8e8d30d 1px,transparent 1px),linear-gradient(#c8e8d30d 1px,transparent 1px);background-size:clamp(55px,7.1vw,108px) clamp(55px,7.1vw,108px);mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent)}
+.scan-line{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,transparent,#f5a16a36,transparent);pointer-events:none;z-index:-1}
+.corner{position:absolute;width:23px;height:23px;border-color:#d3e9d455;z-index:3;pointer-events:none}.corner.a{top:98px;left:4vw;border-top:1px solid;border-left:1px solid}.corner.b{top:98px;right:4vw;border-top:1px solid;border-right:1px solid}.corner.c{bottom:99px;left:4vw;border-bottom:1px solid;border-left:1px solid}.corner.d{bottom:99px;right:4vw;border-bottom:1px solid;border-right:1px solid}
+.topline,.bottomline{display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;z-index:4;padding:0 clamp(20px,4vw,72px);font-size:10px;font-weight:700;letter-spacing:.11em}
+.topline{border-bottom:1px solid var(--edge)}.bottomline{border-top:1px solid var(--edge)}
+.logo{font:900 22px var(--display);letter-spacing:-.06em;white-space:nowrap}.logo i{font-style:normal;color:var(--signal)}
+.system-label,.footer-label{color:var(--muted)}.system-label b{display:inline-block;width:7px;height:7px;background:var(--signal);box-shadow:0 0 16px #ff905caa;margin-right:10px;vertical-align:1px;animation:alive 1s steps(2,end) infinite}
+@keyframes alive{50%{opacity:.25}}
+.main{position:relative;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:24px clamp(12px,4vw,72px);z-index:3}
+.overline{width:min(1040px,100%);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--muted);padding-bottom:21px;border-bottom:1px solid #a9c5b249}.overline span:first-child{color:var(--signal)}
+.stage{position:relative;width:min(1170px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(42px,8vh,88px) 0 clamp(34px,6.2vh,70px);transform-origin:50% 50%;will-change:transform,opacity,filter}
+.kicker{font:900 clamp(20px,2.8vw,38px) var(--display);letter-spacing:.145em;text-transform:uppercase;margin:0;color:#dfe8dd;line-height:1.05}.kicker strong{font-weight:900;color:var(--signal)}
+.kicker-sub{font-size:10px;letter-spacing:.34em;color:#839a8b;margin-top:13px}
+.number-frame{width:100%;position:relative;display:flex;justify-content:center;align-items:center;margin:clamp(23px,4.3vh,53px) 0 17px}
+.number-frame::before,.number-frame::after{content:'';position:absolute;top:50%;width:clamp(13px,3vw,42px);height:1px;background:#efaf8368}.number-frame::before{left:0}.number-frame::after{right:0}
+.number{display:flex;align-items:flex-end;justify-content:center;white-space:nowrap;color:var(--signal);font:400 clamp(47px,11.6vw,168px)/1 var(--mono);letter-spacing:-.105em;text-shadow:0 0 13px #e9693149,0 0 75px #f078392b;font-variant-numeric:tabular-nums;transition:color .22s,text-shadow .22s}
+.number-value{display:inline-block;width:9ch;min-width:9ch;text-align:right;font-variant-numeric:tabular-nums;will-change:transform}.percent-sign{font-size:.24em;align-self:flex-end;line-height:1.65;margin-left:.05em;letter-spacing:0}
+.number::selection{background:var(--signal);color:#121914}
+.number-signal{height:2px;background:linear-gradient(90deg,transparent,#e79259 32%,#ffe3a6 50%,#e79259 70%,transparent);width:min(75%,820px);opacity:.35;transform-origin:center;transition:opacity .3s,width .3s,filter .3s}
+.readout{width:min(1040px,100%);display:flex;justify-content:space-between;gap:14px;font-size:10px;letter-spacing:.09em;font-weight:700;color:#9bad9d}.readout strong{font-weight:700;color:var(--signal)}
+.progress-track{width:min(1040px,100%);height:2px;background:#2d3d33;margin:17px 0 25px;position:relative;overflow:hidden}.progress-fill{height:100%;width:0;background:var(--signal);box-shadow:0 0 14px #ffa777;transition:width .16s linear}
+.footnote{width:min(1040px,100%);display:flex;justify-content:space-between;gap:14px;border-top:1px solid #a9c5b249;padding-top:23px;font-size:10px;letter-spacing:.1em;color:#81978a}.footnote span:last-child{color:#d7e4d7;text-align:right}
+.skip{padding:13px 18px;border:1px solid #f78f5d9c;background:transparent;color:var(--signal);font-size:10px;font-weight:800;letter-spacing:.09em;transition:background .25s,color .25s,transform .25s;white-space:nowrap}.skip:hover,.skip:focus-visible{background:var(--signal);color:#101715;transform:translateY(-2px);outline:none}.skip:disabled{opacity:.35;cursor:default;transform:none}
+.scene.is-locked .number{color:var(--signal-bright);text-shadow:0 0 15px #ffc17baf,0 0 100px #f78a52a3}.scene.is-locked .number-signal{width:95%;opacity:1;filter:drop-shadow(0 0 10px #ff9e6a)}
+.scene.is-exiting .stage{animation:number-exit .72s cubic-bezier(.2,.75,.36,1) both}.scene.is-exiting .topline,.scene.is-exiting .bottomline,.scene.is-exiting .corner,.scene.is-exiting .overline,.scene.is-exiting .footnote,.scene.is-exiting .readout,.scene.is-exiting .progress-track{animation:quiet-exit .38s ease-out both}
+.scene.is-exiting::before{animation:none}
+@keyframes number-exit{0%{transform:scale(1);opacity:1;filter:blur(0)}27%{transform:scale(1.05);opacity:1;filter:blur(0)}100%{transform:scale(2.4);opacity:0;filter:blur(24px)}}
+@keyframes quiet-exit{to{opacity:0}}
+@media(max-width:720px){.scene{grid-template-rows:62px minmax(0,1fr) 78px}.topline,.bottomline{padding:0 18px}.system-label{font-size:0}.system-label b{margin:0}.footer-label{max-width:48%;line-height:1.5;font-size:8px}.main{padding:10px 15px}.overline,.readout,.footnote{font-size:8px}.overline{padding-bottom:16px}.stage{padding:48px 0 45px}.kicker{font-size:clamp(18px,5vw,30px);letter-spacing:.07em}.kicker-sub{font-size:8px;letter-spacing:.14em}.number{font-size:clamp(40px,10.3vw,78px);letter-spacing:-.11em}.number-value{min-width:9ch;width:9ch}.percent-sign{margin-left:.02em}.footnote{line-height:1.5}.corner.a,.corner.b{top:82px}.corner.c,.corner.d{bottom:97px}}
+@media(max-height:540px){.scene{grid-template-rows:48px minmax(0,1fr) 48px;min-height:0}.stage{padding:16px 0}.kicker-sub{display:none}.number-frame{margin:17px 0 10px}.number{font-size:clamp(40px,9vw,90px)}.overline{padding-bottom:9px}.footnote{padding-top:8px}.progress-track{margin:9px 0 10px}.skip{padding:9px 12px}.corner{display:none}}
+@media(prefers-reduced-motion:reduce){.scene::before,.system-label b{animation:none}.stage,.topline,.bottomline,.corner,.overline,.footnote,.readout,.progress-track{animation-duration:.15s!important}.scene.is-exiting .stage{animation:number-exit-reduced .25s ease-in both}@keyframes number-exit-reduced{to{opacity:0;transform:scale(1.07)}}}
+
+/* v10 / CRT meter inspired by the supplied personal intro, but using KURISE's colors. */
+.crt-screen{position:absolute;inset:0;z-index:10;pointer-events:none;opacity:.38;
+ background:repeating-linear-gradient(0deg,rgba(202,92,48,.095) 0 1px,transparent 1px 5px);
+ animation:crt-scan 8s linear infinite}
+.crt-glow{position:absolute;inset:0;z-index:11;pointer-events:none;
+ box-shadow:inset 0 0 120px rgba(210,67,25,.18),inset 0 0 210px rgba(0,0,0,.55)}
+.flash-burst{position:absolute;inset:0;z-index:12;pointer-events:none;opacity:0;
+ background:radial-gradient(ellipse at center,rgba(255,150,78,.54),rgba(240,65,29,.16) 37%,transparent 76%)}
+.scene:not(.is-locked) .number{filter:blur(.65px);animation:crt-number 80ms steps(2,end) infinite}
+.scene.is-locked .number{filter:none;animation:none;color:#ffc482;
+ text-shadow:0 0 18px rgba(255,197,122,.82),0 0 72px rgba(237,89,27,.48)}
+.scene.is-exiting .stage{animation:worldline-zoom-out .66s cubic-bezier(.16,.9,.48,1) both!important}
+.scene.is-exiting .flash-burst{animation:worldline-flash .57s ease-out both}
+.scene.is-exiting .crt-screen{opacity:.15}
+@keyframes crt-scan{to{background-position:0 24px}}
+@keyframes crt-number{50%{opacity:.88}}
+@keyframes worldline-zoom-out{0%{transform:scale(1);filter:blur(0);opacity:1}35%{transform:scale(1.38);filter:blur(2px);opacity:1}100%{transform:scale(3.15);filter:blur(20px);opacity:0}}
+@keyframes worldline-flash{0%,100%{opacity:0}18%{opacity:.8}38%{opacity:.24}}
+@media(prefers-reduced-motion:reduce){.crt-screen,.scene:not(.is-locked) .number{animation:none}.scene.is-exiting .stage{animation:worldline-simple-exit .23s ease-in both!important}.scene.is-exiting .flash-burst{animation:none}
+ @keyframes worldline-simple-exit{to{opacity:0;transform:scale(1.07)}}}
+@media (max-width:600px){.crt-screen{opacity:.24}.crt-glow{box-shadow:inset 0 0 70px rgba(210,67,25,.13)}}
+</style>
+</head>
+<body>
+<div class="scene" id="scene" role="group" aria-label="World line divergence loading animation">
+  <div class="crt-screen" aria-hidden="true"></div><div class="crt-glow" aria-hidden="true"></div><div class="flash-burst" aria-hidden="true"></div>
+  <div class="scan-grid" aria-hidden="true"></div><div class="scan-line" aria-hidden="true"></div>
+  <span class="corner a" aria-hidden="true"></span><span class="corner b" aria-hidden="true"></span><span class="corner c" aria-hidden="true"></span><span class="corner d" aria-hidden="true"></span>
+  <header class="topline"><div class="logo">KURISE<i> // </i>LAB.</div><div class="system-label"><b></b>WORLD LINE OBSERVATION SYSTEM / INITIALIZING</div></header>
+  <main class="main">
+    <div class="overline"><span>FUTURE GADGET / #001</span><span id="systemStatus">OBSERVING WORLD LINES</span></div>
+    <div class="stage" id="stage">
+      <h1 class="kicker">DIVERGENCE <strong>METER</strong></h1>
+      <div class="kicker-sub">世界线变动率 / WORLD LINE DIVERGENCE</div>
+      <div class="number-frame"><div class="number" aria-label="World line divergence meter"><span class="number-value" id="digits" aria-hidden="true">0.000000</span><span class="percent-sign">%</span></div></div>
+      <div class="number-signal" aria-hidden="true"></div>
+    </div>
+    <div class="readout"><strong id="signalStatus">READING STEINER / SCANNING …</strong><span id="elapsedStatus">ACQUISITION / 00:00</span></div>
+    <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="footnote"><span id="resourceStatus">SYSTEM / INITIALIZING</span><span id="worldlineStatus">TARGET WORLD LINE / UNCONFIRMED</span></div>
+  </main>
+  <footer class="bottomline"><span class="footer-label">THIS IS THE CHOICE OF STEINS;GATE / KURISE</span><button class="skip" id="skip" type="button">SKIP / ENTER ↗</button></footer>
+</div>
+<script>
+/* KURISE V10 / WORLD LINE ACQUISITION
+ * Uses the supplied intro's full-number scrambling and CRT -> zoom/flash rhythm.
+ * Preserves the requested random [-1,7) six-decimal value, never a fixed target.
+ * Minimum 300ms, then wait for the actual homepage critical resources.
+ */
+(()=>{'use strict';
+ const OPT={MIN_MS:300,CHANGE_MS:32,LOCK_PAUSE_MS:120,ZOOM_MS:660,MAX_WAIT_MS:9000};
+ const CRITICAL=[
+  './index.html',
+  './css/original.css?v=11','./css/spa.css?v=11','./css/v5.css?v=11','./css/v6.css?v=11',
+  './css/v7.css?v=11','./css/v8.css?v=11','./css/v9.css?v=11','./css/v11.css?v=11',
+  './js/typography.js?v=11','./js/slide-reveal.js?v=11','./js/content.js?v=11',
+  './js/projects.js?v=11','./js/flow-points.js?v=11','./js/router.js?v=11',
+  './js/worldline.js?v=11','./js/theme.js?v=11','./js/contact-film.js?v=11'
+ ];
+ const $=id=>document.getElementById(id),scene=$('scene'),digits=$('digits'),signal=$('signalStatus'),
+  elapsed=$('elapsedStatus'),resources=$('resourceStatus'),line=$('progressFill'),
+  state=$('systemStatus'),worldline=$('worldlineStatus'),skip=$('skip');
+ const params=new URLSearchParams(location.search);
+ const requested=params.get('dest')||'index';
+ const dest=/^(index|about|competition|project|contact|research)$/.test(requested)?requested:'index';
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const born=performance.now();
+ let total=0,settled=0,failures=0,phase='scanning',previous='',final='',navigated=false;
+ let scrambleTicker,progressTicker;
+ let firstVideo=null;
+ function randomUnit(){
+  const c=(typeof crypto!=='undefined'?crypto:null);
+  if(c&&typeof c.getRandomValues==='function'){
+   const buf=new Uint32Array(1);c.getRandomValues(buf);return buf[0]/4294967296;
+  }
+  return Math.random();
+ }
+ function fresh(){
+  let output;
+  do{output=((Math.floor(randomUnit()*8000000)-1000000)/1000000).toFixed(6)}while(output===previous);
+  previous=output;
+  return output;
+ }
+ // Immediately begin changing the *entire* number; no positional locks.
+ function scramble(){if(phase==='scanning')digits.textContent=fresh()}
+ scramble();scrambleTicker=setInterval(scramble,OPT.CHANGE_MS);
+ function track(promise){
+  total++;
+  Promise.resolve(promise).then(()=>{settled++},()=>{settled++;failures++});
+ }
+ function cached(url){
+  return fetch(url,{cache:'force-cache'}).then(async r=>{
+   if(!r.ok)throw Error(r.status+' '+url);
+   await r.arrayBuffer();
+  });
+ }
+ // Chromium/Firefox prohibit fetch(file://); do not hold the loader on a false failure.
+ if(/^https?:$/.test(location.protocol))CRITICAL.forEach(f=>track(cached(f)));
+ track(new Promise((resolve,reject)=>{
+  const image=new Image();let ended=false;
+  const deadline=setTimeout(()=>finish(false),4500);
+  function finish(ok){if(ended)return;ended=true;clearTimeout(deadline);ok?resolve():reject(Error('poster unavailable'))}
+  image.onload=()=>finish(true);image.onerror=()=>finish(false);
+  image.src='./assets/worldline-poster.jpg?v=11';
+  if(image.complete&&image.naturalWidth)finish(true);
+ }));
+ track(new Promise((resolve,reject)=>{
+  const film=document.createElement('video');firstVideo=film;
+  film.preload='auto';film.muted=true;film.playsInline=true;
+  let ended=false;
+  const deadline=setTimeout(()=>finish(false),6000);
+  function finish(ok){if(ended)return;ended=true;clearTimeout(deadline);
+   film.removeAttribute('src');try{film.load()}catch(e){};firstVideo=null;
+   ok?resolve():reject(Error('video first frame unavailable'));
+  }
+  film.addEventListener('loadeddata',()=>finish(true),{once:true});
+  film.addEventListener('error',()=>finish(false),{once:true});
+  film.src='./assets/worldline-background.mp4?v=11';
+  try{film.load()}catch(e){finish(false)}
+ }));
+ function formatTime(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+ function paintProgress(){
+  if(phase!=='scanning')return;
+  const elapsedMs=performance.now()-born,minFraction=Math.min(1,elapsedMs/OPT.MIN_MS);
+  const ratio=total?settled/total:1;
+  const pct=Math.min(99,Math.round((ratio*.92+minFraction*.08)*100));
+  elapsed.textContent='ACQUISITION / '+formatTime(elapsedMs);
+  line.style.width=pct+'%';
+  resources.textContent='HOMEPAGE / '+settled+' OF '+total+' READY'+(failures?' · '+failures+' FAILED':'');
+  state.textContent=settled>=total?'SIGNAL ACQUIRED':'INITIALIZING MAIN PAGE';
+  signal.textContent='WORLD LINE / '+String(pct).padStart(2,'0')+'% LOADED';
+  if(elapsedMs>=OPT.MIN_MS&&(settled>=total||elapsedMs>=OPT.MAX_WAIT_MS))lock();
+ }
+ function stop(){clearInterval(scrambleTicker);clearInterval(progressTicker)}
+ function fieldName(n){
+  if(n<0)return 'OMEGA / Ω';
+  if(n<1)return 'ALPHA / α';
+  if(n<2)return 'BETA / β';
+  if(n<3)return 'GAMMA / γ';
+  if(n<4)return 'DELTA / δ';
+  if(n<5)return 'EPSILON / ε';
+  return 'UNREGISTERED';
+ }
+ function lock(){
+  if(phase!=='scanning')return;
+  phase='locked';stop();
+  final=fresh();digits.textContent=final;
+  scene.classList.add('is-locked');
+  state.textContent='WORLD LINE CONFIRMED';
+  signal.textContent='DIVERGENCE CONFIRMED / '+final+'%';
+  resources.textContent=failures?'NETWORK DEGRADED / CONTINUE':'HOMEPAGE / PREPARED';
+  worldline.textContent='WORLD LINE / '+fieldName(Number(final))+' / '+final+'%';
+  line.style.width='100%';skip.disabled=true;
+  setTimeout(()=>{
+   scene.classList.add('is-exiting');
+   setTimeout(navigate,reduce?230:OPT.ZOOM_MS);
+  },OPT.LOCK_PAUSE_MS);
+ }
+ function navigate(){
+  if(navigated)return;navigated=true;
+  try{sessionStorage.setItem('kurise-intro-seen-v5','1');
+      sessionStorage.setItem('kurise-last-worldline',final);
+      sessionStorage.setItem('kurise-last-worldline-field',fieldName(Number(final)))}catch(e){}
+  location.replace('./index.html?entered=1#'+encodeURIComponent(dest));
+ }
+ // Manual skip skips the waiting phase, but keeps the full random lock and exit.
+ function skipIntro(){
+  const remain=OPT.MIN_MS-(performance.now()-born);
+  if(remain>0)setTimeout(lock,remain);else lock();
+ }
+ skip.addEventListener('click',skipIntro);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')skipIntro()});
+ progressTicker=setInterval(paintProgress,24);paintProgress();
+ // Expose progress for optional future asset dependencies without artificial delays.
+ window.KuriseLoader={
+  waitUntil:track,forceEnter:skipIntro,
+  get progress(){return{settled,total,failures,elapsed:performance.now()-born,locked:phase!=='scanning'}}
+ };
+})();
+</script>
+</body>
+</html>

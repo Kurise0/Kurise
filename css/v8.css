@@ -1,0 +1,99 @@
+/* KURISE / v8: navigation simplification, video-first entrance, coherent research theme */
+:root {--rail-width:0px}
+.chapter-rail{display:none!important}
+/* Free the space previously reserved for the removed chapter rail. */
+@media(min-width:861px){
+  #about>.container,#competition>.container,#project>.container,#contact>.container,
+  #about .research>.container,#about .about-profile {padding-right:var(--gutter)!important}
+  #about .about-modes{right:var(--gutter)!important}
+}
+/* Dark mode only: burgundy-red silhouette, with the video actually visible through its letters. */
+html[data-theme="dark"]{--stencil-ink:#c92e3c}
+html[data-theme="light"]{--stencil-ink:#f0d6ad}
+/* Intro timeline: for 1.45 seconds the film plays alone, before staggered panels appear. */
+#index .hero-stencil,#index .hero-visual,#index .hero-coordinate,
+#index .hero-guides,#index .hero-small-head,#index .hero-eyebrow,
+#index .hero-title,#index .hero-subrow,#index .hero-end{
+  transition:opacity .72s ease,transform .9s cubic-bezier(.18,.86,.22,1);
+}
+#index:not(.hero-intro-ready) .hero-stencil,
+#index:not(.hero-intro-ready) .hero-visual,
+#index:not(.hero-intro-ready) .hero-coordinate,
+#index:not(.hero-intro-ready) .hero-guides,
+#index:not(.hero-intro-ready) .hero-small-head,
+#index:not(.hero-intro-ready) .hero-eyebrow,
+#index:not(.hero-intro-ready) .hero-title,
+#index:not(.hero-intro-ready) .hero-subrow,
+#index:not(.hero-intro-ready) .hero-end {opacity:0!important;transform:translate3d(0,20px,0)}
+#index.hero-intro-ready .hero-stencil{transition-delay:0ms}
+#index.hero-intro-ready .hero-visual{transition-delay:110ms}
+#index.hero-intro-ready .hero-small-head,#index.hero-intro-ready .hero-coordinate{transition-delay:180ms}
+#index.hero-intro-ready .hero-eyebrow{transition-delay:260ms}
+#index.hero-intro-ready .hero-title{transition-delay:340ms}
+#index.hero-intro-ready .hero-subrow{transition-delay:520ms}
+#index.hero-intro-ready .hero-end{transition-delay:690ms}
+#index.hero-intro-ready .hero-title .kinetic-glyph{
+ animation:v8-hero-glyph .55s cubic-bezier(.16,1.22,.26,1) both;
+ animation-delay:calc(340ms + var(--glyph-index,0) * 30ms)
+}
+@keyframes v8-hero-glyph{
+  from{opacity:0;transform:translate3d(0,22px,0) scale(.82);filter:blur(5px)}
+  72%{opacity:1;transform:translate3d(0,-4px,0) scale(1.03);filter:blur(0)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+/* Make the video cutout and introduction occupy separate vertical bands.
+   The video remains the backdrop; titles and explanations never overlay the stencil. */
+@media(min-width:861px){
+ #index .hero-stencil{top:clamp(175px,24vh,245px);width:min(60vw,960px)}
+ #index .hero-main{padding-bottom:clamp(32px,7vh,70px)!important}
+ #index .hero-title{font-size:clamp(34px,4.55vw,65px)!important;line-height:1.13!important;margin:0 0 19px!important}
+ #index .hero-title-outline{line-height:1.12!important}
+ #index .hero-subrow{gap:clamp(22px,3vw,44px)!important}
+ #index .hero-small-head{margin-top:12px}
+}
+@media(max-width:860px){
+ #index .hero-stencil{top:20%!important;width:min(104vw,750px)!important}
+ #index .hero-main{padding-bottom:clamp(40px,7vh,68px)!important}
+ #index .hero-title{line-height:1.16!important;margin-bottom:clamp(15px,2.5vh,25px)!important}
+ #index .hero-subrow{gap:clamp(10px,2vh,22px)!important}
+}
+@media(max-width:580px){
+ #index .hero-stencil{top:20%!important;width:104vw!important}
+ #index .hero-main{padding-bottom:clamp(28px,5.5vh,54px)!important}
+ #index .hero-title{font-size:clamp(26px,6.8vw,37px)!important;line-height:1.18!important}
+ #index .hero-subrow p{max-width:290px;font-size:12px!important;line-height:1.58!important}
+}
+@media(max-height:700px) and (min-width:861px){
+ #index .hero-stencil{top:20%;width:min(53vw,790px)}
+ #index .hero-title{font-size:clamp(30px,4vw,55px)!important}
+ #index .hero-main{padding-bottom:clamp(14px,3.5vh,38px)!important}
+}
+/* Research in About is its own child section: inherited v6 theme variables
+   must override the old hard-coded paper backgrounds and stroke colors. */
+#about .research{background:var(--v6-bg)!important;color:var(--v6-fg)!important;border-color:var(--v6-line)!important}
+#about .research-head,#about .research-list,#about .research-row,
+#about .research-description{background:transparent!important;color:var(--v6-fg)!important}
+#about .research .section-tag,#about .research .research-summary,
+#about .research .research-row span,#about .research .research-row p,
+#about .research-orbit span{color:var(--v6-muted)!important}
+#about .research .research-row button,#about .research .research-row strong,
+#about .research .research-head h2,#about .research .research-head h2 span{
+ color:var(--v6-fg)!important;background:transparent!important}
+#about .research .research-row,#about .research .research-description,
+#about .research .research-row button{border-color:var(--v6-line)!important}
+#about .research .stroke-dark{-webkit-text-stroke:1px var(--v6-fg)!important;color:transparent!important}
+#about .research-orbit svg path,#about .research-orbit svg circle{stroke:var(--v6-muted)}
+#about .research-row button i{color:var(--orange)!important}
+html[data-theme="light"] #about .research{background:var(--v6-bg)!important}
+/* Site icons: consistent 24px inline monochrome marks responsive to the theme. */
+#contact .social-tile{display:grid!important;grid-template-columns:30px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;column-gap:clamp(9px,1.1vw,16px);row-gap:7px!important}
+#contact .social-tile>span{grid-column:1 / -1;grid-row:1}
+#contact .social-tile .social-brand{grid-column:1;grid-row:2;align-self:center;width:clamp(20px,2.15vw,29px);height:clamp(20px,2.15vw,29px);color:var(--v6-fg);transition:transform .3s,color .3s}
+#contact .social-tile strong{grid-column:2;grid-row:2;min-width:0;line-height:1.1;letter-spacing:-.04em}
+#contact .social-tile:hover .social-brand{color:var(--orange);transform:translateY(-3px)}
+#contact .social-tile>i{bottom:12px!important;right:11px!important;font-size:16px!important}
+@media(max-width:660px){#contact .social-tile{grid-template-columns:22px minmax(0,1fr);column-gap:7px;padding:13px 9px!important}
+ #contact .social-tile .social-brand{width:20px;height:20px}
+ #contact .social-tile strong{font-size:clamp(12px,3vw,17px)!important}
+ #contact .social-tile>i{display:none}}
+/* Loading number uses single-string full-width updates, no per-digit transition. */
