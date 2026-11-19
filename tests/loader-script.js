@@ -8,11 +8,11 @@
  const OPT={MIN_MS:300,CHANGE_MS:32,LOCK_PAUSE_MS:120,ZOOM_MS:660,MAX_WAIT_MS:9000};
  const CRITICAL=[
   './index.html',
-  './css/original.css?v=11','./css/spa.css?v=11','./css/v5.css?v=11','./css/v6.css?v=11',
-  './css/v7.css?v=11','./css/v8.css?v=11','./css/v9.css?v=11','./css/v11.css?v=11',
-  './js/typography.js?v=11','./js/slide-reveal.js?v=11','./js/content.js?v=11',
-  './js/projects.js?v=11','./js/flow-points.js?v=11','./js/router.js?v=11',
-  './js/worldline.js?v=11','./js/theme.js?v=11','./js/contact-film.js?v=11'
+  './css/original.css?v=12','./css/spa.css?v=12','./css/v5.css?v=12','./css/v6.css?v=12',
+  './css/v7.css?v=12','./css/v8.css?v=12','./css/v9.css?v=12','./css/v11.css?v=12','./css/v12.css?v=12',
+  './js/typography.js?v=12','./js/slide-reveal.js?v=12','./js/content.js?v=12',
+  './js/projects.js?v=12','./js/flow-points.js?v=12','./js/router.js?v=12',
+  './js/worldline.js?v=12','./js/theme.js?v=12','./js/contact-film.js?v=12'
  ];
  const $=id=>document.getElementById(id),scene=$('scene'),digits=$('digits'),signal=$('signalStatus'),
   elapsed=$('elapsedStatus'),resources=$('resourceStatus'),line=$('progressFill'),
@@ -58,7 +58,7 @@
   const deadline=setTimeout(()=>finish(false),4500);
   function finish(ok){if(ended)return;ended=true;clearTimeout(deadline);ok?resolve():reject(Error('poster unavailable'))}
   image.onload=()=>finish(true);image.onerror=()=>finish(false);
-  image.src='./assets/worldline-poster.jpg?v=11';
+  image.src='./assets/hero-kurisu-poster.jpg?v=12';
   if(image.complete&&image.naturalWidth)finish(true);
  }));
  track(new Promise((resolve,reject)=>{
@@ -72,7 +72,7 @@
   }
   film.addEventListener('loadeddata',()=>finish(true),{once:true});
   film.addEventListener('error',()=>finish(false),{once:true});
-  film.src='./assets/worldline-background.mp4?v=11';
+  film.src='./assets/hero-kurisu.mp4?v=12';
   try{film.load()}catch(e){finish(false)}
  }));
  function formatTime(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}

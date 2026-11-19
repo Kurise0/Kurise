@@ -1,0 +1,134 @@
+/* v14 — restrained editorial polish: left alignment, a real Project photograph,
+   and opacity-driven copy reveals. The original gallery and particle layers remain. */
+
+/* Competition aligns headline, controls, slide metadata and copy on one baseline. */
+#competition .section-intro,
+#competition .archive-controls,
+#competition .archive-card-top,
+#competition .archive-card-body,
+#competition .archive-card h3,
+#competition .archive-card .desc,
+#competition .archive-meta,
+#competition .archive-sole{
+  text-align:left!important;
+}
+#competition .section-intro{justify-content:space-between;align-items:flex-start}
+#competition .section-intro>div:first-child{margin-left:0}
+#competition .intro-aside{text-align:left;margin-left:auto}
+#competition .archive-card-body{padding-left:0!important}
+#competition .archive-card-top{margin-left:0!important}
+#competition .archive-card .archive-meta{justify-content:flex-start}
+@media(max-width:860px){
+  #competition .section-intro{align-items:flex-start}
+  #competition .archive-card-body{padding-left:0!important;padding-right:2px!important}
+}
+
+/* Project photograph occupies the same real image plane as About/Competition. */
+#project{isolation:isolate}
+#project>.chapter-photo,#project>.chapter-photo-shade{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+}
+#project>.chapter-photo{
+  background-image:url('../assets/project-steins-gate.webp');
+  background-size:cover;background-position:center center;background-repeat:no-repeat;
+}
+#project>.chapter-photo-shade{
+  background:linear-gradient(90deg,rgba(10,18,18,.73) 0%,rgba(12,20,20,.56) 47%,rgba(12,20,20,.30) 100%),
+             linear-gradient(0deg,rgba(10,18,18,.77) 0%,rgba(10,18,18,.18) 53%,rgba(10,18,18,.56) 100%);
+}
+#project>.container{position:relative;z-index:1}
+#project .projects-horizontal{background:rgba(14,24,23,.43)!important}
+#project .cinema-panel,
+#project .cinema-panel.panel-order,
+#project .cinema-panel.panel-agent,
+#project .cinema-panel.panel-epilogue{
+  background:linear-gradient(102deg,rgba(14,25,24,.87) 0%,rgba(16,26,24,.65) 48%,rgba(13,22,22,.36) 100%)!important;
+}
+/* Day mode keeps the image visible underneath actual themed foreground content. */
+html[data-theme="light"] #project>.chapter-photo-shade{
+  background:linear-gradient(90deg,rgba(238,240,231,.85) 0%,rgba(236,239,232,.68) 48%,rgba(234,239,232,.37) 100%),
+             linear-gradient(0deg,rgba(233,238,232,.77),rgba(234,238,233,.14) 52%,rgba(233,238,232,.52));
+}
+html[data-theme="light"] #project .projects-horizontal{background:rgba(234,240,233,.4)!important}
+html[data-theme="light"] #project .cinema-panel,
+html[data-theme="light"] #project .cinema-panel.panel-order,
+html[data-theme="light"] #project .cinema-panel.panel-agent,
+html[data-theme="light"] #project .cinema-panel.panel-epilogue{
+  background:linear-gradient(103deg,rgba(236,243,235,.92) 0%,rgba(234,240,233,.76) 48%,rgba(231,237,232,.40) 100%)!important;
+}
+/* A little extra contrast on constrained mobile viewports. */
+@media(max-width:580px){
+ #project .cinema-panel,#project .cinema-panel.panel-order,
+ #project .cinema-panel.panel-agent,#project .cinema-panel.panel-epilogue{
+  background:linear-gradient(180deg,rgba(15,25,23,.87) 0%,rgba(16,25,23,.72) 53%,rgba(15,24,22,.35) 100%)!important;
+ }
+ html[data-theme="light"] #project .cinema-panel,
+ html[data-theme="light"] #project .cinema-panel.panel-order,
+ html[data-theme="light"] #project .cinema-panel.panel-agent,
+ html[data-theme="light"] #project .cinema-panel.panel-epilogue{
+  background:linear-gradient(180deg,rgba(238,242,235,.94) 0%,rgba(236,240,234,.78) 55%,rgba(234,240,234,.44) 100%)!important;
+ }
+}
+
+/* Simple, non-spring opacity reveal. Attach only to focal copy, not links/buttons
+   or card containers, so focus and pointer targets stay usable. */
+.chapter-copy, .slide-copy-target{
+  transition:opacity .63s ease-out,transform .75s cubic-bezier(.19,1,.35,1),filter .63s ease-out;
+}
+.spa-page.copy-ready:not(.copy-playing) .chapter-copy,
+.archive-card.slide-copy-ready:not(.slide-copy-playing) .slide-copy-target,
+.cinema-panel.slide-copy-ready:not(.slide-copy-playing) .slide-copy-target{
+  opacity:0!important;transform:translate3d(0,10px,0)!important;filter:blur(3px)!important;
+}
+.spa-page.copy-ready.copy-playing .chapter-copy,
+.archive-card.slide-copy-ready.slide-copy-playing .slide-copy-target,
+.cinema-panel.slide-copy-ready.slide-copy-playing .slide-copy-target{
+  opacity:1;transform:translate3d(0,0,0);filter:blur(0);
+}
+.chapter-copy,.slide-copy-target{transition-delay:var(--copy-delay,0ms)}
+body.motion-reduced .chapter-copy,body.motion-reduced .slide-copy-target{transition:none!important;opacity:1!important;transform:none!important;filter:none!important}
+
+/* Fix the old :first-child exception: photo/shade layers precede the actual
+   competition content container, so that selector never matched after v12. */
+#competition>.container:not(.archive-bottom){
+  box-sizing:border-box!important;
+  width:100%!important;max-width:none!important;
+  align-self:stretch!important;flex:0 0 auto!important;
+  margin:0!important;
+  padding-inline:var(--gutter)!important;
+}
+#competition>.container:not(.archive-bottom) .section-intro,
+#competition>.container:not(.archive-bottom) .archive-controls{width:100%!important}
+
+/* Show the supplied illustration *inside* the exhibition as well, not only in
+   the narrow margins around it. A strong left scrim protects the typography. */
+#project .cinema-panel,
+#project .cinema-panel.panel-order,
+#project .cinema-panel.panel-agent,
+#project .cinema-panel.panel-epilogue{
+ background-image:linear-gradient(90deg,rgba(12,24,23,.96) 0%,rgba(12,23,23,.88) 36%,rgba(12,22,22,.55) 100%),url('../assets/project-steins-gate.webp')!important;
+ background-size:cover,cover!important;
+ background-position:center center,center center!important;
+ background-repeat:no-repeat!important;
+}
+html[data-theme="light"] #project .cinema-panel,
+html[data-theme="light"] #project .cinema-panel.panel-order,
+html[data-theme="light"] #project .cinema-panel.panel-agent,
+html[data-theme="light"] #project .cinema-panel.panel-epilogue{
+ background-image:linear-gradient(90deg,rgba(237,241,234,.97) 0%,rgba(235,240,232,.90) 36%,rgba(233,239,233,.57) 100%),url('../assets/project-steins-gate.webp')!important;
+}
+@media(max-width:580px){
+ #project .cinema-panel,#project .cinema-panel.panel-order,
+ #project .cinema-panel.panel-agent,#project .cinema-panel.panel-epilogue{
+  background-image:linear-gradient(180deg,rgba(13,24,23,.95) 0%,rgba(14,24,22,.91) 44%,rgba(12,23,22,.56) 100%),url('../assets/project-steins-gate.webp')!important;
+ }
+ html[data-theme="light"] #project .cinema-panel,
+ html[data-theme="light"] #project .cinema-panel.panel-order,
+ html[data-theme="light"] #project .cinema-panel.panel-agent,
+ html[data-theme="light"] #project .cinema-panel.panel-epilogue{
+  background-image:linear-gradient(180deg,rgba(236,241,234,.97) 0%,rgba(233,239,232,.90) 45%,rgba(232,238,231,.61) 100%),url('../assets/project-steins-gate.webp')!important;
+ }
+}
+
+/* Keep date tokens intact after the existing glyph-by-glyph kinetic split. */
+#competition .archive-card h3 .archive-title-year{display:inline-block;white-space:nowrap}

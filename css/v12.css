@@ -1,0 +1,232 @@
+/* KURISE WORLDLINE v12 — photo depth, responsive stage, subtle name cipher.
+   Added after v11: the five chapters, written content and transparent wipes stay intact. */
+
+/* Keep the same visual chapter from edge to edge, with selectable foreground text. */
+#about,#competition { isolation:isolate; }
+#about>.chapter-photo,#about>.chapter-photo-shade,
+#competition>.chapter-photo,#competition>.chapter-photo-shade {
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+}
+#about>.chapter-photo,#competition>.chapter-photo {
+  background-size:cover;background-repeat:no-repeat;transform:translateZ(0);
+}
+#about>.chapter-photo { background-image:url('../assets/about-kurisu.webp');background-position:64% 45%; }
+#competition>.chapter-photo { background-image:url('../assets/competition-worldline.webp');background-position:50% 40%; }
+#about>.chapter-photo-shade {
+  background:linear-gradient(90deg,rgba(11,17,18,.94) 0%,rgba(11,17,18,.86) 44%,rgba(11,17,18,.49) 100%),
+             linear-gradient(0deg,rgba(12,17,17,.87),transparent 37%,rgba(12,17,17,.32));
+}
+#competition>.chapter-photo-shade {
+  background:linear-gradient(90deg,rgba(10,16,18,.83),rgba(11,17,18,.43) 65%,rgba(12,17,18,.53)),
+             linear-gradient(0deg,rgba(10,16,18,.88),transparent 50%,rgba(10,16,18,.58));
+}
+html[data-theme="light"] #about>.chapter-photo-shade {
+  background:linear-gradient(90deg,rgba(244,240,232,.97),rgba(244,240,232,.88) 49%,rgba(244,240,232,.52)),
+             linear-gradient(0deg,rgba(244,240,232,.9),transparent 49%,rgba(244,240,232,.35));
+}
+html[data-theme="light"] #competition>.chapter-photo-shade {
+  background:linear-gradient(90deg,rgba(244,241,233,.86),rgba(244,241,233,.49) 66%,rgba(244,241,233,.58)),
+             linear-gradient(0deg,rgba(244,241,233,.86),transparent 49%,rgba(244,241,233,.53));
+}
+#about>.about-profile,#about>.about-modes,#about>.research,
+#competition>.container,#competition>.archive-viewport {position:relative;z-index:1}
+/* The research subview is transparent so the photograph stays on the same layer
+   when switching PROFILE / RESEARCH. Its own content remains theme-colored. */
+#about>.research{position:absolute;z-index:2;background:transparent!important;}
+#competition .archive-card{
+  background:linear-gradient(115deg,rgba(17,27,27,.94),rgba(24,37,35,.83) 61%,rgba(19,28,28,.76))!important;
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+}
+html[data-theme="light"] #competition .archive-card {
+  background:linear-gradient(115deg,rgba(235,238,230,.93),rgba(225,234,226,.84) 63%,rgba(229,237,228,.77))!important;
+}
+#competition .archive-card-visual {background-color:rgba(18,30,29,.35)!important;}
+html[data-theme="light"] #competition .archive-card-visual{background-color:rgba(230,236,226,.36)!important;}
+
+/* A typographic easter egg only: no explanatory text or changes to translated copy. */
+#index .hero-copy-stack {display:flex;flex-direction:column;gap:clamp(11px,1.8vh,19px);max-width:100%;}
+#index .hero-origin {display:flex;align-items:center;gap:clamp(9px,1.4vw,17px);
+  font:600 clamp(10px,.8vw,13px)/1.6 var(--mono);letter-spacing:.17em;
+  color:rgba(226,239,228,.6);text-transform:uppercase;white-space:nowrap;
+  width:max-content;max-width:100%;}
+#index .hero-origin .origin-name{display:inline-flex;align-items:baseline;}
+#index .hero-origin em{font-style:normal;color:var(--stencil-ink);position:relative;
+  font-weight:900;letter-spacing:.17em;text-shadow:0 0 16px color-mix(in srgb,var(--stencil-ink),transparent 57%);}
+#index .hero-origin em::before,#index .hero-origin em::after{
+  position:relative;color:var(--orange);font-size:1.2em;font-weight:400;opacity:.95;
+}
+#index .hero-origin em::before{content:'「';margin-right:.2em;}
+#index .hero-origin em::after{content:'」';margin-left:.08em;}
+#index .hero-origin .origin-cross{color:var(--orange);font-weight:500;letter-spacing:0;opacity:.7;}
+
+/* 0. Browser/viewport hygiene — account for dynamic browser bars and notch insets. */
+:root {--kurise-safe-bottom:env(safe-area-inset-bottom,0px);}
+html,body{width:100%;max-width:100%;}
+.spa-viewport,.spa-track,.spa-track>.spa-page{height:100vh;height:100dvh;max-height:100dvh;}
+.site-header{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));}
+#contact .footer-inner{padding-bottom:max(9px,var(--kurise-safe-bottom))!important;}
+.mobile-panel{height:calc(100dvh - var(--header-h));bottom:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:calc(24px + var(--kurise-safe-bottom));}
+@media (hover:none), (pointer:coarse) {
+ .cursor-craft{display:none!important}
+ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+ #competition .archive-viewport,#project .projects-horizontal{touch-action:pan-y}
+}
+/* Desktop layouts should collapse into the menu before nav items overlap. */
+@media (max-width:1120px){
+ #mainNavigation{display:none!important}
+ .site-header{gap:clamp(6px,1vw,14px)}
+ .site-header .lang-btn{margin-left:auto}
+ .site-header .mobile-toggle{display:flex;flex:0 0 42px}
+ .mobile-panel{display:flex}
+}
+@media (min-width:861px) and (max-width:1120px){
+ #about .about-grid,#about .research-grid{gap:clamp(12px,3vw,38px)}
+ #about .research-grid{grid-template-columns:minmax(0,1fr) minmax(285px,.86fr)}
+ #about .research-copy .lead{font-size:clamp(15px,1.8vw,21px)}
+}
+
+/* 1. Mobile: keep the full-screen reveal, let each *content area* scroll. */
+@media (max-width:860px){
+ :root{--gutter:clamp(14px,3.7vw,25px)}
+ .site-header{padding-left:max(11px,env(safe-area-inset-left,0px));padding-right:max(11px,env(safe-area-inset-right,0px))}
+ .spa-track>.spa-page.hero .hero-inner{min-height:0!important;height:100%!important;}
+ #index .hero-small-head{flex-shrink:0}
+ #index .hero-main{min-height:0}
+ #index .hero-film video{object-position:58% center;}
+ #index .hero-origin{font-size:clamp(9px,1.5vw,12px);gap:9px;letter-spacing:.1em;}
+ #index .hero-origin em{letter-spacing:.09em}
+ #about>.about-profile{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ #about>.about-profile>.section-cap,#about>.about-profile>.impact-strip{flex-shrink:0}
+ #about .about-grid{flex:1 0 auto;min-height:max-content;align-content:center}
+ #about .research>.container{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ #about .research-grid{flex:1 0 auto;min-height:max-content}
+ #about>.chapter-photo{background-position:67% 43%}
+ #competition>.chapter-photo{background-position:56% 39%}
+ #contact>.container{overflow-y:auto;scrollbar-width:thin;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+ #contact .contact-main{flex:1 0 auto;min-height:max-content}
+ #contact .contact-grid{flex-shrink:0}
+ #contact .footer{flex-shrink:0}
+ #project .cinema-panel .panel-main{overflow-y:auto;scrollbar-width:thin;overscroll-behavior:contain}
+ #project .cinema-panel .panel-copy{min-width:0}
+ #project .cinema-panel h3{overflow-wrap:anywhere}
+}
+@media (max-width:580px){
+ .site-header{gap:8px}
+ .site-header .mark{gap:8px}
+ .site-header .lang-btn{padding-inline:8px}
+ .site-header .theme-toggle{min-width:48px;padding-inline:4px}
+ #index .hero-title{font-size:clamp(23px,6.8vw,38px)!important}
+ #index .hero-origin{opacity:.88;letter-spacing:0;}
+ #index .hero-stencil{width:108vw!important;left:-6vw;top:clamp(100px,18%,190px)!important}
+ #index .hero-visual{right:-26%;top:13%;width:80vw;height:40%;opacity:.49}
+ #about .about-grid{gap:12px;padding-top:clamp(40px,7vh,62px)}
+ #about .about-mast h2{font-size:clamp(37px,10vw,60px)!important}
+ #about .about-copy .lead{font-size:clamp(14px,3.4vw,19px)}
+ #about .impact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #about .impact-cell:nth-child(2){border-right:0!important}
+ #about .impact-cell:nth-child(-n+2){border-bottom:1px solid var(--v6-line)}
+ #about .impact-cell strong{font-size:clamp(29px,8vw,45px)}
+ #about .research-grid{padding-top:clamp(42px,7vh,65px)}
+ #about .research-focus-strip{grid-template-columns:1fr;}
+ #about .research-focus-strip .research-row:first-child{border-right:none!important;border-bottom:1px solid var(--v6-line)!important}
+ #about .research-focus-strip .research-row{padding:10px 12px}
+ #competition .archive-viewport{min-height:0}
+ #competition .archive-card-visual{min-height:0!important}
+ #competition .archive-card-body{min-height:0;overscroll-behavior:contain}
+ #competition .archive-bottom{min-height:36px}
+ #project .cinema-panel{padding-inline:var(--gutter)!important}
+ #project .cinema-panel .panel-main{grid-template-rows:minmax(0,1fr) minmax(70px,22%);gap:3px}
+ #project .cinema-panel .panel-art{min-height:65px}
+ #contact .contact-main{padding:clamp(8px,1.5vh,17px) 0!important}
+ #contact .contact-main h2{font-size:clamp(37px,10.8vw,65px)!important}
+ #contact .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #contact .social-tile{min-width:0;overflow:hidden;grid-template-columns:20px minmax(0,1fr)!important}
+ #contact .social-tile strong{font-size:clamp(11px,3.4vw,17px)!important;white-space:normal!important;overflow-wrap:anywhere}
+ #contact .footer-inner{gap:6px}
+}
+@media (max-width:410px){
+ :root{--gutter:12px;--header-h:60px}
+ .site-header .mark-word{display:none}
+ .site-header .mark-glyph{width:37px;height:36px;font-size:28px}
+ .site-header .theme-toggle{width:39px;min-width:39px;height:38px}
+ .site-header .theme-toggle .theme-text{display:none}
+ .site-header .lang-btn{height:38px;font-size:10px;gap:5px}
+ .site-header .mobile-toggle{height:38px;width:40px;flex-basis:40px}
+ .site-header .mobile-toggle span{width:18px}
+ #index .hero-small-head .tracking-code{font-size:9px}
+ #index .hero-origin{font-size:9px;gap:7px}
+ #about .about-modes{top:calc(var(--header-h) + 45px)}
+ #about .about-mode{font-size:8px;padding:6px 7px}
+ #about .about-mast h2,#about .research-mast h2{font-size:clamp(34px,10.5vw,48px)!important}
+ #competition .section-intro .display-big{font-size:clamp(30px,8vw,40px)}
+ #competition .filter-tabs button{padding:6px 4px;font-size:8px}
+ #competition .archive-arrows button{min-width:28px;width:28px;height:28px}
+ #competition .archive-arrows span{font-size:8px;margin-right:2px}
+ #project .cinema-panel h3{font-size:clamp(37px,12vw,56px)!important}
+ #project .projects-motion-bottom{gap:8px;padding-inline:var(--gutter)}
+ #project .projects-motion-meta{padding-inline:var(--gutter)}
+ #contact .contact-main h2{font-size:clamp(34px,10.5vw,48px)!important}
+}
+/* 2. Landscape phone and short laptop: no lost text or unreachable controls. */
+@media (max-height:700px){
+ #about>.about-profile,#about .research>.container{overflow-y:auto!important;-webkit-overflow-scrolling:touch;}
+ #about .about-grid,#about .research-grid{flex:1 0 auto;min-height:max-content;}
+ #competition .section-cap{padding-top:6px}
+ #competition .section-intro{padding:3px 0 5px;gap:8px}
+ #competition .archive-controls{padding-bottom:5px}
+ #competition .archive-bottom{padding-top:5px;padding-bottom:5px}
+ #project .projects-motion-meta{height:31px!important;min-height:31px!important}
+ #project .projects-motion-bottom{height:40px!important;min-height:40px!important}
+ #project .cinema-panel .panel-topline{padding-top:6px}
+ #project .cinema-panel .panel-bottomline{padding-bottom:5px}
+ #project .cinema-panel .panel-main{overflow-y:auto;overscroll-behavior:contain}
+ #contact>.container{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;}
+ #contact .contact-main{flex:0 0 auto;min-height:max-content}
+ #contact .social-tile{padding-top:6px!important;padding-bottom:6px!important}
+}
+@media (max-height:540px){
+ #index .hero-stencil{top:14%!important;width:min(68vw,820px)!important}
+ #index .hero-main{padding-bottom:10px!important}
+ #index .hero-eyebrow{font-size:9px;margin-bottom:4px}
+ #index .hero-title{font-size:clamp(25px,4vw,48px)!important;margin-bottom:8px!important}
+ #index .hero-origin{font-size:9px}
+ #index .hero-end{padding-top:6px;padding-bottom:7px}
+ #index .hero-small-head{margin-top:4px}
+ #about .about-grid,#about .research-grid{padding-top:35px}
+ #about .about-mast h2,#about .research-mast h2{font-size:clamp(30px,5vw,54px)!important}
+ #competition .section-intro .display-big{font-size:clamp(27px,4.8vw,41px)}
+ #competition .archive-card{padding-top:5px;padding-bottom:5px}
+ #competition .archive-card-top{padding-bottom:3px}
+ #competition .archive-card h3{font-size:clamp(22px,3vw,35px)!important;margin:5px 0}
+ #project .cinema-panel .panel-main{gap:5px;padding:5px 0!important}
+ #project .cinema-panel h3{font-size:clamp(34px,5vw,57px)!important;margin-bottom:10px}
+ #project .cinema-panel .panel-kicker{margin-bottom:8px}
+ #project .cinema-panel p{font-size:11px;line-height:1.4;margin-bottom:8px}
+ #contact .contact-main h2{font-size:clamp(30px,5.5vw,54px)!important}
+}
+@media (max-width:860px) and (orientation:landscape) and (max-height:540px){
+ #index .hero-stencil{top:10%!important;left:0;width:55vw!important}
+ #index .hero-visual{width:42vw;height:65%;right:2%;top:12%}
+ #index .hero-title{font-size:clamp(23px,4.4vw,40px)!important}
+ #index .hero-subrow p{font-size:11px!important;max-width:70vw!important}
+ #about .about-grid,#about .research-grid{grid-template-columns:1fr 1fr;gap:20px;padding-top:18px}
+ #about .research-focus-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #about .research-focus-strip .research-row:first-child{border-right:1px solid var(--v6-line)!important;border-bottom:0!important}
+ #competition .archive-card{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);grid-template-rows:22px minmax(0,1fr)}
+ #competition .archive-card-body{grid-column:1;grid-row:2}
+ #competition .archive-card-visual{grid-column:2;grid-row:2}
+ #project .cinema-panel .panel-main{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);grid-template-rows:minmax(0,1fr)}
+ #project .cinema-panel .panel-art{min-height:0}
+ #contact .contact-main{gap:4px!important}
+}
+@media (prefers-reduced-motion:reduce){
+ #index .hero-origin em{text-shadow:none}
+ #competition .archive-card{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+/* Keep the About subview tabs above the photograph and research overlay. */
+#about>.about-modes {position:absolute;z-index:5;}
+@media (max-width:860px){
+ #competition .archive-card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+ #contact .contact-grid{-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px)}
+}
+@media (max-width:410px){body{min-width:0!important}}

@@ -1,0 +1,43 @@
+/* v13 / precise refinements: compact mobile Project gestures, monotonic particles,
+   center-cropped original artwork and an earlier hero entrance. */
+#about>.chapter-photo,#competition>.chapter-photo{background-position:50% 50%!important;background-size:cover!important}
+
+/* Do not let a huge, full-screen embedded scroll box swallow mobile swipes. */
+@media(max-width:860px){
+ /* Free a visible band below the exhibition for unambiguous chapter swipes. */
+ #project .projects-horizontal{
+   height:min(calc(100dvh - var(--header-h) - 42px),clamp(320px,65dvh,560px))!important;
+   min-height:0!important;
+ }
+ #project .cinema-panel .panel-main{overflow:hidden!important;overscroll-behavior:auto!important;}
+ #project .cinema-panel .panel-copy{overflow-y:auto!important;overflow-x:hidden!important;
+   min-height:0;max-height:100%;overscroll-behavior:contain;scrollbar-width:thin;
+   -webkit-overflow-scrolling:touch;}
+ #project .cinema-panel .panel-art{touch-action:pan-y;}
+ #project .cinema-panel .panel-copy::-webkit-scrollbar{width:3px}
+ #project .cinema-panel .panel-copy::-webkit-scrollbar-thumb{background:var(--v6-line)}
+ #project .cinema-panel .panel-main{grid-template-rows:minmax(0,1fr) clamp(88px,19vh,145px)!important;gap:6px!important;}
+ #project .cinema-panel .panel-copy{align-self:stretch;padding:6px 3px 12px 0}
+ #project .cinema-panel .panel-art{min-height:0!important;max-height:145px!important;}
+ #project .projects-motion-bottom{height:46px!important;min-height:46px!important}
+ #project .projects-motion-meta{height:31px!important;min-height:31px!important}
+}
+@media(max-width:580px){
+ #project .cinema-panel .panel-main{grid-template-rows:minmax(0,1fr) clamp(75px,15vh,115px)!important;}
+ #project .cinema-panel .panel-art{max-height:115px!important;}
+ #project .cinema-panel .panel-copy{scrollbar-width:none}
+ #project .cinema-panel .panel-copy::-webkit-scrollbar{display:none}
+}
+@media(max-width:860px) and (orientation:landscape) and (max-height:540px){
+ #project .cinema-panel .panel-main{grid-template-columns:minmax(0,1.13fr) minmax(0,.87fr)!important;grid-template-rows:minmax(0,1fr)!important}
+ #project .cinema-panel .panel-art{max-height:none!important;}
+}
+/* Earlier, compact typographic stagger; background film is visible throughout. */
+#index.hero-intro-ready .hero-visual{transition-delay:35ms!important}
+#index.hero-intro-ready .hero-small-head,
+#index.hero-intro-ready .hero-coordinate{transition-delay:60ms!important}
+#index.hero-intro-ready .hero-eyebrow{transition-delay:95ms!important}
+#index.hero-intro-ready .hero-title{transition-delay:145ms!important}
+#index.hero-intro-ready .hero-subrow{transition-delay:230ms!important}
+#index.hero-intro-ready .hero-end{transition-delay:310ms!important}
+#index.hero-intro-ready .hero-title .kinetic-glyph{animation-delay:calc(145ms + var(--glyph-index,0) * 22ms)!important}

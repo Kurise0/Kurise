@@ -12,6 +12,7 @@ function clear(stage){
  if(state){cancelAnimationFrame(state.raf);running.delete(stage);}
  stage.querySelectorAll('.slide-outgoing,.slide-incoming').forEach(el=>{
   el.classList.remove('slide-outgoing','slide-incoming');el.style.clipPath='';
+  window.KuriseCopyReveal?.finishSlide(el);
   el.querySelectorAll('.slide-kinetic').forEach(word=>{
    word.classList.add('slide-kinetic-in');
   });
@@ -20,7 +21,9 @@ function clear(stage){
 }
 function start(stage,oldSlide,newSlide,forward){
  clear(stage);
- if(!oldSlide||!newSlide||oldSlide===newSlide||reduced())return;
+ if(!oldSlide||!newSlide||oldSlide===newSlide)return;
+ if(reduced()){window.KuriseCopyReveal?.finishSlide(newSlide);return;}
+ window.KuriseCopyReveal?.prepareSlide(newSlide);
  const duration=690;
  window.KuriseFlowPoints?.transition(oldSlide,newSlide);
  oldSlide.classList.add('slide-outgoing');
@@ -30,6 +33,7 @@ function start(stage,oldSlide,newSlide,forward){
  const title=newSlide.querySelector('.archive-card-body h3,.panel-copy h3');
  if(title){window.KuriseTypography?.split(title);title.classList.add('slide-kinetic');title.classList.remove('slide-kinetic-in');}
  const state={raf:0};running.set(stage,state);
+ let copyActivated=false;
  function draw(p){
   const hidden=(1-p)*100;
   newSlide.style.clipPath=forward?`inset(0 0 0 ${hidden.toFixed(4)}%)`:`inset(0 ${hidden.toFixed(4)}% 0 0)`;
@@ -46,9 +50,10 @@ function start(stage,oldSlide,newSlide,forward){
  function frame(now){
   if(running.get(stage)!==state)return;
   const t=clamp((now-started)/duration,0,1);
+  if(t>=.43&&!copyActivated){copyActivated=true;window.KuriseCopyReveal?.playSlide(newSlide);}
   draw(EASE(t));
   if(t<1)state.raf=requestAnimationFrame(frame);
-  else{clear(stage); if(title)title.classList.add('slide-kinetic-in');}
+  else{clear(stage);window.KuriseCopyReveal?.finishSlide(newSlide);if(title)title.classList.add('slide-kinetic-in');}
  }
  state.raf=requestAnimationFrame(frame);
 }

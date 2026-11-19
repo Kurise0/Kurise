@@ -24,7 +24,7 @@ for file in (root/'js').glob('*.js'):
 for file in (root/'css').glob('*.css'):
     errors=[t for t in tinycss2.parse_stylesheet(file.read_text(),skip_whitespace=True,skip_comments=True) if t.type=='error']
     assert not errors,(file,errors)
-video=(root/'assets/worldline-background.mp4').read_bytes()
+video=(root/'assets/hero-kurisu.mp4').read_bytes()
 assert video.find(b'moov')<video.find(b'mdat'),'video not faststart'
 assert soup.select_one('meta[property="og:type"]')
 assert len(soup.select('nav#mainNavigation a[data-go]'))==5
@@ -42,5 +42,28 @@ assert 'eridanus' not in (root/'js/content.js').read_text().lower()
 assert (root/'js/contact-film.js').is_file()
 assert soup.select_one('link[href^="./css/v11.css"]')
 assert len(soup.select('#project .project-dots button'))==3
+# v12: user-supplied photos, compressed homepage film, origin typography and responsive layer.
+assert soup.select_one('link[href^="./css/v12.css"]')
+assert len(soup.select('.chapter-photo'))==3
+assert soup.select_one('#index .hero-origin em')
+assert len(soup.select('#index .hero-origin em'))==2
+assert (root/'assets/about-kurisu.webp').is_file()
+assert (root/'assets/competition-worldline.webp').is_file()
+assert (root/'assets/hero-kurisu-poster.jpg').is_file()
+assert (root/'assets/hero-kurisu.mp4').stat().st_size < 600_000
+assert 'onPageEnter' in (root/'js/flow-points.js').read_text()
+assert 'onPageEnter' in (root/'js/router.js').read_text()
+assert 'onPageStart' in (root/'js/router.js').read_text()
+assert 'onPageStart' in (root/'js/flow-points.js').read_text()
+assert soup.select_one('link[href^="./css/v13.css"]')
+assert 'v14.css?v=14' in loader
+assert 'copy-reveal.js?v=14' in loader
+assert (root/'assets/project-steins-gate.webp').is_file()
+assert soup.select_one('#project > .chapter-photo-project')
+assert soup.select_one('link[href^="./css/v14.css"]')
+assert soup.select_one('script[src^="./js/copy-reveal.js"]')
+assert not soup.find(string=re.compile('X / TWITTER'))
+assert soup.select_one('a[href="https://x.com/KURISEW"] strong').get_text(strip=True)=='X'
+assert 'hero-kurisu.mp4' in loader
 
-print('PASS: local assets',len(paths),'JS/CSS syntax, 5 routes, 3 project slides, contact lazy video, theme layout, no Eridanus, video faststart, GitHub Pages root')
+print('PASS: local assets',len(paths),'JS/CSS syntax, 5 routes, 3 project slides, picture backdrops, origin cipher, chaos-to-form animation, video faststart')

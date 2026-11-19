@@ -15,17 +15,23 @@ const DURATION=930;
 let index=0,transition=null,lockUntil=0,wheelSum=0,wheelLast=0,aboutMode='profile';
 let edge;
 let heroIntroTimer=0;
+function showHeroIntro(){
+  const hero=$('#index');if(!hero)return;
+  hero.classList.add('hero-intro-ready');
+  hero.classList.remove('hero-intro-pending');
+}
 function beginHeroIntro(){
   const hero=$('#index');if(!hero)return;
   clearTimeout(heroIntroTimer);
   hero.classList.remove('hero-intro-ready');
   hero.classList.add('hero-intro-pending');
-  // Keep the unoccluded film visible for a little while before introducing the typography.
+  // The intro can begin while the hero is *incoming* during the 930ms
+  // chapter reveal. The earlier check for `transition` exited at 340ms,
+  // leaving the hero copy hidden forever after returning from another page.
   heroIntroTimer=setTimeout(()=>{
-    if(index!==0||transition)return;
-    hero.classList.add('hero-intro-ready');
-    hero.classList.remove('hero-intro-pending');
-  },1000);
+    if(transition ? transition.to!==0 : index!==0)return;
+    showHeroIntro();
+  },340);
 }
 function cancelHeroIntro(){
  clearTimeout(heroIntroTimer);
@@ -78,6 +84,7 @@ function setAboutMode(mode){
   button.setAttribute('aria-pressed',String(active));
  });
  if(aboutMode==='research')revealVisible(research);
+ if(!transition&&index===1){window.KuriseCopyReveal?.preparePage(page);window.KuriseCopyReveal?.playPage(page,80);}
 }
 function closeMobile(){
  document.body.classList.remove('menu-open');
@@ -143,8 +150,11 @@ function completeTransition(state){
  document.body.classList.remove('chapter-transitioning');
  edge.classList.remove('is-active');edge.style.top='';
  updateUI();
- if(index===0)beginHeroIntro();
- else cancelHeroIntro();
+ window.KuriseCopyReveal?.finishPage(pages[index]);
+ // Safety net for throttled/suspended timers (background tabs and mobile).
+ // Do not replay the sequence: the normal 340ms timer already started it.
+ if(index===0)showHeroIntro();else cancelHeroIntro();
+ window.KuriseFlowPoints?.onPageEnter(PAGES[index]);
 }
 function setPage(raw,source='link'){
  const next=PAGES.indexOf(normalize(raw));
@@ -160,24 +170,26 @@ function setPage(raw,source='link'){
  // They start at 0 on initial load, and only user gallery actions can change
  // them. Leaving and returning restores precisely what the user selected.
  const incoming=pages[next];
+ if(next!==0)window.KuriseCopyReveal?.preparePage(incoming);
  if(next===0){
-   clearTimeout(heroIntroTimer);
-   incoming.classList.add('hero-intro-pending');
-   incoming.classList.remove('hero-intro-ready');
+   beginHeroIntro();
+   window.KuriseWorldline?.assemble();
  } else if(before===0)cancelHeroIntro();
  const state={from:before,to:next,incoming,forward:next>before,raf:0,progress:0,kinetic:[]};
  wheelSum=0;
- if(useReducedMotion()){index=next;updateUI();if(index===0)beginHeroIntro();lockUntil=performance.now()+180;return;}
+ if(useReducedMotion()){index=next;updateUI();window.KuriseCopyReveal?.finishPage(pages[index]);window.KuriseFlowPoints?.onPageStart(PAGES[index]);lockUntil=performance.now()+180;return;}
  // Two real pages remain painted simultaneously, with incoming on top.
  // The outgoing .is-current is deliberately retained until animation ends.
  transition=state;
  syncMainNav(PAGES[next]);
  state.kinetic=prepareKinetic(incoming);
  incoming.classList.add('is-revealing');
+ window.KuriseFlowPoints?.onPageStart(PAGES[next]);
  incoming.setAttribute('aria-hidden','true');
  if('inert' in incoming)incoming.inert=true;
  document.body.classList.add('chapter-transitioning');
  revealVisible(incoming);
+ if(next!==0)window.KuriseCopyReveal?.playPage(incoming,state.forward?530:150);
  drawFrame(state,0);
  edge.classList.add('is-active');
  closeMobile();
@@ -247,9 +259,12 @@ function onWheel(e){
  if(area==='competition'&&scrollChildIfPossible(e.target.closest('.archive-card-body'),delta)){
   wheelSum=0;return;
  }
- if(area==='project'&&scrollChildIfPossible(e.target.closest('.cinema-panel.is-current .panel-main'),delta)){wheelSum=0;return;}
+ if(area==='project'&&scrollChildIfPossible(e.target.closest('.cinema-panel.is-current .panel-copy'),delta)){wheelSum=0;return;}
  if(index===1){
   const inner=aboutMode==='research'?$('#research>.container'):$('#aboutProfile');
+  if(inner?.contains(e.target)&&scrollChildIfPossible(inner,delta)){wheelSum=0;return;}
+ }
+ if(index===4){const inner=$('#contact>.container');
   if(inner?.contains(e.target)&&scrollChildIfPossible(inner,delta)){wheelSum=0;return;}
  }
  const now=performance.now();
@@ -293,14 +308,23 @@ function setupTouch(){
  const view=$('#spaViewport');
  view.addEventListener('touchstart',e=>{
   if(e.touches.length!==1)return;
+  const scrollZone=e.target.closest('#aboutProfile,#research>.container,.archive-card-body,#contact>.container,.cinema-panel .panel-copy');
   start={x:e.touches[0].clientX,y:e.touches[0].clientY,
-   area:wheelArea(e.target),readArea:!!e.target.closest('.archive-card-body')};
+   area:wheelArea(e.target),readArea:!!e.target.closest('.archive-card-body'),
+   scrollZone,scrollTop:scrollZone?.scrollTop||0};
  },{passive:true});
  view.addEventListener('touchend',e=>{
   if(!start||!e.changedTouches.length)return;
   const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;
+  if(start.scrollZone && Math.abs(dy)>Math.abs(dx)){
+   const zone=start.scrollZone;
+   const max=zone.scrollHeight-zone.clientHeight;
+   if(Math.abs(zone.scrollTop-start.scrollTop)>3 ||
+      (max>4 && (dy<0 && zone.scrollTop<max-2 || dy>0 && zone.scrollTop>2))){start=null;return;}
+  }
   if(Math.abs(dy)>75&&Math.abs(dy)>Math.abs(dx)*1.25&&!start.readArea){
-   if(performance.now()>lockUntil)step(-Math.sign(dy),!!start.area);
+   // Vertical mobile swipes navigate chapters, even over Project artwork.
+   if(performance.now()>lockUntil)step(-Math.sign(dy),start.area==='competition');
   }else if(!start.area&&Math.abs(dx)>75&&Math.abs(dx)>Math.abs(dy)*1.4){
    if(performance.now()>lockUntil)step(-Math.sign(dx),false);
   }
@@ -319,8 +343,10 @@ function init(){
  const cleanPath=location.pathname+(manualReduced?'?motion=reduce':'')+'#'+PAGES[index];
  if(location.pathname+location.search+location.hash!==cleanPath)history.replaceState(null,'',cleanPath);
  updateUI();
+ if(index!==0){window.KuriseCopyReveal?.preparePage(pages[index]);window.KuriseCopyReveal?.playPage(pages[index],110);}
  prepareKinetic(pages[0]);
  if(index===0)beginHeroIntro();else cancelHeroIntro();
+ window.KuriseFlowPoints?.onPageEnter(PAGES[index]);
  const replay=$('#replayBoot');
  if(replay){let number='';try{number=sessionStorage.getItem('kurise-last-worldline')||'';}catch(e){}
   replay.textContent=`↻ [ ${number||'--.------'} % ]`;

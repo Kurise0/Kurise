@@ -1,4 +1,4 @@
-/* KURISE / FORMATION ENGINE v9
+/* KURISE / FORMATION ENGINE v12
    Both galleries are made of persistent Canvas point-clouds. Every slide owns
    its own canvas, so the transparent left/right wipe never exposes a raw SVG.
    Competition geometry comes from each existing SVG; project geometry from
@@ -57,34 +57,42 @@ function samplePixels(c,id){
 class Cloud{
  constructor(host,id,slide,type){
   this.host=host;this.id=id;this.slide=slide;this.type=type;
-  this.rand=rng(seed(id)+17);this.pts=[];this.positions=[];
-  this.w=0;this.h=0;this.last=0;this.burstUntil=0;this.outgoing=false;this.morphStart=performance.now();
+  this.rand=rng(seed(id)+17);this.pts=[];this.w=0;this.h=0;
+  this.last=0;this.started=false;this.morphStart=0;
+  // Linear-in-space interpolation with a single monotonic ease: no spring,
+  // velocity integration or overshoot at the end of the formation.
+  this.formationMs=1450;this.initialHoldMs=90;
+  this.pointer=null;
   this.canvas=document.createElement('canvas');this.canvas.className='formation-canvas';
   this.canvas.setAttribute('aria-hidden','true');this.ctx=this.canvas.getContext('2d',{alpha:true});
   if(!this.ctx)return;
-  // Attach the canvas BEFORE hiding the original artwork. There is no empty frame.
   host.classList.add('formation-host');host.append(this.canvas);
-  this.resize();this.fromProjectOrFallback();
-  host.classList.add('formation-ready');
+  this.resize();this.fromProjectOrFallback();host.classList.add('formation-ready');
   if(type==='competition')this.loadSVG();
-  host.addEventListener('pointermove',e=>{let r=host.getBoundingClientRect();this.pointer={x:e.clientX-r.left,y:e.clientY-r.top}} ,{passive:true});
+  host.addEventListener('pointermove',e=>{const r=host.getBoundingClientRect();this.pointer={x:e.clientX-r.left,y:e.clientY-r.top}},{passive:true});
   host.addEventListener('pointerleave',()=>{this.pointer=null},{passive:true});
  }
  resize(){
   const r=this.host.getBoundingClientRect();
-  let ww=r.width||this.w||400,hh=r.height||this.h||220;
+  const ww=r.width||this.w||400,hh=r.height||this.h||220;
   if(Math.abs(ww-this.w)<1&&Math.abs(hh-this.h)<1)return;
-  const ow=this.w||ww,oh=this.h||hh;this.w=ww;this.h=hh;
+  this.w=ww;this.h=hh;
   const dpr=Math.min(devicePixelRatio||1,2);
   this.canvas.width=Math.round(ww*dpr);this.canvas.height=Math.round(hh*dpr);
-  this.canvas.style.width=ww+'px';this.canvas.style.height=hh+'px';this.ctx.setTransform(dpr,0,0,dpr,0,0);
-  for(const p of this.pts){p.x*=ww/ow;p.y*=hh/oh;p.tx*=ww/ow;p.ty*=hh/oh}
+  this.canvas.style.width=ww+'px';this.canvas.style.height=hh+'px';
+  this.ctx.setTransform(dpr,0,0,dpr,0,0);
+  this.updateTargets();
+ }
+ updateTargets(){
+  if(!this.pts.length)return;
+  const scale=Math.min(this.w/W*.96,this.h/H*.94),ox=(this.w-W*scale)/2,oy=(this.h-H*scale)/2;
+  for(const p of this.pts){p.tx=ox+p.nx*scale;p.ty=oy+p.ny*scale;}
  }
  fromProjectOrFallback(){
   const off=document.createElement('canvas');off.width=W;off.height=H;
   const c=off.getContext('2d',{willReadFrequently:true});if(!c)return;
   guide(c,this.type==='project'?this.id:'project-0');
-  this.setShape(samplePixels(c,this.id+'-bootstrap'),false);
+  this.setShape(samplePixels(c,this.id+'-bootstrap'));
  }
  loadSVG(){
   const svg=this.host.querySelector('svg');if(!svg)return;
@@ -97,84 +105,74 @@ class Cloud{
    const cc=c.getContext('2d',{willReadFrequently:true});
    try{
     cc.clearRect(0,0,W,H);
-    // The source shapes are authored in a 540×275 viewBox; use meet scaling.
     const scale=Math.min(W/540,H/275),dx=(W-540*scale)/2,dy=(H-275*scale)/2;
     cc.drawImage(im,dx,dy,540*scale,275*scale);
-    this.setShape(samplePixels(cc,this.id),false);
-   }catch(e){/* Preserve drawn fallback, never reveal a missing source. */}
+    // Async SVG geometry must not restart formation or flash a complete shape.
+    this.setShape(samplePixels(cc,this.id));
+    if(this.started)this.paint(performance.now(),true);
+   }catch(e){/* Existing sampled fallback remains visible. */}
   };
   im.onerror=()=>URL.revokeObjectURL(url);im.src=url;
  }
- setShape(targets,scatter){
+ setShape(targets){
   const old=this.pts,r=this.rand;
-  this.positions=targets;
-  const next=[];
-  const scale=Math.min(this.w/W*.96,this.h/H*.94),ox=(this.w-W*scale)/2,oy=(this.h-H*scale)/2;
-  for(let i=0;i<targets.length;i++){
-   const [x,y]=targets[i],tx=ox+x*scale,ty=oy+y*scale;
-   const before=old.length?old[(i*47)%old.length]:null;
-   const angle=r()*Math.PI*2;
-   next.push({x:before?before.x:tx+(r()-.5)*this.w*.24,
-      y:before?before.y:ty+(r()-.5)*this.h*.26,
-      tx,ty,vx:(r()-.5)*5,vy:(r()-.5)*5,
-      radius:.65+r()*.85,phase:r()*6.283,twinkle:r()});
-  }
-  this.pts=next;
-  this.morphStart=performance.now();
-  if(scatter)this.assemble();
+  const next=targets.map(([nx,ny],i)=>{
+   const prev=old.length?old[i%old.length]:null;
+   return {nx,ny,tx:0,ty:0,
+    sx:prev?prev.sx:this.w*(.04+.92*r()),
+    sy:prev?prev.sy:this.h*(.04+.92*r()),
+    radius:.65+r()*.85,phase:prev?prev.phase:r()*Math.PI*2,
+    twinkle:r()};
+  });
+  this.pts=next;this.updateTargets();
+  // The clock is owned by chapter/slide entry, not by geometry loading.
+  // Newly-created fields remain empty until explicitly activated.
  }
- burst(isOutgoing){
-  this.outgoing=isOutgoing;
-  this.burstUntil=performance.now()+(isOutgoing?600:840);
-  this.morphStart=performance.now();
+ assemble(){
+  this.started=true;this.morphStart=performance.now();
   const r=this.rand;
   for(const p of this.pts){
-    if(!isOutgoing){p.x=p.tx+(r()-.5)*this.w*.72;p.y=p.ty+(r()-.5)*this.h*.66;}
-    p.vx+=(r()-.5)*(isOutgoing?14:12);
-    p.vy+=(r()-.5)*(isOutgoing?14:12);
+   p.sx=this.w*(.04+.92*r());p.sy=this.h*(.04+.92*r());
   }
-  if(reduced()&&!isOutgoing){for(const p of this.pts){p.x=p.tx;p.y=p.ty;p.vx=p.vy=0}}
+  this.paint(this.morphStart,true); // overwrite last completed canvas BEFORE the wipe
  }
- assemble(){this.burst(false)}
  active(){
-  const p=this.slide.closest('.spa-page');
-  return p&&(p.classList.contains('is-current')||p.classList.contains('is-revealing'))&&
-   (this.slide.classList.contains('is-current')||this.slide.classList.contains('slide-incoming')||this.slide.classList.contains('slide-outgoing'));
+  const page=this.slide.closest('.spa-page');
+  return page&&(page.classList.contains('is-current')||page.classList.contains('is-revealing'))&&
+    (this.slide.classList.contains('is-current')||this.slide.classList.contains('slide-incoming')||this.slide.classList.contains('slide-outgoing'));
  }
- frame(now){
-  if(!this.active()||document.hidden)return;
-  if(now-this.last<(innerWidth<580?28:16))return;this.last=now;
-  this.resize();const ctx=this.ctx,w=this.w,h=this.h;
-  ctx.clearRect(0,0,w,h);
+ paint(now,force=false){
+  if(!force&&(!this.active()||document.hidden||!this.started))return;
+  if(!force&&now-this.last<(innerWidth<580?28:16))return;
+  this.last=now;this.resize();
+  const ctx=this.ctx,w=this.w,h=this.h;ctx.clearRect(0,0,w,h);
+  if(!this.started)return;
   const light=document.documentElement.dataset.theme==='light';
   const base=light?[27,83,83]:[158,225,214];
   const glow=light?[181,75,48]:[253,125,88];
-  const age=now-this.morphStart,shattering=this.outgoing&&now<this.burstUntil;
-  const settling=age<1250;
-  const pointer=this.pointer,reach=Math.min(125,w*.24),t=now*.001;
+  const elapsed=Math.max(0,now-this.morphStart);
+  const progress=reduced()?1:clamp((elapsed-this.initialHoldMs)/(this.formationMs-this.initialHoldMs),0,1);
+  const formation=progress*progress*(3-2*progress);
+  const revealAlpha=reduced()?1:clamp(.22+progress*1.65,0,1);
+  const pointer=this.pointer,reach=Math.min(125,w*.24),time=now*.001;
   for(const p of this.pts){
-   const dx=pointer?p.x-pointer.x:0,dy=pointer?p.y-pointer.y:0;
-   const d=pointer?Math.hypot(dx,dy)||1:1;
-   const hit=pointer?Math.max(0,1-d/reach):0;
-   if(shattering){p.vx+=(p.x-w/2)*.0007;p.vy+=(p.y-h/2)*.0007;
-     p.vx*=.94;p.vy*=.94;
-   }else{
-     p.vx+=(p.tx-p.x)*(settling?.034:.052)+dx/d*hit*hit*2.5;
-     p.vy+=(p.ty-p.y)*(settling?.034:.052)+dy/d*hit*hit*2.5;
-     p.vx*=settling?.84:.78;p.vy*=settling?.84:.78;
+   // No dynamic momentum: interpolate directly from stable scatter coordinates.
+   const drift=(1-formation)*Math.min(2.8,w*.004);
+   const x=p.sx+(p.tx-p.sx)*formation+Math.cos(time*1.2+p.phase)*drift;
+   const y=p.sy+(p.ty-p.sy)*formation+Math.sin(time*1.1+p.phase)*drift;
+   let ox=0,oy=0,hit=0;
+   if(pointer&&formation>.9){
+    const dx=x-pointer.x,dy=y-pointer.y,d=Math.hypot(dx,dy)||1;
+    hit=Math.max(0,1-d/reach);
+    ox=dx/d*hit*hit*11;oy=dy/d*hit*hit*11;
    }
-   p.x+=p.vx;p.y+=p.vy;
-   const speed=Math.hypot(p.vx,p.vy),hi=hit>.22||speed>3.2;
-   const rgb=hi?glow:base;
-   const opacity=clamp((shattering?.55:.68)+Math.sin(t*2+p.phase)*.13+hit*.19,.22,1);
-   if(settling&&speed>1.9){
-     ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*1.8,p.y-p.vy*1.8);
-     ctx.lineWidth=.65;ctx.strokeStyle=`rgba(${glow.join(',')},${clamp(speed/35,.04,.23)})`;ctx.stroke();
-   }
-   ctx.beginPath();ctx.arc(p.x,p.y,p.radius+hit*.8,0,Math.PI*2);
+   const rgb=p.twinkle<.11?glow:base;
+   const opacity=clamp((.50+.13*Math.sin(time*1.5+p.phase)+hit*.17)*revealAlpha,.06,.95);
+   ctx.beginPath();ctx.arc(x+ox,y+oy,p.radius+hit*.6,0,Math.PI*2);
    ctx.fillStyle=`rgba(${rgb.join(',')},${opacity})`;ctx.fill();
   }
  }
+ frame(now){this.paint(now)}
  destroy(){this.canvas.remove();this.host.classList.remove('formation-host','formation-ready');}
 }
 let started=false,raf=0;
@@ -187,14 +185,29 @@ function reconcile(){
   if(!host||fields.has(host))continue;
   const idx=type==='project'?[...slide.parentElement.children].indexOf(slide):0;
   const id=type==='competition'?'competition-'+slide.dataset.id:'project-'+idx;
-  fields.set(host,new Cloud(host,id,slide,type));
+  const cloud=new Cloud(host,id,slide,type);fields.set(host,cloud);
+  // Dynamic competition filter/language rebuilds occur while the page is open.
+  if(cloud.active()&&!document.body.classList.contains('chapter-transitioning'))cloud.assemble();
+ }
+}
+function onPageStart(pageName){
+ reconcile();
+ for(const f of fields.values()){
+  if(f.slide.closest('.spa-page')?.id===pageName&&f.slide.classList.contains('is-current'))f.assemble();
+ }
+}
+function onPageEnter(pageName){
+ // On completion, never scatter again: the cloud has been forming THROUGH the wipe.
+ reconcile();
+ for(const f of fields.values()){
+  if(!f.started&&f.slide.closest('.spa-page')?.id===pageName&&f.slide.classList.contains('is-current'))f.assemble();
  }
 }
 function onReveal(outgoing,incoming){
  reconcile();
  const oldHost=outgoing?.querySelector('.archive-card-visual,.panel-art');
  const newHost=incoming?.querySelector('.archive-card-visual,.panel-art');
- if(oldHost)fields.get(oldHost)?.burst(true);
+ // Outgoing particles stay stable; only the incoming cloud assembles.
  if(newHost)fields.get(newHost)?.assemble();
 }
 function frame(now){raf=requestAnimationFrame(frame);for(const f of fields.values())f.frame(now)}
@@ -202,6 +215,6 @@ function init(){if(started)return;started=true;reconcile();
  addEventListener('resize',()=>{for(const f of fields.values())f.resize()},{passive:true});
  raf=requestAnimationFrame(frame);
 }
-window.KuriseFlowPoints={init,attachToCurrent:reconcile,reconcile,transition:onReveal,
- debug:()=>({clouds:fields.size,competition:[...fields.values()].filter(x=>x.type==='competition').length,projects:[...fields.values()].filter(x=>x.type==='project').length,visible:[...fields.values()].filter(x=>x.active()).map(x=>x.id)})};
+window.KuriseFlowPoints={init,attachToCurrent:reconcile,reconcile,transition:onReveal,onPageStart,onPageEnter,
+ debug:()=>({clouds:fields.size,competition:[...fields.values()].filter(x=>x.type==='competition').length,projects:[...fields.values()].filter(x=>x.type==='project').length,visible:[...fields.values()].filter(x=>x.active()).map(x=>({id:x.id,started:x.started,ageMs:x.started?Math.round(performance.now()-x.morphStart):null}))})};
 })();

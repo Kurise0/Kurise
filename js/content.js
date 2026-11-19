@@ -126,7 +126,7 @@ function renderCompetitions(preserveCurrent=false) {
  container.innerHTML=items.map(c=>`<article class="archive-card" data-id="${c.id}" data-graphic="${c.graphic}">
    <div class="archive-card-top"><span class="archive-card-index">FIELD / ${c.n}</span><span>${c.short} • ${c.year}</span></div>
    <div class="archive-card-visual">${graphicSVG(c.graphic)}</div>
-   <div class="archive-card-body"><div class="archive-meta"><i></i><span>${esc(c.category)}</span> / ${text[lang].taskLabel}</div><h3>${esc(c.title)}</h3>
+   <div class="archive-card-body"><div class="archive-meta"><i></i><span>${esc(c.category)}</span> / ${text[lang].taskLabel}</div><h3>${esc(c.title).replace(/(20\d{2})$/,'<span class="archive-title-year">$1</span>')}</h3>
    <p class="desc">${esc(c[lang])}</p><div class="archive-sole"><div class="rank-box"><strong>${String(c.rank).padStart(2,'0')}</strong><span><small>${text[lang].rank}</small>/ ${c.total.toLocaleString('en-US')} ${text[lang].teams}</span></div>
    <div class="medal-label ${c.medal}">✦ ${c.medal.toUpperCase()}</div><a class="kaggle-open magnetic" target="_blank" rel="noopener noreferrer" aria-label="${text[lang].openChallenge}: ${esc(c.title)}" title="${text[lang].openChallenge}" href="${c.url}">↗</a></div></div></article>`).join('');
  gallery.selected=Math.max(0,selectedIndex);
